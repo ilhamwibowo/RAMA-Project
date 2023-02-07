@@ -8,4 +8,3 @@ services:
       - 5226:80
     volumes:
       - .:/api
-    command: dotnet run "--environment=Development"
