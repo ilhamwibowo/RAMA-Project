@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  api:
+    container_name: api
+    build: .
+    ports:
+      - 5226:80
+    volumes:
+      - .:/api
+    command: dotnet run "--environment=Development"
