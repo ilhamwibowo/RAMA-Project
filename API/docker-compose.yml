@@ -8,3 +8,26 @@ services:
       - 5226:80
     volumes:
       - .:/api
+    depends_on:
+      - pgsql
+    networks:
+      - dotnet_api
+  pgsql:
+    container_name: pgsql
+    image: postgres:12.2
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - dotnet_api
+
+networks:
+  dotnet_api:
+
+volumes:
+  pgdata:
