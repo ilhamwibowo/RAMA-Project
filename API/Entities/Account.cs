@@ -10,20 +10,20 @@ namespace API.Entities
     {
         [Key]
         public int AccId { get; set; }
+        [Required]
+        public string Email { get; set; }
 
-        public string? Email { get; set; }
+        public byte[] PasswordHash { get; set; }
 
-        public byte[]? PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
 
-        public byte[]? PasswordSalt { get; set; }
-
-        public string? Role { get; set; }
+        public string Role { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public string? KTP { get; set; }
+        public string KTP { get; set; }
 
-        public string? No_HP { get; set; }
+        public string No_HP { get; set; }
 
         public DateOnly Birthday { get; set; }
     }
