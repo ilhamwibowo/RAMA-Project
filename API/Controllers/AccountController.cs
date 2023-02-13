@@ -15,11 +15,13 @@ namespace API.Controllers
         private readonly DataContext _context;
         private readonly ITokenService _tokenService;
         private readonly ILogger<AccountController> _logger;
-        public AccountController(DataContext context, ITokenService tokenService, ILogger<AccountController> logger)
+        private readonly IEmailService _emailService;
+        public AccountController(DataContext context, ITokenService tokenService, ILogger<AccountController> logger, IEmailService emailService)
         {
             _tokenService = tokenService;
             _context = context;
             _logger = logger;
+            _emailService = emailService;
         }
 
         [HttpPost("register")]
@@ -40,7 +42,7 @@ namespace API.Controllers
                 PasswordSalt = hmac.Key
             };
 
-            _context.Account.Add(user);
+            _context.Accounts.Add(user);
             try
             {
                 await _context.SaveChangesAsync();
@@ -88,7 +90,7 @@ namespace API.Controllers
         
         private async Task<bool> AccountExists(string Email)
         {
-            return await _context.Account.AnyAsync(x => x.Email == Email);
+            return await _context.Accounts.AnyAsync(x => x.Email == Email);
         }
         private bool EmailValid(string Email)
         {
@@ -97,5 +99,17 @@ namespace API.Controllers
             Regex regex = new Regex(pattern);
             return regex.IsMatch(Email);
         }
+
+        private string GenerateOTP()
+        {
+            Random random = new Random();
+            string otp = "";
+            for (int i = 0; i < 6; i++)
+            {
+                otp += random.Next(0, 10);
+            }
+            return otp;
+        }
+
     }
 }
