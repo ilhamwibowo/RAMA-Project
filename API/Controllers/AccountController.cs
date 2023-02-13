@@ -66,7 +66,25 @@ namespace API.Controllers
         // using var hmac = new HMACSHA512 (user.PasswordSalt);
         // var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         // atau boleh buat repository untuk Account.
-
+        [HttpPost("login")]
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto){
+            string email = loginDto.Email.ToLower();
+            string password = loginDto.Password;
+            if (!(await AccountExists(email)))
+                return BadRequest("Email is not registered");
+            // how to get email and password from database? belum tau yang ini caranya gimana
+            Account user = await _context.Account.FirstOrDefaultAsync(x => x.Email == loginDto.Email);
+            using var hmac = new HMACSHA512 (user.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            for (int i = 0; i < computedHash.Length; i++)
+                if (computedHash[i] != user.PasswordHash[i])
+                    return BadRequest("Password does not match");
+            return Ok(new UserDto {
+                Email = user.Email,
+                Token = _tokenService.CreateToken(user)
+            });
+        } 
+        
         
         private async Task<bool> AccountExists(string Email)
         {
