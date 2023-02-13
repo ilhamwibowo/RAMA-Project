@@ -24,7 +24,7 @@ namespace API.Controllers
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProfileDto>> getProfile(int id) {
-            var user = await _context.Account.FirstOrDefaultAsync(x => x.AccId == id);
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == id);
 
             if(user == null) {
                 return BadRequest("User not found");
@@ -43,7 +43,7 @@ namespace API.Controllers
 
         [HttpPut("edit/{id}")]
         public async Task<ActionResult> editProfile(int id, ProfileDto profile) {
-            var user = await _context.Account.FirstOrDefaultAsync(x => x.AccId == id);
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == id);
 
             if (user == null) {
                 return BadRequest("User not found");
@@ -56,7 +56,7 @@ namespace API.Controllers
             user.Birthday = profile.Birthday;
 
             try {
-                _context.Account.Update(user);
+                _context.Accounts.Update(user);
                 await _context.SaveChangesAsync();
             }
             catch(Exception e) {
