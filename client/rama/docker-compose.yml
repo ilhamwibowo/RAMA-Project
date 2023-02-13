@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  rama-client:
+    container_name: rama-client
+    build: .
+    ports:
+      - 5173:5173
+    volumes:
+      - ./node_modules:/usr/src/app/node_modules
+    networks:
+      - api_dotnet_api
+    command: npm run dev
+
+volumes:
+  node_modules:
+
+networks:
+  api_dotnet_api:
+    external: true
