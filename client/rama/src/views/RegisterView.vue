@@ -1,25 +1,22 @@
 ﻿<template>
-  <div class="login">
+  <div class="register">
     <div class="title">
       <h1>
-        Rama
+        Register into Rama
       </h1>
     </div>
-    <div id="login">
+    <div id="register">
       <div id="username">
         <input type="text" name="email" v-model="email" placeholder="E-mail" />
       </div>
       <div id="password">
         <input type="password" name="password" v-model="password" placeholder="Password" />
       </div>
-      <div id="login-response" v-show="">
+      <div id="register-response" v-show="">
         <p>{{ response }}}</p>
       </div>
-      <div id="login-button">
-        <button type="button" v-on:click="login()">Login</button>
-      </div>
-      <div id="register-from-login">
-        <a href="http://localhost:5173/register">Register</a>
+      <div id="register-button">
+        <button type="button" v-on:click="register()">Register</button>
       </div>
     </div>
   </div>
@@ -29,7 +26,7 @@
 import axios from "axios";
 
 export default {
-  name: "LoginView",
+  name: "RegisterView",
   
   data() {
     return {
@@ -40,10 +37,10 @@ export default {
   },
   
   methods: {
-    login() {
+    register() {
       // TODO: Change POST target url if needed
       // TODO: Handle CORS
-      axios.post("https://localhost:5226/api/Account/login", {
+      axios.post("https://localhost:5226/api/Account/register", {
         email: this.email,
         password: this.password
       }).then((response) => {
@@ -67,9 +64,8 @@ export default {
   color: var(--color-heading);
 }
 
-.login, #username, #password, 
-#login-button, #login-response,
-#register-from-login {
+.register, #username, #password,
+#register-button, #register-response {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;

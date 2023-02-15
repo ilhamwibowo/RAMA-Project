@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      redirect: "/login",
+      // redirect: "/login",
       // component: HomeView,
     },
     {
@@ -23,11 +23,16 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/LoginView.vue"),
     },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
+    }
   ],
 });
 
 router.beforeEach(async (to, from) => {
-  if (localStorage.getItem("token") === null && to.name !== "login") {
+  if (localStorage.getItem("token") === null && to.name !== "login" && to.name !== "register") {
     return { name: "login" }
   }
 });
