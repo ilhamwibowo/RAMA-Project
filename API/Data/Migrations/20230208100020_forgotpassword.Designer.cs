@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230208100020_forgotpassword")]
+    partial class forgotpassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +63,7 @@ namespace API.Data.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("API.Entities.ForgotPasswordHistory", b =>
@@ -68,21 +71,18 @@ namespace API.Data.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<int>("CheckCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Otp")
+                    b.Property<string>("OTP")
                         .HasColumnType("text");
 
-                    b.Property<int>("RequestCount")
-                        .HasColumnType("integer");
+                    b.HasKey("Date");
 
-                    b.HasKey("Date", "Email");
-
-                    b.ToTable("ForgotPasswordHistories");
+                    b.ToTable("ForgotPasswordHistory");
                 });
 #pragma warning restore 612, 618
         }
