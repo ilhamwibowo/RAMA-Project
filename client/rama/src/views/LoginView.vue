@@ -12,11 +12,11 @@
       <div id="password">
         <input type="password" name="password" v-model="password" placeholder="Password" />
       </div>
+      <div id="login-response" v-show="">
+        <p>{{ response }}}</p>
+      </div>
       <div id="login-button">
         <button type="button" v-on:click="login()">Login</button>
-      </div>
-      <div id="login-response" v-show="">
-        <textarea>{{ response }}}</textarea>
       </div>
     </div>
   </div>
@@ -63,7 +63,7 @@ export default {
   color: var(--color-heading);
 }
 
-.login, #username, #password, #login-button {
+.login, #username, #password, #login-button, #login-response {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
