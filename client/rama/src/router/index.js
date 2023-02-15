@@ -7,7 +7,8 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: HomeView,
+      redirect: "/login",
+      // component: HomeView,
     },
     {
       path: "/about",
@@ -17,7 +18,18 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/AboutView.vue"),
     },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("../views/LoginView.vue"),
+    },
   ],
+});
+
+router.beforeEach(async (to, from) => {
+  if (localStorage.getItem("token") === null && to.name !== "login") {
+    return { name: "login" }
+  }
 });
 
 export default router;
