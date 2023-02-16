@@ -25,6 +25,8 @@
 <script>
 import axios from "axios";
 
+const env = import.meta.env;
+
 export default {
   name: "RegisterView",
   
@@ -40,7 +42,7 @@ export default {
     register() {
       // TODO: Change POST target url if needed
       // TODO: Handle CORS
-      axios.post("https://localhost:5226/api/Account/register", {
+      axios.post(env.VITE_API_URI + "/Account/register", {
         email: this.email,
         password: this.password
       }).then((response) => {
