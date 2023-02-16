@@ -30,6 +30,8 @@ const env = import.meta.env;
 export default {
   name: "AccountRecovery",
   
+  emits: ["email", "isRequested"],
+  
   data() {
     return {
       email: "",

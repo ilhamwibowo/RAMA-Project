@@ -49,9 +49,14 @@ const env = import.meta.env;
 export default {
   name: "ResetPassword",
   
+  emits: ["isRecovered"],
+  
+  props: {
+    email: ""
+  },
+  
   data() {
     return {
-      email: "",
       newPassword: "",
       confirmPassword: "",
       OTPCode: "",
