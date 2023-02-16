@@ -45,6 +45,7 @@ export default {
         if (response.status !== 200) {
           this.response = "Request failed! Please try again later.";
         } else {
+          this.$emit("email", this.email);
           this.$emit("isRequested", true);
         }
       });
