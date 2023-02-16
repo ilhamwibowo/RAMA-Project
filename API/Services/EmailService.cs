@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Interfaces;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using MailKit;
 using API.Helpers;
 using API.DTOs;
 using MailKit.Net.Smtp;
