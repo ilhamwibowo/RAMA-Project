@@ -43,7 +43,7 @@ export default {
     login() {
       // TODO: Change POST target url if needed
       // TODO: Handle CORS
-      axios.post("https://localhost:5226/api/Account/login", {
+      axios.post("http://localhost:5226/api/Account/login", {
         email: this.email,
         password: this.password
       }).then((response) => {
