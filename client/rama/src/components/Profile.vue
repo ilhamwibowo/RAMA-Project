@@ -1,6 +1,9 @@
 <template>
     <div class="profile">
         <h1>Profile</h1>
+        <div class="container-image">
+            <img :src="user.image" />
+        </div>
         <DetailProfile title="Name" :text="user.Name"/>
         <DetailProfile title="Email" :text="user.Email"/>
         <DetailProfile title="KTP" :text="user.KTP"/>
@@ -39,8 +42,29 @@ export default {
                 KTP: '3515070000000001',
                 No_HP: '082200000001',
                 Birthday: '25-09-2002',
+                image: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
             }
         }
-    }
+    },
 }
 </script>
+
+<style scoped>
+.container-image {
+    display: flex;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    position: relative;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+img {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+}
+</style>

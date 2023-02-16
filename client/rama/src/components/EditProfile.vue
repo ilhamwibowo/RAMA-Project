@@ -1,6 +1,13 @@
 <template>
     <div class="profile">
         <h1>Edit Profile</h1>
+        <div class="container-image">
+            <input type="file" id="image" accept="image/*" @change="photoChange" style="display:none;"/>
+            <img :src="user.image" />
+            <div class="edit" @click="uploadPhoto"> 
+                <div class="circle"></div>
+            </div>
+        </div>
         <div class="container-detail">
             <h3 class="title">Name</h3>
             <input class="input" v-model="user.Name"/>
@@ -57,6 +64,7 @@ export default {
                 KTP: '3515072509020001',
                 No_HP: '082235171080',
                 Birthday: '2001-09-25',
+                image: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
             },
             id: 1 // get from cache
         }
@@ -78,9 +86,12 @@ export default {
                 .then(response => this.id = response.data.id)
 
         },
-
-        cancel() {
-
+        uploadPhoto() {
+            document.getElementById("image").click()
+        },
+        photoChange(event) {
+            const image = event.target.files[0]
+            this.user.image = URL.createObjectURL(image)
         }
     }
 
@@ -118,4 +129,39 @@ export default {
     .edit-detail-profile {
         margin: 10px 0px 
     }
+    .container-image {
+    display: flex;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    position: relative;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    }
+
+    img {
+        display: inline;
+        margin: 0 auto;
+        height: 100%;
+        width: auto;
+    }
+
+    .edit {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+
+    }
+    .circle {
+        background-color:#d3c5c5;
+        width: 100%;
+        height: 100%;
+        opacity:0;
+        transition: 0.3s;
+    }
+    
+    .circle:hover {
+        opacity:0.3;
+    }   
 </style>
