@@ -48,18 +48,14 @@ export default {
         this.invalidEmail = "Invalid e-mail!";
       } else {
         this.invalidEmail = "";
-        // TODO: Change POST target url if needed
-        // TODO: Handle CORS
         axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/requestotp", {
           email: this.email
-        }).then((response) => {
-          if (response.status !== 200) {
-            this.response = "Request failed! Please try again later.";
-          } else {
-            this.response = "";
-            this.$emit("email", this.email);
-            this.$emit("isRequested", true);
-          }
+        }).then(() => {
+          this.response = "";
+          this.$emit("email", this.email);
+          this.$emit("isRequested", true);
+        }).catch(() => {
+          this.response = "Request failed! Please try again later.";
         });
       }
     }

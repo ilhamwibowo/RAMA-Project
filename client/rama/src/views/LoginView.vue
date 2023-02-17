@@ -59,20 +59,15 @@ export default {
       } else {
         this.invalidEmail = "";
         this.invalidPassword = "";
-        // TODO: Change POST target url if needed
-        // TODO: Handle CORS
         axios.post(import.meta.env.VITE_API_URI + "/Account/login", {
           email: this.email,
           password: this.password
         }).then((response) => {
-          if (response.status !== 200) {
-            this.response = response.data;
-          } else {
-            this.response = "";
-            localStorage.setItem("token", response.data.token);
-            // TODO: Redirect to profile page
-            this.$router.push("/profile");
-          }
+          this.response = "";
+          localStorage.setItem("token", response.data.token);
+          this.$router.push("/profile");
+        }).catch((error) => {
+          this.response = error.response.data;
         });
       }
     }

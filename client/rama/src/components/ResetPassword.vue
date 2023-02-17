@@ -76,19 +76,15 @@ export default {
         }
       } else {
         this.invalidPassword = "";
-        // TODO: Change POST target url if needed
-        // TODO: Handle CORS
         axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/changepassword", {
           email: this.email,
           otp: this.OTPCode,
           newPassword: this.newPassword
-        }).then((response) => {
-          if (response.status !== 200) {
-            this.response = "Request failed! Please try again later.";
-          } else {
-            this.response = "";
-            this.$emit("isRecovered", true);
-          }
+        }).then(() => {
+          this.response = "";
+          this.$emit("isRecovered", true);
+        }).catch(() => {
+          this.response = "Request failed! Please try again later.";
         });
       }
     }
