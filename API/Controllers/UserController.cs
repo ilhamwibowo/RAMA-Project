@@ -88,7 +88,7 @@ namespace API.Controllers
             
         }
         [HttpPost("add-photo")]
-        public async Task<ActionResult> AddPhoto(IFormFile file)
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             if (user == null) return Unauthorized("User not found");
@@ -103,8 +103,18 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
             _context.Accounts.Update(user);
-            int id = await _context.SaveChangesAsync();
-            return Ok();
+            try {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e) {
+                _logger.LogError(e, "Failed to save user");
+                return BadRequest("Failed to save user");
+            }
+            return Ok(new PhotoDto
+            {
+                Id = user.ProfilePhoto.PhotoId,
+                Url = user.ProfilePhoto.Url
+            });
 
         }
     }
