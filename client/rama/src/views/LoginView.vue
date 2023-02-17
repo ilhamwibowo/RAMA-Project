@@ -71,7 +71,7 @@ export default {
             this.response = "";
             localStorage.setItem("token", response.data.token);
             // TODO: Redirect to profile page
-            // this.$router.push("/profile");
+            this.$router.push("/profile");
           }
         });
       }
