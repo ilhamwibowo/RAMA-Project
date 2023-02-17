@@ -12,7 +12,7 @@
       <div id="password">
         <input type="password" name="password" v-model="password" placeholder="Password" />
       </div>
-      <div id="login-response" v-show="">
+      <div id="login-response" v-if="response">
         <p>{{ response }}}</p>
       </div>
       <div id="login-button">
