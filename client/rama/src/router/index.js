@@ -44,12 +44,12 @@ const router = createRouter({
     {
       path: "/profile",
       name: "profile",
-      component: ProfileView
+      component: () => import("../views/ProfileView.vue")
     },
     {
       path: "/profile/edit",
       name: "edit-profile",
-      component: EditProfileView
+      component: () => import("../views/EditProfileView.vue")
     },
     {
       path: "/forgot",
