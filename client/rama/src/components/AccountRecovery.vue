@@ -25,8 +25,6 @@
 <script>
 import axios from "axios";
 
-const env = import.meta.env;
-
 export default {
   name: "AccountRecovery",
   
@@ -41,7 +39,7 @@ export default {
   
   methods: {
     request() {
-      axios.put(env.VITE_API_URI + "/Account/forgotpassword/requestotp", {
+      axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/requestotp", {
         email: this.email
       }).then((response) => {
         if (response.status !== 200) {

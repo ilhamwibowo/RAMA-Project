@@ -44,8 +44,6 @@
 <script>
 import axios from "axios";
 
-const env = import.meta.env;
-
 export default {
   name: "ResetPassword",
   
@@ -70,7 +68,7 @@ export default {
       // this.invalid = () => {
       //   //
       // };
-      axios.put(env.VITE_API_URI + "/Account/forgotpassword/changepassword", {
+      axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/changepassword", {
         email: this.email,
         otp: this.OTPCode,
         newPassword: this.newPassword

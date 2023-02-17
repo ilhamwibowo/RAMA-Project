@@ -28,8 +28,6 @@
 <script>
 import axios from "axios";
 
-const env = import.meta.env;
-
 export default {
   name: "LoginView",
   
@@ -45,7 +43,7 @@ export default {
     login() {
       // TODO: Change POST target url if needed
       // TODO: Handle CORS
-      axios.post(env.VITE_API_URI + "/Account/login", {
+      axios.post(import.meta.env.VITE_API_URI + "/Account/login", {
         email: this.email,
         password: this.password
       }).then((response) => {
