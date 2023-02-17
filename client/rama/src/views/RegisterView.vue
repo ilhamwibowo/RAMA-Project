@@ -12,7 +12,7 @@
       <div id="password">
         <input type="password" name="password" v-model="password" placeholder="Password" />
       </div>
-      <div id="register-response" v-show="">
+      <div id="register-response" v-if="response">
         <p>{{ response }}}</p>
       </div>
       <div id="register-button">
@@ -24,8 +24,6 @@
 
 <script>
 import axios from "axios";
-
-const env = import.meta.env;
 
 export default {
   name: "RegisterView",
@@ -42,7 +40,7 @@ export default {
     register() {
       // TODO: Change POST target url if needed
       // TODO: Handle CORS
-      axios.post(env.VITE_API_URI + "/Account/register", {
+      axios.post(import.meta.env.VITE_API_URI + "/Account/register", {
         email: this.email,
         password: this.password
       }).then((response) => {

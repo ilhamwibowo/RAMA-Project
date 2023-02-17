@@ -51,11 +51,20 @@ const router = createRouter({
       name: "edit-profile",
       component: EditProfileView
     },
+    {
+      path: "/forgot",
+      name: "forgot",
+      component: () => import("../views/ForgotView.vue"),
+      
+    },
   ],
 });
 
 router.beforeEach(async (to, from) => {
-  if (localStorage.getItem("token") === null && to.name !== "login" && to.name !== "register") {
+  if (localStorage.getItem("token") === null 
+      && to.name !== "login" 
+      && to.name !== "register" 
+      && to.name !== "forgot") {
     return { name: "login" }
   }
 });

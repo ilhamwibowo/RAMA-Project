@@ -1,4 +1,5 @@
 using API.Data;
+using API.Data.Migrations;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -33,6 +34,16 @@ namespace API.Controllers
             if(user == null) {
                 return BadRequest("User not found");
             }
+            PhotoDto Photo;
+            if (user.ProfilePhoto == null) {
+                Photo = null;
+            }
+            else {
+                Photo = new PhotoDto{
+                    Id = user.ProfilePhoto.PhotoId,
+                    Url = user.ProfilePhoto.Url
+                };
+            }
             //return user profile
             return Ok(new ProfileDto{
                 Email = user.Email,
@@ -40,10 +51,7 @@ namespace API.Controllers
                 KTP = user.KTP,
                 No_HP = user.No_HP,
                 Birthday = user.Birthday,
-                ProfilePhoto = new PhotoDto{
-                    Id = user.ProfilePhoto.PhotoId,
-                    Url = user.ProfilePhoto.Url
-                }
+                ProfilePhoto = Photo
             });
         }
 
@@ -80,7 +88,7 @@ namespace API.Controllers
             
         }
         [HttpPost("add-photo")]
-        public async Task<ActionResult> AddPhoto(IFormFile file)
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             if (user == null) return Unauthorized("User not found");
@@ -95,8 +103,18 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
             _context.Accounts.Update(user);
-            int id = await _context.SaveChangesAsync();
-            return Ok();
+            try {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e) {
+                _logger.LogError(e, "Failed to save user");
+                return BadRequest("Failed to save user");
+            }
+            return Ok(new PhotoDto
+            {
+                Id = user.ProfilePhoto.PhotoId,
+                Url = user.ProfilePhoto.Url
+            });
 
         }
     }
