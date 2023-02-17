@@ -21,6 +21,9 @@
     <div id="confirm-password">
       <input type="password" name="confirm-password" v-model="confirmPassword" placeholder="Re-enter new password" />
     </div>
+    <div id="invalid-password" v-if="invalidPassword">
+      <p>{{ invalidPassword }}</p>
+    </div>
     <div class="subtitle">
       <h4>
         An OTP code has been sent to your e-mail!
@@ -32,8 +35,8 @@
     <div id="otp-code">
       <input type="text" name="otp-code" v-model="OTPCode" placeholder="OTP code" />
     </div>
-    <div id="request-response" v-if="invalid">
-      <p>{{ invalid }}</p>
+    <div id="request-response" v-if="response">
+      <p>{{ response }}</p>
     </div>
     <div id="reset-button">
       <button type="button" v-on:click="reset()">Reset Password</button>
@@ -57,26 +60,37 @@ export default {
     return {
       newPassword: "",
       confirmPassword: "",
+      invalidPassword: "",
       OTPCode: "",
-      invalid: ""
+      response: ""
     }
   },
   
   methods: {
     reset() {
-      // TODO: Implement password validation
-      // this.invalid = () => {
-      //   //
-      // };
-      axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/changepassword", {
-        email: this.email,
-        otp: this.OTPCode,
-        newPassword: this.newPassword
-      }).then((response) => {
-        if (response.status === 200) {
-          this.$emit("isRecovered", true);
+      if (this.newPassword !== this.confirmPassword || this.password === "") {
+        if (this.newPassword !== this.confirmPassword) {
+          this.invalidPassword = "Password does not match!";
+        } if (this.password === "") {
+          this.invalidPassword = "Please fill in your password!";
         }
-      });
+      } else {
+        this.invalidPassword = "";
+        // TODO: Change POST target url if needed
+        // TODO: Handle CORS
+        axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/changepassword", {
+          email: this.email,
+          otp: this.OTPCode,
+          newPassword: this.newPassword
+        }).then((response) => {
+          if (response.status !== 200) {
+            this.response = "Request failed! Please try again later.";
+          } else {
+            this.response = "";
+            this.$emit("isRecovered", true);
+          }
+        });
+      }
     }
   }
 }
@@ -90,7 +104,7 @@ export default {
 }
 
 h4, .reset-password, #new-password,
-#confirm-password, #otp-code,
+#confirm-password, #invalid-password, #otp-code,
 #request-response, #reset-button {
   display: flex;
   flex-wrap: wrap;
@@ -102,5 +116,9 @@ h4, .reset-password, #new-password,
 
 h4 {
   margin-bottom: 0 !important;
+}
+
+#invalid-password, #request-response {
+  color: red;
 }
 </style>
