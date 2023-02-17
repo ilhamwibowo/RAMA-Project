@@ -3,7 +3,7 @@
         <h1>Edit Profile</h1>
         <div class="container-image">
             <input type="file" id="image" accept="image/*" @change="photoChange" style="display:none;"/>
-            <img :src="user.image" />
+            <img :src="user.photoUrl" />
             <div class="edit" @click="uploadPhoto"> 
                 <div class="circle"></div>
             </div>
@@ -14,24 +14,24 @@
         </div>
         <div class="container-detail">
             <h3 class="title">Email</h3>
-            <input class="input" v-model="user.Email"/>
+            <input class="input" v-model="user.email"/>
         </div>
         <div class="container-detail">
             <h3 class="title">Identity Card</h3>
-            <input class="input" v-model="user.KTP"/>
+            <input class="input" v-model="user.ktp"/>
         </div>
         <div class="container-detail"> 
             <h3 class="title">Phone Number</h3>
-            <input class="input" v-model="user.No_HP"/>
+            <input class="input" v-model="user.no_hp"/>
         </div>
         <div class="container-detail">
             <h3 class="title">Birthday</h3>
-            <input class="input" v-model="user.Birthday"/>
+            <input class="input" v-model="user.birthday"/>
         </div>
 
-        <router-link :to="{path: '/profile'}">
-            <button class="btn save" @click="updateUser">Save</button>
-        </router-link>
+        <!-- <router-link :to="{path: '/profile'}"> -->
+        <button class="btn save" @click="updateUser">Save</button>
+        <!-- </router-link> -->
         <router-link :to="{path: `/profile`}">
             <button class="btn cancel">Cancel</button>
         </router-link>
@@ -43,6 +43,7 @@ import DetailProfile from './DetailProfile.vue';
 import EditDetailProfile from './EditDetailProfile.vue';
 import axios from 'axios'
 
+const env = import.meta.env;
 
 
 export default {
@@ -56,34 +57,59 @@ export default {
     },
     data() {
         return {
-            user: {
-                AccId: 1,
-                Name: 'Muhammad Akmal Arifin',
-                Email: 'akmal@gmail.com',
-                Role: 'Runner',
-                KTP: '3515072509020001',
-                No_HP: '082235171080',
-                Birthday: '2001-09-25',
-                image: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-            },
-            id: 1 // get from cache
+            // user: {
+            //     AccId: 1,
+            //     Name: 'Muhammad Akmal Arifin',
+            //     Email: 'akmal@gmail.com',
+            //     Role: 'Runner',
+            //     KTP: '3515072509020001',
+            //     No_HP: '082235171080',
+            //     Birthday: '2001-09-25',
+            //     image: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+            // },
+            user: Object,
+            previewImage: Object,
         }
     },
     methods: {
-        updateUser() {
+        async updateUser() {
+            const token = localStorage.getItem('token')
+
+            
+            // Upload Photo
+            var statusPhoto
+            var formData = new FormData();
+            // var imageFile = document.querySelector('#image')
+            formData.append('file', this.previewImage)
+            const config = {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                },
+            }
+
+            await axios
+                .post(env.VITE_API_URI + "/User/add-photo", formData, config)
+                .then(response => profilePhoto = response.data)
+                .catch(err => console.log(err))
+
+            console.log(profilePhoto)
+
+            // Upload User
+
             const body = {
-                // Name: this.user.Name,
-                // Email: this.user.Name,
-                Role: this.user.Role,
-                KTP: this.user.KTP,
-                No_HP: this.user.No_HP,
-                Birthday: this.user.Birthday
+                role: this.user.role,
+                kTP: this.user.ktp,
+                no_hp: this.user.no_hp,
+                birthday: this.user.birthday,
+                photoUrl: profilePhoto
             }
             
             // Post current {Role, KTP, No_HP, Birthday}
             axios
-                .post(`http://localhost:5226/api/User/edit/${this.id}`, body)
+                .put(env.VITE_API_URI + '/User/edit', body, config)
                 .then(response => this.id = response.data.id)
+                .catch(err => console.log(err))
 
         },
         uploadPhoto() {
@@ -91,23 +117,32 @@ export default {
         },
         photoChange(event) {
             const image = event.target.files[0]
-            this.user.image = URL.createObjectURL(image)
+            this.previewImage = image
+            this.user.photoUrl = URL.createObjectURL(image)
         }
-    }
+    },
 
     // Fetch data API
-    // created() {
-    //     axios
-    //         .get(`http://localhost:5226/api/User/${this.id}`)
-    //         .then(response => {
-    //             // JSON responses automatically parsed
-    //             this.user = response.data
-    //         })
-    //         .catch(e => {
-    //             console.log(e)
-    //         });
-    //     // console.log(this.user)
-    // }
+    async created() {
+        const token = localStorage.getItem("token");
+        console.log(token);
+
+        const config = {
+            headers : { Authorization : `Bearer ${token}`}
+        }
+        await axios
+            .get(env.VITE_API_URI + "/User", config)
+            .then(response => {
+                if (response.status !== 200) {
+                    console.log(repsonse);
+                }
+                else {
+                    this.user = response.data;
+                }
+            })
+            .catch(e => {console.log(e)});
+        console.log(this.user)
+    }
 }
 </script>
 
