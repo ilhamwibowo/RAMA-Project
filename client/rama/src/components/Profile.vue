@@ -1,17 +1,27 @@
 <template>
     <div class="profile">
         <h1>Profile</h1>
+
+        <!-- Container Image -->
         <div class="container-image">
             <img :src="previewImageUrl" />
         </div>
-        <DetailProfile title="Name" :text="user.Name"/>
-        <DetailProfile title="Email" :text="user.email"/>
-        <DetailProfile title="KTP" :text="user.ktp"/>
-        <DetailProfile title="Phone Number" :text="user.no_HP"/>
-        <DetailProfile title="Birthday" :text="user.birthday"/>
-        <router-link :to="{ path: '/profile/edit/'}">
-            <button class="btn edit">Edit</button>
-        </router-link>
+
+        <!-- Container Detail -->
+        <div class="container-detail">
+            <DetailProfile title="Name" :text="user.Name"/>
+            <DetailProfile title="Email" :text="user.email"/>
+            <DetailProfile title="KTP" :text="user.ktp"/>
+            <DetailProfile title="Phone Number" :text="user.no_HP"/>
+            <DetailProfile title="Birthday" :text="user.birthday"/>
+        </div>
+
+        <!-- Container Button -->
+        <div class="container-btn">
+            <router-link :to="{ path: '/profile/edit/'}">
+                <button class="btn edit">Edit</button>
+            </router-link>
+        </div>
     </div>
 </template>
 
@@ -29,16 +39,20 @@ export default {
     data() {
         return {
             user: Object,
-            previewImageUrl: ''
+            previewImageUrl: String
         }
     },
 
+    // Get Data User
     async created() {
         const token = localStorage.getItem("token");
 
+        // Configuration for API
         const config = {
             headers : { Authorization : `Bearer ${token}`}
         }
+
+        // Axios Get
         await axios
             .get(env.VITE_API_URI + "/User", config)
             .then(response => {
@@ -50,7 +64,8 @@ export default {
                 }
             })
             .catch(err => {console.log(err)});
-        console.log(this.user)
+            
+        // handle if there is no image
         this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : ''
     }
 }
