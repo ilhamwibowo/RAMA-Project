@@ -13,8 +13,11 @@
     <div id="recovery-email">
       <input type="text" name="email" v-model="email" placeholder="E-mail" />
     </div>
+    <div id="invalid-email" v-if="invalidEmail">
+      <p>{{ invalidEmail }}</p>
+    </div>
     <div id="request-response" v-if="response">
-      <p>{{ response }}}</p>
+      <p>{{ response }}</p>
     </div>
     <div id="recover-button">
       <button type="button" v-on:click="request()">Submit</button>
@@ -33,22 +36,32 @@ export default {
   data() {
     return {
       email: "",
+      invalidEmail: "",
       response: ""
     }
   },
   
   methods: {
     request() {
-      axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/requestotp", {
-        email: this.email
-      }).then((response) => {
-        if (response.status !== 200) {
-          this.response = "Request failed! Please try again later.";
-        } else {
-          this.$emit("email", this.email);
-          this.$emit("isRequested", true);
-        }
-      });
+      let reEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (!this.email.toLowerCase().match(reEmail)) {
+        this.invalidEmail = "Invalid e-mail!";
+      } else {
+        this.invalidEmail = "";
+        // TODO: Change POST target url if needed
+        // TODO: Handle CORS
+        axios.put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/requestotp", {
+          email: this.email
+        }).then((response) => {
+          if (response.status !== 200) {
+            this.response = "Request failed! Please try again later.";
+          } else {
+            this.response = "";
+            this.$emit("email", this.email);
+            this.$emit("isRequested", true);
+          }
+        });
+      }
     }
   }
 }
@@ -61,7 +74,7 @@ export default {
   color: var(--color-heading);
 }
 
-.email-recovery, #recovery-email, 
+.email-recovery, #recovery-email, #invalid-email, 
 #request-response, #recover-button {
   display: flex;
   flex-wrap: wrap;
@@ -69,5 +82,9 @@ export default {
   align-items: center;
   justify-content: center;
   margin-bottom: 0.5rem;
+}
+
+#invalid-email, #request-response {
+  color: red;
 }
 </style>

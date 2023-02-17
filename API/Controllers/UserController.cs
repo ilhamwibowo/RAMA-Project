@@ -7,6 +7,8 @@ using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace API.Controllers
 {
@@ -67,10 +69,33 @@ namespace API.Controllers
 
             // TODO : Validate data using regular expression
             // Profile found 
-            user.Role = profile.Role;
-            user.KTP = profile.KTP;
-            user.No_HP = profile.No_HP;
-            user.Birthday = profile.Birthday;
+            if (profile.No_HP != null) {
+                string patternHP = @"^(?:\+62|0)[1-9][0-9]{0,11}$";
+                if (!Regex.IsMatch(profile.No_HP, patternHP)) {
+                    return BadRequest("Invalid phone number");
+                }
+                user.No_HP = profile.No_HP;
+            }
+
+            if (profile.KTP != null) {
+                string patternKTP = @"^[1-9]\d{15}$";
+                if (!Regex.IsMatch(profile.KTP, patternKTP)) {
+                    return BadRequest("Invalid KTP");
+                }
+                var checkUser = await _context.Accounts.FirstOrDefaultAsync(x => x.KTP == profile.KTP);
+                if (checkUser != null && checkUser.AccId != id) {            
+                    return BadRequest("KTP already registered");
+                }
+                user.KTP = profile.KTP;
+            }
+
+            if (profile.Role != null) {
+                user.Role = profile.Role;
+            }
+
+            if (profile.Birthday != null) {
+                user.Birthday = profile.Birthday;
+            }
 
             // Update user profile
             try {
