@@ -3,7 +3,7 @@
         <h1>Edit Profile</h1>
         <div class="container-image">
             <input type="file" id="image" accept="image/*" @change="photoChange" style="display:none;"/>
-            <img :src="user.photoUrl" />
+            <img :src="previewImageUrl" />
             <div class="edit" @click="uploadPhoto"> 
                 <div class="circle"></div>
             </div>
@@ -22,7 +22,7 @@
         </div>
         <div class="container-detail"> 
             <h3 class="title">Phone Number</h3>
-            <input class="input" v-model="user.no_hp"/>
+            <input class="input" v-model="user.no_HP"/>
         </div>
         <div class="container-detail">
             <h3 class="title">Birthday</h3>
@@ -57,31 +57,21 @@ export default {
     },
     data() {
         return {
-            // user: {
-            //     AccId: 1,
-            //     Name: 'Muhammad Akmal Arifin',
-            //     Email: 'akmal@gmail.com',
-            //     Role: 'Runner',
-            //     KTP: '3515072509020001',
-            //     No_HP: '082235171080',
-            //     Birthday: '2001-09-25',
-            //     image: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-            // },
             user: Object,
             previewImage: Object,
+            previewImageUrl: ''
         }
     },
     methods: {
         async updateUser() {
             const token = localStorage.getItem('token')
 
-            
             // Upload Photo
             var profilePhoto
             var formData = new FormData();
             // var imageFile = document.querySelector('#image')
             formData.append('file', this.previewImage)
-            const config = {
+            const configPhoto = {
                 headers: { 
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -89,27 +79,35 @@ export default {
             }
 
             await axios
-                .post(env.VITE_API_URI + "/User/add-photo", formData, config)
-                .then(response => console.log(response))
+                .post(env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
+                .then(response => profilePhoto = response.data)
                 .catch(err => console.log(err))
 
             console.log(profilePhoto)
 
             // Upload User
-
-            // const body = {
-            //     role: this.user.role,
-            //     kTP: this.user.ktp,
-            //     no_hp: this.user.no_hp,
-            //     birthday: this.user.birthday,
-            //     photoUrl: profilePhoto
-            // }
+            const configUser = {
+                headers: { 
+                    Authorization: `Bearer ${token}`
+                },
+            }
+            const body = {
+                role: this.user.role,
+                ktp: this.user.ktp,
+                no_HP: this.user.no_hp,
+                birthday: this.user.birthday,
+                photoUrl: profilePhoto.url,
+                profilePhoto: {
+                    id: profilePhoto.id,
+                    url: profilePhoto.url
+                }
+            }
             
-            // // Post current {Role, KTP, No_HP, Birthday}
-            // axios
-            //     .put(env.VITE_API_URI + '/User/edit', body, config)
-            //     .then(response => this.id = response.data.id)
-            //     .catch(err => console.log(err))
+            // Post current {Role, KTP, No_HP, Birthday}
+            axios
+                .put(env.VITE_API_URI + '/User/edit', body, configUser)
+                .then(response => this.id = response.data.id)
+                .catch(err => console.log(err))
 
         },
         uploadPhoto() {
@@ -118,14 +116,13 @@ export default {
         photoChange(event) {
             const image = event.target.files[0]
             this.previewImage = image
-            this.user.photoUrl = URL.createObjectURL(image)
+            this.previewImageUrl = URL.createObjectURL(image)
         }
     },
 
     // Fetch data API
     async created() {
         const token = localStorage.getItem("token");
-        console.log(token);
 
         const config = {
             headers : { Authorization : `Bearer ${token}`}
@@ -140,8 +137,9 @@ export default {
                     this.user = response.data;
                 }
             })
-            .catch(e => {console.log(e)});
+            .catch(err => {console.log(err)});
         console.log(this.user)
+        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : ''
     }
 }
 </script>
