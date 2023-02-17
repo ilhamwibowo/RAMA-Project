@@ -10,6 +10,8 @@ services:
       - ./node_modules:/usr/src/app/node_modules
     networks:
       - api_dotnet_api
+    env_file:
+      - .env
     command: npm run dev
 
 volumes:

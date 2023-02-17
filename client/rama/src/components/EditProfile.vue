@@ -14,7 +14,7 @@
         <!-- Container Detail Profile -->
         <div class="container-detail">
             <h3 class="title">Name</h3>
-            <input class="input" v-model="user.Name"/>
+            <input class="input" v-model="user.name"/>
         </div>
         <div class="container-detail">
             <h3 class="title">Email</h3>
@@ -114,6 +114,7 @@ export default {
 
             // Body request for put api
             const body = {
+                name: this.user.name,
                 role: this.user.role,
                 ktp: this.user.ktp,
                 no_HP: this.user.no_HP,

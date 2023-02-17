@@ -48,6 +48,7 @@ namespace API.Controllers
             }
             //return user profile
             return Ok(new ProfileDto{
+                Name = user.Name,
                 Email = user.Email,
                 Role = user.Role,
                 KTP = user.KTP,
@@ -96,7 +97,9 @@ namespace API.Controllers
             if (profile.Birthday != null) {
                 user.Birthday = profile.Birthday;
             }
-
+            if (profile.Name != null) {
+                user.Name = profile.Name;
+            }
             // Update user profile
             try {
                 _context.Accounts.Update(user);

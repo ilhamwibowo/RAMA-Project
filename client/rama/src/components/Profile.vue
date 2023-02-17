@@ -9,7 +9,7 @@
 
         <!-- Container Detail -->
         <div class="container-detail">
-            <DetailProfile title="Name" :text="user.Name"/>
+            <DetailProfile title="Name" :text="user.name"/>
             <DetailProfile title="Email" :text="user.email"/>
             <DetailProfile title="KTP" :text="user.ktp"/>
             <DetailProfile title="Phone Number" :text="user.no_HP"/>

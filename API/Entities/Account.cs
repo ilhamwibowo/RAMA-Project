@@ -9,6 +9,7 @@ namespace API.Entities
         public int AccId { get; set; }
         [Required]
         public string Email { get; set; }
+        public string Name { get; set; }
 
         public byte[] PasswordHash { get; set; }
 
