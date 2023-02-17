@@ -14,7 +14,7 @@
       <input type="text" name="email" v-model="email" placeholder="E-mail" />
     </div>
     <div id="request-response" v-if="response">
-      <p>{{ response }}}</p>
+      <p>{{ response }}</p>
     </div>
     <div id="recover-button">
       <button type="button" v-on:click="request()">Submit</button>

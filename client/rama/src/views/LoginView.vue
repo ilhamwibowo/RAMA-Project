@@ -13,7 +13,7 @@
         <input type="password" name="password" v-model="password" placeholder="Password" />
       </div>
       <div id="login-response" v-if="response">
-        <p>{{ response }}}</p>
+        <p>{{ response }}</p>
       </div>
       <div id="login-button">
         <button type="button" v-on:click="login()">Login</button>

@@ -33,7 +33,7 @@
       <input type="text" name="otp-code" v-model="OTPCode" placeholder="OTP code" />
     </div>
     <div id="request-response" v-if="invalid">
-      <p>{{ invalid }}}</p>
+      <p>{{ invalid }}</p>
     </div>
     <div id="reset-button">
       <button type="button" v-on:click="reset()">Reset Password</button>
