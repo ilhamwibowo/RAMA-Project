@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Data;
 
 namespace API.Entities
 {
@@ -30,5 +23,8 @@ namespace API.Entities
         public string No_HP { get; set; }
 
         public DateOnly Birthday { get; set; }
+
+        public Photo ProfilePhoto { get; set; }
+
     }
 }

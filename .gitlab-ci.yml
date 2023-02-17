@@ -1,0 +1,7 @@
+image: mcr.microsoft.com/dotnet/sdk:7.0
+
+build:
+  stage: build
+  script:
+    - 'cd API'
+    - 'dotnet build'
