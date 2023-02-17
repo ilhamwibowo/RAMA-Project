@@ -77,7 +77,7 @@ export default {
 
             
             // Upload Photo
-            var statusPhoto
+            var profilePhoto
             var formData = new FormData();
             // var imageFile = document.querySelector('#image')
             formData.append('file', this.previewImage)
@@ -90,26 +90,26 @@ export default {
 
             await axios
                 .post(env.VITE_API_URI + "/User/add-photo", formData, config)
-                .then(response => profilePhoto = response.data)
+                .then(response => console.log(response))
                 .catch(err => console.log(err))
 
             console.log(profilePhoto)
 
             // Upload User
 
-            const body = {
-                role: this.user.role,
-                kTP: this.user.ktp,
-                no_hp: this.user.no_hp,
-                birthday: this.user.birthday,
-                photoUrl: profilePhoto
-            }
+            // const body = {
+            //     role: this.user.role,
+            //     kTP: this.user.ktp,
+            //     no_hp: this.user.no_hp,
+            //     birthday: this.user.birthday,
+            //     photoUrl: profilePhoto
+            // }
             
-            // Post current {Role, KTP, No_HP, Birthday}
-            axios
-                .put(env.VITE_API_URI + '/User/edit', body, config)
-                .then(response => this.id = response.data.id)
-                .catch(err => console.log(err))
+            // // Post current {Role, KTP, No_HP, Birthday}
+            // axios
+            //     .put(env.VITE_API_URI + '/User/edit', body, config)
+            //     .then(response => this.id = response.data.id)
+            //     .catch(err => console.log(err))
 
         },
         uploadPhoto() {
