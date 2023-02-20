@@ -27,6 +27,9 @@
       <div id="register-from-login">
         <a href="http://localhost:5173/register">Register</a>
       </div>
+      <div id="forget-password">
+        <a href="http://localhost:5173/forgot">Forget password?</a>
+      </div>
     </div>
   </div>
 </template>
@@ -84,7 +87,8 @@ export default {
 
 .login, #email, #invalid-email, 
 #password, #invalid-password, #login-button, 
-#login-response, #register-from-login {
+#login-response, #register-from-login,
+#forget-password {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
