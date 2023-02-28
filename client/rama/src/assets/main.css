@@ -1,34 +1,13 @@
-@import './base.css';
-
-#app {
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+.title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 48px;
+}
+.text {
+    font-family: 'Darker Grotesque', sans-serif;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-}
-
-input {
-  font-size: 100%;
-  max-width: 300px;
-  width: 100%;
+body {
+    background-color: #f3f2ee;
+    margin: 0 50px 0 50px;
+    text-align: center;
 }
