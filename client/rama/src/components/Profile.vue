@@ -57,7 +57,7 @@ export default {
             .get(env.VITE_API_URI + "/User", config)
             .then(response => {
                 if (response.status !== 200) {
-                    console.log(repsonse);
+                    console.log(response);
                 }
                 else {
                     this.user = response.data;
