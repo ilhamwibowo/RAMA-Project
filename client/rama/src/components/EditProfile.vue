@@ -75,6 +75,7 @@ export default {
             // console.log(this.previewImageUrl)
             console.log(this.flagPhoto)
 
+            // If user upload new photo
             if (this.flagPhoto) {
                 console.log("A")
                 // Configuration for post api
@@ -94,7 +95,7 @@ export default {
                 .post(env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
                 .then(response => profilePhoto = response.data)
                 .catch(err => console.log(err))
-            } else {
+            } else { // if user doesn't upload a new photo
                 console.log("B")
                 console.log(this.user)
                 profilePhoto = this.user.profilePhoto
