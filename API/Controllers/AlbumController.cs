@@ -32,16 +32,19 @@ namespace API.Controllers
             var result = await _photoService.AddPhototoAlbumAsync(file, album.AlbumName);
 
             if (result.Error != null) return BadRequest(result.Error.Message); 
+            List<string> stringtag = await _photoService.GetText(result.SecureUrl.AbsoluteUri);
+            stringtag.RemoveAt(0);
+            //remove bcs the first index isinya semua tag yang digabungin dengan "\n", tidak dibutuhkan
             Photo photo = new Photo
                 {
                     Url = result.SecureUrl.AbsoluteUri,
                     PublicId = result.PublicId,
-                    BibTags = await _photoService.GetText(result.SecureUrl.AbsoluteUri)
+                    BibTags = stringtag
                 };
             
             album.AlbumPhotos.Add(photo);
             _context.Albums.Update(album);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
             return Ok();
         }
         private bool isImage(string filename){
