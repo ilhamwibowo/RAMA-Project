@@ -11,7 +11,7 @@ namespace API.Entities
 
         //for bibtag
 
-        public List<int> BigTags { get; set; }= new List<int>();
+        public List<string> BibTags { get; set; }= new List<string>();
         
     }
 }
