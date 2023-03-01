@@ -54,7 +54,9 @@ namespace API.Data
                         RaceId= race.RaceId,
                         BibNumber= acc.AccId.ToString(),
                         Runner = acc,
-                        position = pos++
+                        Position = pos++,
+                        Duration = new TimeSpan(1,23 + pos, pos),
+                        FinishTime = DateTime.UtcNow + new TimeSpan(1,23 + pos, pos)
                     }
                 );
                 context.Races.Update(race);

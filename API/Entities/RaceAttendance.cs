@@ -12,6 +12,10 @@ namespace API.Entities
 
         public Account Runner { get; set; }
 
-        public int position { get; set;}
+        public int Position { get; set;}
+
+        public TimeSpan Duration {get; set;}
+
+        public DateTime FinishTime{get; set;}
     }
 }
