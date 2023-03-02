@@ -9,16 +9,16 @@
 
         <!-- Container Detail -->
         <div class="container-detail">
-            <DetailProfile title="Name" :text="user.name"/>
-            <DetailProfile title="Email" :text="user.email"/>
-            <DetailProfile title="KTP" :text="user.ktp"/>
-            <DetailProfile title="Phone Number" :text="user.no_HP"/>
-            <DetailProfile title="Birthday" :text="user.birthday"/>
+            <DetailProfile title="Name" :text="user.name" />
+            <DetailProfile title="Email" :text="user.email" />
+            <DetailProfile title="KTP" :text="user.ktp" />
+            <DetailProfile title="Phone Number" :text="user.no_HP" />
+            <DetailProfile title="Birthday" :text="user.birthday" />
         </div>
 
         <!-- Container Button -->
         <div class="container-btn">
-            <router-link :to="{ path: '/profile/edit/'}">
+            <router-link :to="{ path: '/profile/edit/' }">
                 <button class="btn edit">Edit</button>
             </router-link>
         </div>
@@ -26,14 +26,14 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import { mapWritableState } from "pinia";
 
-import DetailProfile from './DetailProfile.vue';
+import DetailProfile from "./DetailProfile.vue";
 import { useProfileStore } from "@/stores/profile";
 
 export default {
-    name: 'Profile',
+    name: "Profile",
     components: {
         DetailProfile
     },
@@ -41,13 +41,13 @@ export default {
         return {
             user: Object,
             previewImageUrl: String
-        }
+        };
     },
-    
+
     computed: {
         ...mapWritableState(useProfileStore, {
             username: "name",
-            role: "role" 
+            role: "role"
         })
     },
 
@@ -57,28 +57,29 @@ export default {
 
         // Configuration for API
         const config = {
-            headers : { Authorization : `Bearer ${token}`}
-        }
+            headers: { Authorization: `Bearer ${token}` }
+        };
 
         // Axios Get
         await axios
             .get(import.meta.env.VITE_API_URI + "/User", config)
-            .then(response => {
+            .then((response) => {
                 if (response.status !== 200) {
                     console.log(response);
-                }
-                else {
+                } else {
                     this.user = response.data;
                     this.username = response.data.name;
                     // this.role = response.data.role;
                 }
             })
-            .catch(err => {console.log(err)});
-            
+            .catch((err) => {
+                console.log(err);
+            });
+
         // handle if there is no image
-        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : ''
+        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "";
     }
-}
+};
 </script>
 
 <style scoped>

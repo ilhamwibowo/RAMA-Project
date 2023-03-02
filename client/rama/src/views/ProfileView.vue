@@ -2,38 +2,38 @@
     <div class="view">
         <Header class="header" />
         <Profile class="body" />
-        <div class="footer" ></div>
+        <div class="footer"></div>
     </div>
 </template>
 
 <script>
-import Profile from '../components/Profile.vue';
-import Header from '../components/Header.vue';
+import Profile from "../components/Profile.vue";
+import Header from "../components/Header.vue";
 export default {
-    name:'ProfileView',
+    name: "ProfileView",
     components: {
         Profile,
         Header
     }
-}
+};
 </script>
 
 <style>
 @media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+    .about {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
 }
 
 .view {
     display: grid;
     grid-template-rows: 50px auto 100px;
-    grid-template-areas: 
-    "header" 
-    "body" 
-    "footer";
+    grid-template-areas:
+        "header"
+        "body"
+        "footer";
 }
 
 .header {
@@ -48,4 +48,3 @@ export default {
     grid-area: footer;
 }
 </style>
-  

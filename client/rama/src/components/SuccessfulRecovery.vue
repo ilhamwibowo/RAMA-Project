@@ -1,38 +1,36 @@
 ﻿<template>
-  <div class="successful-recovery">
-    <div class="title">
-      <h1>
-        Your password has been reset!
-      </h1>
+    <div class="successful-recovery">
+        <div class="title">
+            <h1>Your password has been reset!</h1>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "SuccessfulRecovery",
-  
-  mounted() {
-    setTimeout(() => {
-      this.$router.push("/login");
-    }, 3000);
-  }
-}
+    name: "SuccessfulRecovery",
+
+    mounted() {
+        setTimeout(() => {
+            this.$router.push("/login");
+        }, 3000);
+    }
+};
 </script>
 
 <style scoped>
 .successful-recovery {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
 }
 
 .title {
-  font-weight: 500;
-  margin-bottom: 1rem;
-  color: var(--color-heading);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--color-heading);
 }
 </style>
