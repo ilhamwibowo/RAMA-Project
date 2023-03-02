@@ -92,19 +92,49 @@ namespace API.Controllers
         }
 
 
-        // Get all race attendance
+        // Get all race attendance without pagination
         // For testing purposes, maybe necessary
+        [AllowAnonymous]
         [HttpGet("{raceId}/attendance")]
-        public IActionResult GetRaceAttendance(int raceId)
+        public async Task<IActionResult> GetAllRaceAttendance(int raceId)
         {
-            var raceAttendance = _context.Races
-                .Where(r => r.RaceId == raceId)
-                .SelectMany(r => r.RaceAttendee)
-                .OrderBy(r => r.Position)
-                .ToList();
+            try
+            {
+                // Get race as per raceId
+                var race = await _context.Races
+                    .AsNoTracking()
+                    .Where(r => r.RaceId == raceId)
+                    .Include(r => r.RaceAttendee)
+                    .ThenInclude(ra => ra.Runner)
+                    .FirstOrDefaultAsync();
+                
+                // Race not found
+                if (race == null)
+                {
+                    return NotFound();
+                }
+                
+                // Get race attendance
+                var raceAttendance = race.RaceAttendee
+                    .OrderBy(ra => ra.Position)
+                    .Select(ra => new RaceAttendanceDto
+                    {
+                        ProfilePhotoUrl = ra.Runner.ProfilePhoto?.Url,
+                        Name = ra.Runner.Name,
+                        BibNumber = ra.BibNumber,
+                        Position = ra.Position,
+                        Duration = ra.Duration,
+                        FinishTime = ra.FinishTime
+                    })
+                    .ToList();
 
-            return Ok(raceAttendance);
-        }      
+                return Ok(raceAttendance);
+            } 
+            catch (Exception e) 
+            {
+                return BadRequest(e.Message);
+            }
+        } 
 
         // Get race details including photos, name, etc
         // For testing purposes
@@ -113,7 +143,7 @@ namespace API.Controllers
         {
             var race = await _context.Races
                 .Include(r => r.RaceAttendee)
-                    .ThenInclude(ra => ra.Runner)
+                .ThenInclude(ra => ra.Runner)
                 .Include(r => r.RaceAlbum)
                 .FirstOrDefaultAsync(r => r.RaceId == raceId);
 
