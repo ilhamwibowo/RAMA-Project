@@ -3,7 +3,8 @@
         <h3 class="title">{{ title }}</h3>
         <p class="text">{{ text }}</p>
     </div>
-</template>>
+</template>
+>
 
 <script>
 export default {
@@ -12,7 +13,7 @@ export default {
         title: String,
         text: String
     }
-}
+};
 </script>
 
 <style scoped>
