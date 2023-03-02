@@ -46,22 +46,38 @@ namespace API.Controllers
 
         // Get participant of a specific race
         // Page and pageSize required in query
-        // May need to be optimized
+        // Read only
         [HttpGet("{raceId}/attendees")]
         public async Task<IActionResult> GetRaceAttendance(int raceId, int page = 1, int pageSize = 10)
         {
-            try {
-                var raceAttendance = await _context.Races
+            try
+            {
+                // Get race as per raceId
+                var race = await _context.Races
+                    .AsNoTracking()
                     .Where(r => r.RaceId == raceId)
-                    .SelectMany(r => r.RaceAttendee)
-                    .OrderBy(r => r.Position)
+                    .Include(r => r.RaceAttendee)
+                    .ThenInclude(ra => ra.Runner)
+                    .Include(r => r.RaceAlbum)
+                    .FirstOrDefaultAsync();
+                
+                // Race not found
+                if (race == null)
+                {
+                    return NotFound();
+                }
+                
+                // Get race attendance
+                var raceAttendance = race.RaceAttendee
+                    .OrderBy(ra => ra.Position)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
-                    .ToListAsync();
-                
+                    .ToList();
+
                 return Ok(raceAttendance);
             } 
-            catch (Exception e) {
+            catch (Exception e) 
+            {
                 return BadRequest(e.Message);
             }
 
