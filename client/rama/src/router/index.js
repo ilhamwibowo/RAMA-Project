@@ -31,7 +31,7 @@ const router = createRouter({
       path: "/logout",
       name: "logout",
       component: () => import("../views/LogoutView.vue"),
-      beforeEnter: (to, from) => {
+      beforeEnter: () => {
         if (localStorage.getItem("token") === null) {
           return false;
         }
@@ -61,7 +61,7 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   if (localStorage.getItem("token") === null 
       && to.name !== "login" 
       && to.name !== "register" 
