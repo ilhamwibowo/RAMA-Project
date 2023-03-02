@@ -9,10 +9,14 @@
 </template>
 
 <script>
+import { useProfileStore } from "@/stores/profile";
+
 export default {
   name: "LogoutView",
   
   mounted() {
+    const store = useProfileStore();
+    store.$reset();
     setTimeout(() => {
       this.$router.push("/login");
     }, 3000);
