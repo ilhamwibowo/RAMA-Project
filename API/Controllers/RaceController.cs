@@ -46,7 +46,7 @@ namespace API.Controllers
 
         // Get participant of a specific race
         // Page and pageSize required in query
-        // Read only
+        [AllowAnonymous]
         [HttpGet("{raceId}/attendees")]
         public async Task<IActionResult> GetRaceAttendance(int raceId, int page = 1, int pageSize = 10)
         {
@@ -58,7 +58,6 @@ namespace API.Controllers
                     .Where(r => r.RaceId == raceId)
                     .Include(r => r.RaceAttendee)
                     .ThenInclude(ra => ra.Runner)
-                    .Include(r => r.RaceAlbum)
                     .FirstOrDefaultAsync();
                 
                 // Race not found
@@ -72,6 +71,15 @@ namespace API.Controllers
                     .OrderBy(ra => ra.Position)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
+                    .Select(ra => new RaceAttendanceDto
+                    {
+                        ProfilePhotoUrl = ra.Runner.ProfilePhoto?.Url,
+                        Name = ra.Runner.Name,
+                        BibNumber = ra.BibNumber,
+                        Position = ra.Position,
+                        Duration = ra.Duration,
+                        FinishTime = ra.FinishTime
+                    })
                     .ToList();
 
                 return Ok(raceAttendance);
@@ -100,7 +108,7 @@ namespace API.Controllers
 
         // Get race details including photos, name, etc
         // For testing purposes
-        [HttpGet("{raceId}")]
+        [HttpGet("{raceId}/details")]
         public async Task<ActionResult<RaceDto>> GetRaceDetails(int raceId)
         {
             var race = await _context.Races
