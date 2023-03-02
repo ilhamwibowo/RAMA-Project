@@ -17,7 +17,7 @@ export default {
 
 <style scoped>
     .title {
-        color:aliceblue;
+        color: black;
         font-weight: bold;
         font-size:medium
     }

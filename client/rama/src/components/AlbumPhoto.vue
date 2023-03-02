@@ -1,7 +1,7 @@
 <template>
     <figure>
         <img :src="photoUrl">
-        <input class="checkbox" type="checkbox" :value=photoId>
+        <input class="checkbox" type="checkbox" :value=photoUrl @change="check($event)">
     </figure>
 </template>
 
@@ -11,6 +11,14 @@ export default {
     props: {
         photoUrl: String,
         photoId: String,
+    },
+    methods: {
+        check(event) {
+            let isCheck = event.target.checked
+            let url = event.target.value
+            console.log("Clicked: ", isCheck, url)
+            this.$emit("updateCheck", {'isCheck': isCheck, 'url': url})
+        }
     }
 }
 </script>
@@ -19,9 +27,9 @@ export default {
 figure {
     margin: 0;
     display: grid;
-    grid-template-columns: 50px auto;
-    grid-template-rows: 50px auto;
-    margin-bottom: 45px;
+    grid-template-columns: 30px auto;
+    grid-template-rows: 30px auto;
+    margin-bottom: 25px;
     break-inside: avoid;
 }
 

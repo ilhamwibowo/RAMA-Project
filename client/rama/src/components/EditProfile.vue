@@ -46,18 +46,12 @@
 </template>
 
 <script>
-import DetailProfile from './DetailProfile.vue';
-import EditDetailProfile from './EditDetailProfile.vue';
 import axios from 'axios';
 
 const env = import.meta.env;
 
 export default {
     name: 'Profile',
-    components: {
-        DetailProfile,
-        EditDetailProfile
-    },
     data() {
         return {
             user: Object,
@@ -188,7 +182,7 @@ export default {
 
 <style scoped>
     .title {
-        color:aliceblue;
+        color:black;
         font-weight: bold;
         font-size:medium
     }
@@ -199,7 +193,7 @@ export default {
         border-radius: 5px;
         padding: 5px 10px;
         background-color: rgba(0,0,0,0);
-        color:rgba(235,235,235,0.64);
+        color: black
     }
     .edit-detail-profile {
         margin: 10px 0px 
