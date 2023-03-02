@@ -53,7 +53,7 @@ export default {
   emits: ["isRecovered"],
   
   props: {
-    email: ""
+    email: String
   },
   
   data() {
