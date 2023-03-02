@@ -26,10 +26,11 @@
 </template>
 
 <script>
-import DetailProfile from './DetailProfile.vue';
 import axios from 'axios';
+import { mapWritableState } from "pinia";
 
-const env = import.meta.env
+import DetailProfile from './DetailProfile.vue';
+import { useProfileStore } from "@/stores/profile";
 
 export default {
     name: 'Profile',
@@ -41,6 +42,13 @@ export default {
             user: Object,
             previewImageUrl: String
         }
+    },
+    
+    computed: {
+        ...mapWritableState(useProfileStore, {
+            username: "name",
+            role: "role" 
+        })
     },
 
     // Get Data User
@@ -54,13 +62,15 @@ export default {
 
         // Axios Get
         await axios
-            .get(env.VITE_API_URI + "/User", config)
+            .get(import.meta.env.VITE_API_URI + "/User", config)
             .then(response => {
                 if (response.status !== 200) {
-                    console.log(repsonse);
+                    console.log(response);
                 }
                 else {
                     this.user = response.data;
+                    this.username = response.data.name;
+                    // this.role = response.data.role;
                 }
             })
             .catch(err => {console.log(err)});

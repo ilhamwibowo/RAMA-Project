@@ -50,8 +50,6 @@ import DetailProfile from './DetailProfile.vue';
 import EditDetailProfile from './EditDetailProfile.vue';
 import axios from 'axios';
 
-const env = import.meta.env;
-
 export default {
     name: 'Profile',
     components: {
@@ -91,7 +89,7 @@ export default {
                 
                 // Axios Post
                 await axios
-                .post(env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
+                .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
                 .then(response => profilePhoto = response.data)
                 .catch(err => console.log(err))
             } else {
@@ -128,7 +126,7 @@ export default {
             
             // Axios Put
             await axios
-                .put(env.VITE_API_URI + '/User/edit', body, configUser)
+                .put(import.meta.env.VITE_API_URI + '/User/edit', body, configUser)
                 .then(response => status = response.status)
                 .catch(err => {
                     console.log(err)
@@ -168,7 +166,7 @@ export default {
 
         // Axios Get
         await axios
-            .get(env.VITE_API_URI + "/User", config)
+            .get(import.meta.env.VITE_API_URI + "/User", config)
             .then(response => {
                 if (response.status !== 200) {
                     console.log(repsonse);
