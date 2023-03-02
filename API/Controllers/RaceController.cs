@@ -48,7 +48,7 @@ namespace API.Controllers
         // Page and pageSize required in query
         [AllowAnonymous]
         [HttpGet("{raceId}/attendees")]
-        public async Task<IActionResult> GetRaceAttendance(int raceId, int page = 1, int pageSize = 10)
+        public async Task<ActionResult<RaceDto>> GetRaceAttendance(int raceId, int page = 1, int pageSize = 10)
         {
             try
             {
@@ -81,8 +81,16 @@ namespace API.Controllers
                         FinishTime = ra.FinishTime
                     })
                     .ToList();
+                var totalCount = race.RaceAttendee.Count();
 
-                return Ok(raceAttendance);
+                return Ok( new{
+                    RaceName = race.RaceName, 
+                    RaceAttendee = raceAttendance,
+                    TotalCount = totalCount,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+                     });
             } 
             catch (Exception e) 
             {
@@ -96,7 +104,7 @@ namespace API.Controllers
         // For testing purposes, maybe necessary
         [AllowAnonymous]
         [HttpGet("{raceId}/attendance")]
-        public async Task<IActionResult> GetAllRaceAttendance(int raceId)
+        public async Task<ActionResult<RaceDto>> GetAllRaceAttendance(int raceId)
         {
             try
             {
@@ -128,7 +136,10 @@ namespace API.Controllers
                     })
                     .ToList();
 
-                return Ok(raceAttendance);
+                return Ok( new RaceDto {
+                     RaceName = race.RaceName, 
+                     RaceAttendee = raceAttendance
+                     });
             } 
             catch (Exception e) 
             {
@@ -136,32 +147,6 @@ namespace API.Controllers
             }
         } 
 
-        // Get race details including photos, name, etc
-        // For testing purposes
-        [HttpGet("{raceId}/details")]
-        public async Task<ActionResult<RaceDto>> GetRaceDetails(int raceId)
-        {
-            var race = await _context.Races
-                .Include(r => r.RaceAttendee)
-                .ThenInclude(ra => ra.Runner)
-                .Include(r => r.RaceAlbum)
-                .FirstOrDefaultAsync(r => r.RaceId == raceId);
-
-            if (race == null)
-            {
-                return NotFound();
-            }
-
-            var raceDetails = new RaceDto
-            {
-                RaceId = race.RaceId,
-                RaceName = race.RaceName,
-                RaceAttendee = race.RaceAttendee,
-                RaceAlbum = race.RaceAlbum
-            };
-
-            return Ok(raceDetails);
-        }
 
     }
 }
