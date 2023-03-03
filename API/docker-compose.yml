@@ -8,6 +8,8 @@ services:
       - 5226:80
     volumes:
       - .:/api
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/key.json
     depends_on:
       - pgsql
     networks:

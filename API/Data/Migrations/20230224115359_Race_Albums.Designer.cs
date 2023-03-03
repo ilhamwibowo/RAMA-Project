@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230224115359_Race_Albums")]
+    partial class RaceAlbums
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,8 +124,8 @@ namespace API.Data.Migrations
                     b.Property<int?>("AlbumId")
                         .HasColumnType("integer");
 
-                    b.Property<List<string>>("BibTags")
-                        .HasColumnType("text[]");
+                    b.Property<List<int>>("BigTags")
+                        .HasColumnType("integer[]");
 
                     b.Property<string>("PublicId")
                         .HasColumnType("text");
@@ -163,16 +166,7 @@ namespace API.Data.Migrations
                     b.Property<int>("RaceId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("BibNumber")
-                        .HasColumnType("text");
-
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("interval");
-
-                    b.Property<DateTime>("FinishTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Position")
+                    b.Property<int>("BibNumber")
                         .HasColumnType("integer");
 
                     b.Property<int?>("RunnerAccId")
