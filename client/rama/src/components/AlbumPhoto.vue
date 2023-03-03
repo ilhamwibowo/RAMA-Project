@@ -1,20 +1,28 @@
 <template>
     <figure>
-        <img :src="photoUrl">
+        <img :src="photoUrl" @click="onClickPhoto">
         <input id="check" class="checkbox" type="checkbox" :value=photoId @change="onClickCheck($event)" :checked="isCheck">
+        <teleport to="body">
+            <AlbumPhotoDetail v-if="isOpen" :id="photoId" :url="photoUrl" @closeClicked="onClickClose"/>
+        </teleport>
     </figure>
 </template>
 
 <script>
 import { useProductStore } from '../stores/photos';
+import AlbumPhotoDetail from '../components/AlbumPhotoDetail.vue'
 const photos = useProductStore();
 
 export default {
     name: "AlbumPhoto",
     data() {
         return {
-            isCheck: false
+            isCheck: false,
+            isOpen: false
         }
+    },
+    components: {
+        AlbumPhotoDetail
     },
     props: {
         photoUrl: String,
@@ -35,6 +43,12 @@ export default {
             } else {
                 photos.deletePhoto(photo);
             }
+        },
+        onClickPhoto() {
+            this.isOpen = true;
+        },
+        onClickClose() {
+            this.isOpen = false;
         }
     },
     async created() {

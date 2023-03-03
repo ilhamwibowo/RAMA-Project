@@ -2,11 +2,13 @@
     <div>
         <p class="title">Album Page</p>
         <AlbumSearch @searchInput="search"/>
+        
         <div>
             <input type="file" id="image" accept="image/*" multiple="multiple" @change="uploadPhoto" style="display:none;"/>
             <button class="btn upload" @click="uploadClicked" >Upload</button>
             <button class="btn download" @click="download">Download</button>
         </div>
+
         <AlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
         <Pagination :totalPage="totalPage" :pager="pager" :page="page" @changePage="updatePage" @changePager="updatePager"/>
     </div>
@@ -99,7 +101,8 @@ export default {
         AlbumPhoto,
         AlbumSearch,
         Pagination,
-        AlbumPagination
+        AlbumPagination,
+        AlbumPhotoDetail
     },
     methods: {
         search(keySearch) {
