@@ -55,6 +55,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
     if (
         localStorage.getItem("token") === null &&
+        to.name !== "home" &&
         to.name !== "login" &&
         to.name !== "register" &&
         to.name !== "forgot"
