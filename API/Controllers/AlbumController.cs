@@ -83,6 +83,33 @@ namespace API.Controllers
             );
 
         }
+
+        [HttpDelete("photos/{photoId}")]
+        public async Task<IActionResult> DeletePhoto(int photoId)
+        {
+            // Find photo
+            var photo = await _context.Photo.FindAsync(photoId);
+            if (photo == null) return NotFound();
+
+            // Remove photo from cloud
+            var result = await _photoService.DeletePhotoAsync(photo.PublicId);
+            if (result.Error != null) return BadRequest(result.Error.Message);
+
+            // Remove photo from table
+            _context.Remove(photo);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            return Ok();
+        }
+
         private bool isImage(string filename)
         {
             string[] ext = { ".jpg", ".bmp", ".gif", ".png" };

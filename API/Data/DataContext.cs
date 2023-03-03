@@ -24,6 +24,7 @@ namespace API.Data
         public DbSet<ForgotPasswordHistory> ForgotPasswordHistories{ get; set; }
 
         public DbSet<Album> Albums { get; set; }
+        public DbSet<Photo> Photo { get; set; }
 
         public DbSet<Race> Races { get; set; }
     }
