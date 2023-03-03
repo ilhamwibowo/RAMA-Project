@@ -113,7 +113,7 @@ namespace API.Controllers
                     .AsNoTracking()
                     .Where(r => r.RaceId == raceId)
                     .Include(r => r.RaceAttendee)
-                    .ThenInclude(ra => ra.Runner)
+                    .ThenInclude(ra => ra.Runner.ProfilePhoto)
                     .FirstOrDefaultAsync();
                 
                 // Race not found
