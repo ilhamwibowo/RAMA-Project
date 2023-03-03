@@ -7,15 +7,8 @@
             <button class="btn upload" @click="uploadClicked" >Upload</button>
             <button class="btn download" @click="download">Download</button>
         </div>
-        <div class="photo-container">
-            
-            <AlbumPhoto 
-                v-for="photo in listPhotos.photos" 
-                :key="photo.id" 
-                :photoId="photo.id" 
-                :photoUrl="photo.url" 
-                @updateCheck="updateListCheck"/>
-        </div>
+        <AlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
+        <Pagination :totalPage="totalPage" :pager="pager" :page="page" @changePage="updatePage" @changePager="updatePager"/>
     </div>
 </template>
 
@@ -24,6 +17,11 @@ import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 import AlbumPhoto from '../components/AlbumPhoto.vue'
 import AlbumSearch from '../components/AlbumSearch.vue'
+import Pagination from '../components/Pagination.vue';
+import AlbumPagination from '../components/AlbumPagination.vue';
+import { useProductStore } from '../stores/photos';
+
+const photos = useProductStore();
 export default {
     name: "Album",
     data() {
@@ -88,34 +86,34 @@ export default {
                     }
                 ]
             },
-            listCheck: []
+            totalPhoto: 0,
+            totalPage: 0,
+            page: 1,
+            pager: 10,
+            photoShow: [],
+            albumPaginationKey: 0,
+            timer: 0
         }
     },
     components: {
         AlbumPhoto,
-        AlbumSearch
+        AlbumSearch,
+        Pagination,
+        AlbumPagination
     },
     methods: {
         search(keySearch) {
             console.log("Key: ", keySearch);
             /** TODO: Fetch data according to keySearch */
         },
-        updateListCheck(data) {
-            if (data.isCheck) {
-                this.listCheck.push(data.url);
-            } else {
-                this.listCheck = this.listCheck.filter((e) => { return e !== data.url});
-            }
-            console.log(this.listCheck);
-        },
         download() {
             console.log("download");
             const zip = new JSZip();
-            for (let i = 0; i < this.listCheck.length; i++) {
-                const fileName = this.listCheck[i].split("/").at(-1);
-                const imageUrl = this.listCheck[i];
 
-                console.log("Name", fileName);
+            const listCheck = photos.PhotosCheckUrl();
+            for (let i = 0; i < listCheck.length; i++) {
+                const fileName = listCheck[i].split("/").at(-1);
+                const imageUrl = listCheck[i];
 
                 let blob = fetch(imageUrl).then(r => r.blob());
                 zip.file(fileName, blob);
@@ -124,15 +122,59 @@ export default {
             zip.generateAsync({ type: 'blob' }).then(function (content) {
                 FileSaver.saveAs(content, 'download.zip');
             });
-        },
-        uploadClicked() {
-            document.getElementById("image").click();
+            photos.clearPhoto();
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+            this.timer = setTimeout(() => {
+                this.albumPaginationKey += 1;
+            }, 800);
         },
         uploadPhoto(event) {
             const inputPhotos = event.target.files;
             console.log(inputPhotos);
+        },
+        clearPhoto() {
+            photos.clearPhoto();
+        },
+        updatePage(n) {
+            this.page = n;
+
+            let page = this.page
+            let pager = this.pager
+
+            let start = (pager * (page-1))
+            let end = (pager * page)
+            this.photoShow = this.listPhotos.photos.slice(start, end)
+        },
+        updatePager(n) {
+            this.pager = n;
+            this.totalPage = Math.ceil(this.totalPhoto/this.pager)
+
+            let page = this.page
+            let pager = this.pager
+
+            let start = (pager * (page-1))
+            let end = (pager * page)
+            this.photoShow = this.listPhotos.photos.slice(start, end)
         }
+    },
+
+    async created() {
+        let page = this.page
+        let pager = this.pager
+
+        // Update Data
+        this.totalPhoto = this.listPhotos.photos.length
+        this.totalPage = Math.ceil(this.totalPhoto/pager)
+
+        let start = (pager * (page-1))
+        let end = (pager * page)
+        this.photoShow = this.listPhotos.photos.slice(start, end)
+        console.log(this.photoShow)
     }
+
 }
 </script>
 
@@ -150,6 +192,7 @@ export default {
     padding:10px 15px;
     border-radius: 100px;
     border-width: 1px;
+    cursor: pointer;
 }
 .upload {
     background-color: #353642;

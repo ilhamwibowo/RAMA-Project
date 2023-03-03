@@ -1,24 +1,44 @@
 <template>
     <figure>
         <img :src="photoUrl">
-        <input class="checkbox" type="checkbox" :value=photoUrl @change="check($event)">
+        <input id="check" class="checkbox" type="checkbox" :value=photoId @change="onClickCheck($event)" :checked="isCheck">
     </figure>
 </template>
 
 <script>
+import { useProductStore } from '../stores/photos';
+const photos = useProductStore();
+
 export default {
     name: "AlbumPhoto",
+    data() {
+        return {
+            isCheck: false
+        }
+    },
     props: {
         photoUrl: String,
         photoId: String,
     },
     methods: {
-        check(event) {
-            let isCheck = event.target.checked
-            let url = event.target.value
-            console.log("Clicked: ", isCheck, url)
-            this.$emit("updateCheck", {'isCheck': isCheck, 'url': url})
+        onClickCheck(event) {
+            // let isCheck = event.target.checked
+            // let url = event.target.value
+            // console.log("Clicked: ", isCheck, url)
+            // this.$emit("updateCheck", {'isCheck': isCheck, 'url': url, 'id': id})
+
+            let isCheck = event.target.checked;
+            let photo = {'id': this.photoId, 'url': this.photoUrl};
+            this.isCheck = isCheck
+            if (isCheck) {
+                photos.addPhoto(photo);
+            } else {
+                photos.deletePhoto(photo);
+            }
         }
+    },
+    async created() {
+        this.isCheck = (photos.isFound({'id': this.photoId, 'url': this.photoUrl})) 
     }
 }
 </script>
