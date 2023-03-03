@@ -52,11 +52,6 @@ const router = createRouter({
             path: "/forgot",
             name: "forgot",
             component: () => import("../views/ForgotView.vue")
-        },
-        {
-            path: "/album",
-            name: "album",
-            component: () => import("../views/AlbumView.vue")
         }
     ]
 });
