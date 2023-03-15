@@ -1,4 +1,4 @@
-namespace API.Data.Helpers
+namespace API.Data
 {
     public class CloudinarySettings
     {
