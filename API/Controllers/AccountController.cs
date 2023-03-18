@@ -39,7 +39,8 @@ namespace API.Controllers
             {
                 Email = Email,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password)),
-                PasswordSalt = hmac.Key
+                PasswordSalt = hmac.Key,
+                Role = "Runner"
             };
 
             _context.Accounts.Add(user);

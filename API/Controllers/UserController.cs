@@ -61,7 +61,6 @@ namespace API.Controllers
         [HttpPut("edit")]
         public async Task<ActionResult> editProfile(ProfileDto profile) {
             int id = User.GetUserId();
-            // Get user based on id
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == id);
 
             if (user == null) {
