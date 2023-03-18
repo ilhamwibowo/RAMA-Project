@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Google.Api.Gax.ResourceNames;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
@@ -19,7 +20,7 @@ namespace API.Entities
 
         public int RegistrationFee { get; set; }
 
-        public List<Location> Points { get; set; }
+        public List<Location> Points { get; set; } = new List<Location>();
 
         public List<RaceAttendance> RaceAttendee { get; set; } = new List<RaceAttendance>();
 
