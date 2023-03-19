@@ -10,7 +10,7 @@
             <div id="login">
                 <div id="email">
                     <label>Email</label><br>
-                    <input type="email" id="email-form" name="email" v-model="email" placeholder="E-mail" />
+                    <input type="text" id="email-form" name="email" v-model="email" placeholder="Email" />
                 </div>
                 <div id="invalid-email" v-if="invalidEmail">
                     <p>{{ invalidEmail }}</p>
@@ -126,11 +126,15 @@ label{
     margin-top: 1%;
     width: 100%;
     height: 2vw;
-    font-size: large;
+    font-size: 14px;
     background: rgb(255, 255, 255);
     border: 1px solid grey;
     border-radius: 15px;
     padding: 0 10px 0 10px;
+}
+
+input::placeholder{
+    font-size: 13px;
 }
 
 #forget-password{
