@@ -4,37 +4,39 @@
             <img src="./registerImage.png" alt="registerImage">
         </div>
         <div class="form-container">
-            <div class="title">
-                <h1>SIGN UP</h1>
-            </div>
-            <div id="register">
-                <div id="email">
-                    <label>Email</label><br>
-                    <input type="text" id="email-form" name="email" v-model="email" placeholder="E-mail" />
+            <div class="register-container">
+                <div class="title">
+                    <h1>SIGN UP</h1>
                 </div>
-                <div id="invalid-email" v-if="invalidEmail">
-                    <p>{{ invalidEmail }}</p>
+                <div id="register">
+                    <div id="email">
+                        <label>Email</label><br>
+                        <input type="text" id="email-form" name="email" v-model="email" placeholder="E-mail" />
+                    </div>
+                    <div id="invalid-email" v-if="invalidEmail">
+                        <p>{{ invalidEmail }}</p>
+                    </div>
+                    <div id="password">
+                        <label>Password</label><br>
+                        <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                    </div>
+                    <div id="confirm-password">
+                        <label>Confirm Password</label><br>
+                        <input type="password" id="password-confirm" name="confirm-password" v-model="confirmPassword" placeholder="Re-enter new password" />
+                    </div>
+                    <div id="invalid-password" v-if="invalidPassword">
+                        <p>{{ invalidPassword }}</p>
+                    </div>
+                    <div id="register-response" v-if="response">
+                        <p>{{ response }}</p>
+                    </div>
+                    <div id="register-button">
+                        <button type="button" id="submit-register" v-on:click="register()">Sign Up</button>
+                    </div>
                 </div>
-                <div id="password">
-                    <label>Password</label><br>
-                    <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                <div class="login-container">
+                    <p>Already have an account? <a href="http://localhost:5173/login">Login</a></p>
                 </div>
-                <div id="confirm-password">
-                    <label>Confirm Password</label><br>
-                    <input type="password" id="password-confirm" name="confirm-password" v-model="confirmPassword" placeholder="Re-enter new password" />
-                </div>
-                <div id="invalid-password" v-if="invalidPassword">
-                    <p>{{ invalidPassword }}</p>
-                </div>
-                <div id="register-response" v-if="response">
-                    <p>{{ response }}</p>
-                </div>
-                <div id="register-button">
-                    <button type="button" id="submit-register" v-on:click="register()">Sign Up</button>
-                </div>
-            </div>
-            <div class="login-container">
-                <p>Already have an account? <a href="http://localhost:5173/login">Login</a></p>
             </div>
         </div>
     </div>
@@ -108,20 +110,28 @@ export default {
 }
 
 .registerImage{
-    margin-top: 5%;
-    /* width: 65%;
-    height: 100%; */
+    width: 65%;
+    height: 100%;
 }
 img{
-    width: 65%;
+    top: 15%;
+    left: 20%;
+    width: 50%;
     height: auto;
     display: block;
 }
 
 .form-container{
-    margin-top:5%;
-    /* width: 35%;
-    height: 100; */
+    width: 35%;
+    height: 100;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-container{
+    margin-top: 10%;
+    width: 50%;
+    height: auto;
 }
 #email{
     text-align: left;
@@ -137,6 +147,10 @@ img{
     text-align: left;
 }
 
+
+label{
+    margin-left:4%;
+}
 #email-form, #password-form, #password-confirm{
     margin-top: 1%;
     width: 100%;
