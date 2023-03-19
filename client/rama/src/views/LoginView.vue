@@ -104,6 +104,11 @@ img {
     display: block;
 }
 
+form-container{
+    width: 30%;
+    height: auto;
+    display: block;
+}
 .title{
     
 }
@@ -134,7 +139,7 @@ label{
 }
 
 input::placeholder{
-    font-size: 13px;
+    font-size: 0.8rem;
 }
 
 #forget-password{
@@ -151,7 +156,7 @@ input::placeholder{
     width: 100%;
     background: #1f2220;  
     height: 2.5vw;
-    border-radius: 15px;
+    border-radius: 0.9rem;
     border-color: transparent;
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
