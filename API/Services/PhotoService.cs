@@ -1,7 +1,8 @@
-using API.Data.Helpers;
+using API.Data;
 using API.Interfaces;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Google.Cloud.Vision.V1;
 using Microsoft.Extensions.Options;
 
 namespace API.Services
@@ -38,7 +39,40 @@ namespace API.Services
 
             return uploadResult;
         }
+        public async Task<ImageUploadResult> AddPhototoAlbumAsync(IFormFile file, string AlbumName)
+        {
+            var uploadResult = new ImageUploadResult();
 
+            if (file.Length > 0)
+            {
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Folder = "RAMA/" + AlbumName
+                };
+
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            }
+
+            return uploadResult;
+        }
+        public async Task<List<string>> GetText(string Url)
+        {
+            var client = ImageAnnotatorClient.Create();
+            var image = Image.FromUri(Url);
+            var response = await client.DetectTextAsync(image);
+            //TODO: Filtering only bib numbers?
+            List<string> words = new List<string>();
+            foreach(var annotation  in response)
+            {
+                if (annotation.Description != null)
+                {
+                    words.Add(annotation.Description);
+                }
+            }
+            return words;
+        }
         public async Task<DeletionResult> DeletePhotoAsync(string publicId)
         {
             var deleteParams = new DeletionParams(publicId);

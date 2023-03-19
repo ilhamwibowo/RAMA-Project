@@ -46,9 +46,11 @@ export default {
             } else {
                 this.invalidEmail = "";
                 axios
-                    .put(import.meta.env.VITE_API_URI + "/Account/forgotpassword/requestotp", {
-                        email: this.email
-                    })
+                    .put(
+                        import.meta.env.VITE_API_URI +
+                            "/Account/forgotpassword/requestotp?Email=" +
+                            this.email
+                    )
                     .then(() => {
                         this.response = "";
                         this.$emit("email", this.email);

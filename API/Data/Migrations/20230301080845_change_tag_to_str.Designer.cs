@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230301080845_change_tag_to_str")]
+    partial class changetagtostr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,36 +113,6 @@ namespace API.Data.Migrations
                     b.ToTable("ForgotPasswordHistories");
                 });
 
-            modelBuilder.Entity("API.Entities.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Category")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Latitude")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Longitude")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("RaceId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RaceId");
-
-                    b.ToTable("Location");
-                });
-
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
                     b.Property<int>("PhotoId")
@@ -175,29 +148,15 @@ namespace API.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RaceId"));
 
-                    b.Property<int>("Distance")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("RaceAlbumAlbumId")
                         .HasColumnType("integer");
 
                     b.Property<string>("RaceName")
                         .HasColumnType("text");
 
-                    b.Property<int>("RegistrationFee")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("StartLocationId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("RaceId");
 
                     b.HasIndex("RaceAlbumAlbumId");
-
-                    b.HasIndex("StartLocationId");
 
                     b.ToTable("Races");
                 });
@@ -207,16 +166,7 @@ namespace API.Data.Migrations
                     b.Property<int>("RaceId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("BibNumber")
-                        .HasColumnType("text");
-
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("interval");
-
-                    b.Property<DateTime>("FinishTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Position")
+                    b.Property<int>("BibNumber")
                         .HasColumnType("integer");
 
                     b.Property<int?>("RunnerAccId")
@@ -238,13 +188,6 @@ namespace API.Data.Migrations
                     b.Navigation("ProfilePhoto");
                 });
 
-            modelBuilder.Entity("API.Entities.Location", b =>
-                {
-                    b.HasOne("API.Entities.Race", null)
-                        .WithMany("Points")
-                        .HasForeignKey("RaceId");
-                });
-
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
                     b.HasOne("API.Entities.Album", null)
@@ -258,13 +201,7 @@ namespace API.Data.Migrations
                         .WithMany()
                         .HasForeignKey("RaceAlbumAlbumId");
 
-                    b.HasOne("API.Entities.Location", "StartLocation")
-                        .WithMany()
-                        .HasForeignKey("StartLocationId");
-
                     b.Navigation("RaceAlbum");
-
-                    b.Navigation("StartLocation");
                 });
 
             modelBuilder.Entity("API.Entities.RaceAttendance", b =>
@@ -289,8 +226,6 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Race", b =>
                 {
-                    b.Navigation("Points");
-
                     b.Navigation("RaceAttendee");
                 });
 #pragma warning restore 612, 618

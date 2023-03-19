@@ -15,9 +15,17 @@ namespace API.Data
                 .IsUnique();
             builder.Entity<ForgotPasswordHistory>()
                 .HasKey(nameof(ForgotPasswordHistory.Date), nameof(ForgotPasswordHistory.Email));
+            builder.Entity<RaceAttendance>()
+                .HasKey(nameof(RaceAttendance.RaceId), nameof(RaceAttendance.BibNumber));
+            
         }
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<ForgotPasswordHistory> ForgotPasswordHistories{ get; set; }
+
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Photo> Photo { get; set; }
+
+        public DbSet<Race> Races { get; set; }
     }
 }
