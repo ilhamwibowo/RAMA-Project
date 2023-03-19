@@ -1,32 +1,39 @@
 ﻿<template>
-    <div class="login">
-        <div class="title">
-            <h1>Rama</h1>
+    <div class="layout">
+        <div class="loginImange">
+            <img src="./loginImage.png" alt="loginImahe"/>
         </div>
-        <div id="login">
-            <div id="email">
-                <input type="text" name="email" v-model="email" placeholder="E-mail" />
+        <div class="form-container">
+            <div class="title">
+                <h1>LOGIN</h1>
             </div>
-            <div id="invalid-email" v-if="invalidEmail">
-                <p>{{ invalidEmail }}</p>
+            <div id="login">
+                <div id="email">
+                    <label>Email</label><br>
+                    <input type="email" id="email-form" name="email" v-model="email" placeholder="E-mail" />
+                </div>
+                <div id="invalid-email" v-if="invalidEmail">
+                    <p>{{ invalidEmail }}</p>
+                </div>
+                <div id="password">
+                    <label>Password</label><br>
+                    <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                </div>
+                <div id="invalid-password" v-if="invalidPassword">
+                    <p>{{ invalidPassword }}</p>
+                </div>
+                <div id="login-response" v-if="response">
+                    <p>{{ response }}</p>
+                </div>
+                <div id="forget-password">
+                    <a href="http://localhost:5173/forgot">Forget password</a>
+                </div>
+                <div id="login-button">
+                    <button type="button" id="submit-login" v-on:click="login()">Login</button>
+                </div>
             </div>
-            <div id="password">
-                <input type="password" name="password" v-model="password" placeholder="Password" />
-            </div>
-            <div id="invalid-password" v-if="invalidPassword">
-                <p>{{ invalidPassword }}</p>
-            </div>
-            <div id="login-response" v-if="response">
-                <p>{{ response }}</p>
-            </div>
-            <div id="login-button">
-                <button type="button" v-on:click="login()">Login</button>
-            </div>
-            <div id="register-from-login">
-                <a href="http://localhost:5173/register">Register</a>
-            </div>
-            <div id="forget-password">
-                <a href="http://localhost:5173/forgot">Forget password?</a>
+            <div id="register-container">
+                <p>Don't have an account? <a href="http://localhost:5173/register">Sign Up</a></p>
             </div>
         </div>
     </div>
@@ -82,32 +89,73 @@ export default {
 </script>
 
 <style scoped>
-.title {
-    font-weight: 500;
-    margin-bottom: 1rem;
-    color: var(--color-heading);
-}
 
-.login,
-#email,
-#invalid-email,
-#password,
-#invalid-password,
-#login-button,
-#login-response,
-#register-from-login,
-#forget-password {
+.layout{
+    height: 100%;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.5rem;
 }
 
-#invalid-email,
-#invalid-password,
-#login-response {
-    color: red;
+img {
+    width: 70%;
+    height: auto;
+    display: block;
+}
+
+.title{
+    
+}
+
+#email{
+    text-align: left;
+}
+
+#password{
+    margin-top: 8%;
+    text-align: left;
+}
+
+label{
+    margin-left: 10%;
+}
+
+
+#email-form, #password-form{
+    margin-top: 1%;
+    width: 100%;
+    height: 2vw;
+    font-size: large;
+    background: rgb(255, 255, 255);
+    border: 1px solid grey;
+    border-radius: 15px;
+    padding: 0 10px 0 10px;
+}
+
+#forget-password{
+
+}
+
+#login-button{
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+#submit-login{
+    color: white;
+    width: 100%;
+    background: #1f2220;  
+    height: 2.5vw;
+    border-radius: 15px;
+    border-color: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+#register-container{
+    border-top: 2px solid white;
 }
 </style>
+
