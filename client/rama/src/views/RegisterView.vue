@@ -18,7 +18,12 @@
                     </div>
                     <div id="password">
                         <label>Password</label><br>
-                        <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                        <div class="password-wrap">
+                            <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                            <button type="button" id="show-pw" v-on:click="tooglePassword()">
+                                <img src="../assets/eye-outline.svg" alt="open eye" />
+                            </button>
+                        </div>
                     </div>
                     <div id="confirm-password">
                         <label>Confirm Password</label><br>
@@ -93,6 +98,18 @@ export default {
                     .catch((error) => {
                         this.response = error.response.data;
                     });
+            }
+        },
+        tooglePassword(){
+            const passwordInput = document.getElementById("password-form");
+            const showButton = document.getElementById("show-pw");
+
+            if(passwordInput.type === "password"){
+                passwordInput.type = "text";
+                // showButton.innerHTML = '<img src="../assets/eye-off-outline.svg" alt="closed eye" />';
+            }else{
+                passwordInput.type = "password";
+                // showButton.innerHTML = '<img src="../assets/eye-outline.svg" alt="open eye" />';
             }
         }
     }
@@ -187,6 +204,29 @@ input::placeholder{
     border-top : 2px solid #000;
 }
 
+.password-wrap{
+    position: relative;
+}
+
+#show-pw{
+    position: absolute;
+    top: 55%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 14%;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    outline: none;
+    border: none;
+}
+
+#show-pw img{
+    width: 100%;
+    height: auto;
+    left: 0;
+}
 
 /* .title {
     font-weight: 500;
