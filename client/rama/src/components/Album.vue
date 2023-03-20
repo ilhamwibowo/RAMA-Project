@@ -17,6 +17,7 @@
 <script>
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
+import axios from 'axios';
 import AlbumPhoto from '../components/AlbumPhoto.vue'
 import AlbumSearch from '../components/AlbumSearch.vue'
 import Pagination from '../components/Pagination.vue';
@@ -94,7 +95,8 @@ export default {
             pager: 10,
             photoShow: [],
             albumPaginationKey: 0,
-            timer: 0
+            timer: 0,
+            albumId: 1,
         }
     },
     components: {
@@ -104,10 +106,38 @@ export default {
         AlbumPagination,
     },
     methods: {
-        search(keySearch) {
+
+        /** Search */
+        async search(keySearch) {
             console.log("Key: ", keySearch);
             /** TODO: Fetch data according to keySearch */
+
+            // Get data
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            // Axios Get
+            await axios
+                .get(import.meta.env.VITE_API_URI + "/Album/" + this.albumId + "?query=" + encodeURI(keySearch), config)
+                .then((response) => {
+                    this.listPhotos = response.data.photos
+                    console.log(response)
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
+
+            console.log(this.listPhotos)
+
+            this.updatePage(this.page)
         },
+
+        /** Download */
         download() {
             console.log("download");
             const zip = new JSZip();
@@ -133,13 +163,50 @@ export default {
                 this.albumPaginationKey += 1;
             }, 800);
         },
-        uploadPhoto(event) {
-            const inputPhotos = event.target.files;
-            console.log(inputPhotos);
-        },
         clearPhoto() {
+            // Clear photo checklist after download
             photos.clearPhoto();
         },
+
+        /** Upload Photo */
+        uploadPhoto(event) {
+            // get input photos
+            const inputPhotos = Array.from(event.target.files);
+
+            // Post one by one 
+            inputPhotos.forEach((file) => {
+                this.sendPostPhoto(file)
+            })
+        },
+        sendPostPhoto(file) {
+            var status
+
+            // get token
+            const token = localStorage.getItem("token");
+
+            // create form data
+            var formData = new FormData();
+            formData.append("file", file)
+
+            // configuration for post api
+            const configPhoto = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            };
+            
+            axios
+                .post(import.meta.env.VITE_API_URI + "/Album/" + this.albumId, formData, configPhoto)
+                .then((response => console.log(response)))
+                .catch((err) => console.log(err))
+
+        },
+        uploadClicked() {
+            document.getElementById("image").click();
+        },
+
+        /** Pagination */
         updatePage(n) {
             this.page = n;
 
@@ -148,7 +215,7 @@ export default {
 
             let start = (pager * (page-1))
             let end = (pager * page)
-            this.photoShow = this.listPhotos.photos.slice(start, end)
+            this.photoShow = this.listPhotos.slice(start, end)
         },
         updatePager(n) {
             this.pager = n;
@@ -159,22 +226,34 @@ export default {
 
             let start = (pager * (page-1))
             let end = (pager * page)
-            this.photoShow = this.listPhotos.photos.slice(start, end)
+            this.photoShow = this.listPhotos.slice(start, end)
         }
     },
 
     async created() {
-        let page = this.page
-        let pager = this.pager
+        // Get data
+        const token = localStorage.getItem("token");
 
-        // Update Data
-        this.totalPhoto = this.listPhotos.photos.length
-        this.totalPage = Math.ceil(this.totalPhoto/pager)
+        // Configuration for API
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
 
-        let start = (pager * (page-1))
-        let end = (pager * page)
-        this.photoShow = this.listPhotos.photos.slice(start, end)
-        console.log(this.photoShow)
+        // Axios Get
+        await axios
+            .get(import.meta.env.VITE_API_URI + "/Album/" + this.albumId, config)
+            .then((response) => {
+                this.listPhotos = response.data.photos
+                console.log(response)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+
+        console.log(this.listPhotos)
+
+        this.updatePage(this.page)
     }
 
 }

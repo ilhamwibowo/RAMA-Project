@@ -90,6 +90,10 @@ export default {
                 var formData = new FormData();
                 formData.append("file", this.previewImage);
 
+                for (const value of formData.values()) {
+                    console.log(value);
+                }
+
                 // Axios Post
                 await axios
                     .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
