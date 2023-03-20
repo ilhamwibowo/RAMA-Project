@@ -52,7 +52,7 @@
             </div>
             <hr>
             <div id="back-forget">
-                <p>Back to <a href="http://localhost:5173/forgot">Forget Password</a></p>
+                <p>Back to <RouterLink to="/forgot">forget password</RouterLink></p>
             </div>
         </div>
     </div>

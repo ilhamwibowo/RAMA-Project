@@ -25,7 +25,7 @@
             </div>
             <hr>
             <div id="back-link">
-                <p>Back to <a href="http://localhost:5173/login">Sign In</a></p>
+                <p>Back to <RouterLink to="/login">Sign In</RouterLink></p>
             </div>
             <br>
         </div>
