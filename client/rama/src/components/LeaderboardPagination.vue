@@ -68,7 +68,13 @@ export default {
 
             // When on the last page
             if (this.currentPage === this.totalPage) {
-                return this.totalPage - this.maxVisibleButtons;
+                const start = this.totalPage - (this.maxVisibleButtons - 1);
+
+                if (start === 0) {
+                    return 1;
+                } else {
+                    return start;
+                }
             }
 
             // When in between
