@@ -145,7 +145,6 @@ input[type="text"] {
 }
 
 #btn-recover {
-  height: 3vw;
   width: 300px;
   padding: 10px;
   background-color: #1f2220;
