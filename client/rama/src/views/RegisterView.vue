@@ -228,6 +228,10 @@ input::placeholder{
     left: 0;
 }
 
+#submit-register:hover{
+    background: #FFA801;
+    transition: 0.3s;
+}
 /* .title {
     font-weight: 500;
     margin-bottom: 1rem;

@@ -180,6 +180,11 @@ input::placeholder{
     letter-spacing: 3px;
 }
 
+#submit-login:hover{
+    background: #FFA801;
+    transition: 0.3s;
+}
+
 #register-container{
     border-top: 2px solid #000;
 }
