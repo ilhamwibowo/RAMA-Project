@@ -54,6 +54,28 @@ namespace API.Controllers
                     _logger.LogError(e, "Failed to save Race Registration");
                     return BadRequest("Failed to save Race Registration");
                 }
+            // email confirmation
+
+            try
+                {
+                    await _emailService.SendEmailAsync(
+                        new MailDto
+                        {
+                            ToEmail = requester.Email,
+                            Subject = "Pendaftaran Event | RAMA",
+                            Body = $"Haloo {requester.Name}! Selamat kamu telah berhasil mendaftarkan diri kamu ke Event {race.RaceName}. "+
+                                   $"Namun, Registrasi Belum selesai, kamu masih perlu membayar Fee sebesar {race.RegistrationFee} rupiah untuk menyelesaikan pendaftaran. "+
+                                   $"Jangan Lupa yaa. Kami tunggu kehadiranmu di lapangan!!"
+                        }
+                    );
+                }
+            catch(Exception e)
+                {
+                    _logger.LogError(e, "Failed to send email");
+                    return BadRequest("Failed to send email");
+                }
+
+
             return CreatedAtAction(nameof(GetRaceRegist), new {RaceId}, newRR);
         }
         [HttpGet]
