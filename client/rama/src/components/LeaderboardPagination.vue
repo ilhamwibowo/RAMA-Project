@@ -125,6 +125,10 @@ export default {
 </script>
 
 <style scoped>
+ul {
+    padding: 0 0 !important;
+}
+
 .pagination {
     list-style-type: none;
 }
