@@ -23,7 +23,7 @@ namespace API.Controllers
             _logger = logger;
         } 
         [HttpPost]
-        public async Task<ActionResult<RaceDto>> CreateRace(RaceDto raceDto)
+        public async Task<ActionResult> CreateRace(RaceDto raceDto)
         {   
             Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
