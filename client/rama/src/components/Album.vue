@@ -102,7 +102,6 @@ export default {
         AlbumSearch,
         Pagination,
         AlbumPagination,
-        AlbumPhotoDetail
     },
     methods: {
         search(keySearch) {
