@@ -16,6 +16,7 @@ namespace API.Entities
 
         // public Payment payment  // for later 
         public PaymentStatus Status { get; set;}
+        public string StatusAsText {get; set; }
 
         public DateTime PaidAt{get; set;}
         public DateTime TakenKitAt{get; set;}

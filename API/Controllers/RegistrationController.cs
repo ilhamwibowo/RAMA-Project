@@ -38,6 +38,8 @@ namespace API.Controllers
 
             if (race == null) return NotFound();
 
+            if (await _context.RaceRegistrations.AnyAsync(rr => rr.AccId == requester.AccId && rr.RaceId == race.RaceId)) return BadRequest("Anda telah terdaftar!.");
+
             RaceRegistration newRR = new RaceRegistration 
                 {
                     AccId = requester.AccId,
@@ -64,7 +66,7 @@ namespace API.Controllers
                             ToEmail = requester.Email,
                             Subject = "Pendaftaran Event | RAMA",
                             Body = $"Haloo {requester.Name}! Selamat kamu telah berhasil mendaftarkan diri kamu ke Event {race.RaceName}. "+
-                                   $"Namun, Registrasi Belum selesai, kamu masih perlu membayar Fee sebesar {race.RegistrationFee} rupiah untuk menyelesaikan pendaftaran. "+
+                                   $"Namun, Registrasi Belum selesai, kamu masih perlu membayar Fee sebesar {race.RegistrationFee} rupiah untuk menyelesaikan pendaftaran."+
                                    $"Jangan Lupa yaa. Kami tunggu kehadiranmu di lapangan!!"
                         }
                     );
@@ -97,6 +99,7 @@ namespace API.Controllers
                             RaceId = rr.RaceId,
                             RegistedAt = rr.RegistedAt,
                             Status = rr.Status,
+                            StatusAsText = rr.Status.ToString(),
                             RegistrationFee = rr.RegistrationFee,
                             PaidAt = rr.PaidAt,
                             TakenKitAt = rr.TakenKitAt
@@ -119,7 +122,7 @@ namespace API.Controllers
         {
             Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
 
-            if (requester == null && requester.Role != "Admin") return Unauthorized();
+            if (requester == null || requester.Role != "Admin") return Unauthorized();
 
             List<RaceRegistration> AllRaceHistory = _context.RaceRegistrations.OrderBy(r => r.RegistedAt).ToList();
 
@@ -135,6 +138,7 @@ namespace API.Controllers
                             RaceId = rr.RaceId,
                             RegistedAt = rr.RegistedAt,
                             Status = rr.Status,
+                            StatusAsText = rr.Status.ToString(),
                             RegistrationFee = rr.RegistrationFee,
                             PaidAt = rr.PaidAt,
                             TakenKitAt = rr.TakenKitAt
@@ -169,6 +173,7 @@ namespace API.Controllers
                     RaceId = rr.RaceId,
                     RegistedAt = rr.RegistedAt,
                     Status = rr.Status,
+                    StatusAsText = rr.Status.ToString(),
                     RegistrationFee = rr.RegistrationFee,
                     PaidAt = rr.PaidAt,
                     TakenKitAt = rr.TakenKitAt
@@ -183,7 +188,7 @@ namespace API.Controllers
         {
             Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
 
-            if (requester == null && requester.Role != "Admin") return Unauthorized();
+            if (requester == null || requester.Role != "Admin") return Unauthorized();
 
             RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId == RaceId && x.AccId == AccId);
 
@@ -212,9 +217,16 @@ namespace API.Controllers
         {
             Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
 
-            if (requester == null && requester.Role != "Admin") return Unauthorized();
-
             RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId == RaceId && x.AccId == AccId);
+
+
+
+            // Registration can be deleted by Admin
+            // and user can also delete their own Registration if its status is still 0.
+            if (requester == null || (  requester.Role != "Admin" && (rr.Status != RaceRegistration.PaymentStatus.Waiting || requester.AccId != AccId) )) return Unauthorized();
+            _logger.LogInformation($"{requester.Role != "Admin"}, {rr.Status != RaceRegistration.PaymentStatus.Waiting}, {requester.AccId != AccId}");
+
+
 
             if (rr == null) return NotFound();
 
