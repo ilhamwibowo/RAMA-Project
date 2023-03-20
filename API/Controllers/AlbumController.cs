@@ -22,7 +22,7 @@ namespace API.Controllers
             _context = context;
             _logger = logger;
         }
-        [HttpPost]
+        [HttpPost("{albumId}")]
         public async Task<ActionResult> AddPhoto(int albumId, IFormFile file)
         {
             Account requester = _context.Accounts.FirstOrDefault(x => x.AccId == User.GetUserId());
