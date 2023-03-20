@@ -56,6 +56,7 @@ export default {
                 this.invalidEmail = "Invalid e-mail!";
             } else {
                 this.invalidEmail = "";
+                this.response = "";
                 axios
                     .put(
                         import.meta.env.VITE_API_URI +
