@@ -27,5 +27,7 @@ namespace API.Entities
 
         public Photo ProfilePhoto { get; set; }
 
+        public List<RaceRegistration> RaceHistory { get; set; }= new List<RaceRegistration>();
+
     }
 }
