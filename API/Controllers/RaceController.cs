@@ -22,16 +22,18 @@ namespace API.Controllers
             _context = context;
             _logger = logger;
         } 
-        //For Testing
         [HttpPost]
-        public async Task<ActionResult> CreateRace()
+        public async Task<ActionResult> CreateRace(RaceDto raceDto)
         {   
+            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            // if (requester.Role != "Admin") Unauthorized("No Permission!");
             Race race = new Race
                 {
-                    RaceName = "Test",
-                    RaceAlbum = new Album {
-                        AlbumName = "Test"
-                    }
+                    RaceName = raceDto.RaceName,
+                    StartTime = raceDto.StartTime,
+                    StartLocation = raceDto.StartLocation,
+                    Distance = raceDto.Distance,
+                    RegistrationFee = raceDto.RegistrationFee
                 };
             await _context.Races.AddAsync(race);
             try {
@@ -41,7 +43,78 @@ namespace API.Controllers
                 _logger.LogError(e, "Failed to save Race");
                 return BadRequest("Failed to save Race");
             }
-            return Ok(race);
+            return CreatedAtAction(nameof(GetRace), new { Id = race.RaceId}, raceDto);
+        }
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<RaceDto>> GetRace(int id)
+        {
+            Race race = await _context.Races.FirstOrDefaultAsync(x => x.RaceId == id);
+            if (race == null) return NotFound();
+
+            return Ok
+                (
+                    new RaceDto 
+                        {
+                            RaceName = race.RaceName,
+                            StartTime = race.StartTime,
+                            StartLocation = race.StartLocation,
+                            Distance = race.Distance,
+                            RegistrationFee = race.RegistrationFee,
+                            Points = race.Points
+
+                        }
+                );
+        }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateRace(int id, RaceDto raceDto)
+        {
+            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            // if (requester.Role != "Admin") Unauthorized("No Permission!");
+
+            Race race = _context.Races.FirstOrDefault(x => x.RaceId == id);
+            if (race == null) return NotFound();
+
+            race.RaceName = raceDto.RaceName;
+            race.StartTime = raceDto.StartTime;
+            race.StartLocation = raceDto.StartLocation;
+            race.Distance = raceDto.Distance;
+            race.RegistrationFee = raceDto.RegistrationFee;
+
+            _context.Races.Update(race);
+            try 
+                {
+                    await _context.SaveChangesAsync();
+                }
+            catch (Exception e)
+                {
+                    _logger.LogError(e, "Failed to save Race");
+                    return BadRequest("Failed to save Race");
+                }
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteRace(int id)
+        {
+            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            // if (requester.Role != "Admin") Unauthorized("No Permission!");
+
+            Race race = await _context.Races.FirstOrDefaultAsync(x => x.RaceId == id);
+            if (race == null) return NotFound();
+
+            _context.Races.Remove(race);
+
+            try 
+                {
+                    await _context.SaveChangesAsync();
+                }
+            catch (Exception e)
+                {
+                    _logger.LogError(e, "Failed to delete Race");
+                    return BadRequest("Failed to delete Race");
+                }
+            return Ok();
         }
 
         // Get participant of a specific race
