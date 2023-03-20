@@ -1,11 +1,11 @@
 ﻿<template>
     <div class="layout">
         <div class="loginImange">
-            <img src="./loginImage.png" alt="loginImage"/>
+            <img src="loginImage.png" alt="loginImage"/>
         </div>
         <div class="form-container">
             <div class="title">
-                <h1>LOGIN</h1>
+                <h1>LOG IN</h1>
             </div>
             <div id="login">
                 <div id="email">
@@ -123,7 +123,7 @@ form-container{
 }
 
 label{
-    margin-left: 10%;
+    margin-left: 5%;
 }
 
 
@@ -164,7 +164,7 @@ input::placeholder{
 }
 
 #register-container{
-    border-top: 2px solid white;
+    border-top: 2px solid #000;
 }
 </style>
 

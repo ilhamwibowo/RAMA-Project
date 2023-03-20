@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="layout">
         <div class="registerImage">
-            <img src="./registerImage.png" alt="registerImage">
+            <img src="registerImage.png" alt="registerImage">
         </div>
         <div class="form-container">
             <div class="register-container">
@@ -184,7 +184,7 @@ input::placeholder{
 }
 
 .login-container{
-    border-top : 2px solid white;
+    border-top : 2px solid #000;
 }
 
 
