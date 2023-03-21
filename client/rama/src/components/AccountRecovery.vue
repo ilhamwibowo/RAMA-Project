@@ -25,7 +25,7 @@
             </div>
             <hr>
             <div id="back-link">
-                <p>Back to <a href="http://localhost:5173/login">Sign In</a></p>
+                <p>Back to <RouterLink to="/login">Sign In</RouterLink></p>
             </div>
             <br>
         </div>
@@ -56,6 +56,7 @@ export default {
                 this.invalidEmail = "Invalid e-mail!";
             } else {
                 this.invalidEmail = "";
+                this.response = "";
                 axios
                     .put(
                         import.meta.env.VITE_API_URI +
@@ -144,7 +145,6 @@ input[type="text"] {
 }
 
 #btn-recover {
-  height: 3vw;
   width: 300px;
   padding: 10px;
   background-color: #1f2220;
