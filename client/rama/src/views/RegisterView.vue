@@ -21,13 +21,20 @@
                         <div class="password-wrap">
                             <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
                             <button type="button" id="show-pw" v-on:click="tooglePassword()">
-                                <img src="../assets/eye-outline.svg" alt="open eye" />
+                                <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPw"/>
+                                <img src="../assets/eye-off-outline.svg" alt="close eye" v-if="showPw">
                             </button>
                         </div>
                     </div>
                     <div id="confirm-password">
                         <label>Confirm Password</label><br>
-                        <input type="password" id="password-confirm" name="confirm-password" v-model="confirmPassword" placeholder="Re-enter new password" />
+                        <div class="password-confirm-wrap">
+                            <input type="password" id="password-confirm" name="confirm-password" v-model="confirmPassword" placeholder="Re-enter new password" />
+                            <button type="button" id="show-pw-confirm" v-on:click="tooglePasswordConfirm()">
+                                <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPwConfirm"/>
+                                <img src="../assets/eye-off-outline.svg" alt="close eye" v-if="showPwConfirm">
+                            </button>
+                        </div>
                     </div>
                     <div id="invalid-password" v-if="invalidPassword">
                         <p>{{ invalidPassword }}</p>
@@ -60,7 +67,9 @@ export default {
             confirmPassword: "",
             invalidEmail: "",
             invalidPassword: "",
-            response: ""
+            response: "",
+            showPw : false,
+            showPwConfirm: false
         };
     },
 
@@ -106,10 +115,20 @@ export default {
 
             if(passwordInput.type === "password"){
                 passwordInput.type = "text";
-                // showButton.innerHTML = '<img src="../assets/eye-off-outline.svg" alt="closed eye" />';
+                this.showPw = true;
             }else{
                 passwordInput.type = "password";
-                // showButton.innerHTML = '<img src="../assets/eye-outline.svg" alt="open eye" />';
+                this.showPw = false;
+            }
+        },
+        tooglePasswordConfirm(){
+            const passwordInput = document.getElementById("password-confirm");
+            if(passwordInput.type == "password"){
+                passwordInput.type = "text";
+                this.showPwConfirm = true;
+            }else{
+                passwordInput.type = "password";
+                this.showPwConfirm = false;
             }
         }
     }
@@ -223,6 +242,34 @@ input::placeholder{
 }
 
 #show-pw img{
+    width: 100%;
+    height: auto;
+    left: 0;
+}
+
+.password-confirm-wrap{
+    position : relative;
+}
+
+.password-wrap{
+    position: relative;
+}
+
+#show-pw-confirm{
+    position: absolute;
+    top: 55%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 14%;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    outline: none;
+    border: none;
+}
+
+#show-pw-confirm img{
     width: 100%;
     height: auto;
     left: 0;
