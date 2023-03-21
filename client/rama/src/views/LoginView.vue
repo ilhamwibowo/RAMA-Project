@@ -20,7 +20,8 @@
                     <div class="password-wrap">
                         <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
                         <button type="button" id="show-pw" v-on:click="tooglePassword()">
-                            <img src="../assets/eye-outline.svg" alt="open eye" />
+                            <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPw"/>
+                            <img src="../assets/eye-off-outline.svg" alt="close eye" v-if="showPw">
                         </button>
                     </div>
                 </div>
@@ -56,7 +57,8 @@ export default {
             password: "",
             invalidEmail: "",
             invalidPassword: "",
-            response: ""
+            response: "",
+            showPw : false
         };
     },
 
@@ -95,9 +97,11 @@ export default {
 
             if(passwordInput.type === "password"){
                 passwordInput.type = "text";
+                this.showPw = true;
                 // showButton.innerHTML = '<img src="../assets/eye-off-outline.svg" alt="closed eye" />';
             }else{
                 passwordInput.type = "password";
+                this.showPw = false;
                 // showButton.innerHTML = '<img src="../assets/eye-outline.svg" alt="open eye" />';
             }
         }
