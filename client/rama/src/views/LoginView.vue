@@ -1,32 +1,45 @@
 ﻿<template>
-    <div class="login">
-        <div class="title">
-            <h1>Rama</h1>
+    <div class="layout">
+        <div class="loginImange">
+            <img src="loginImage.png" alt="loginImage"/>
         </div>
-        <div id="login">
-            <div id="email">
-                <input type="text" name="email" v-model="email" placeholder="E-mail" />
+        <div class="form-container">
+            <div class="title">
+                <h1>LOG IN</h1>
             </div>
-            <div id="invalid-email" v-if="invalidEmail">
-                <p>{{ invalidEmail }}</p>
+            <div id="login">
+                <div id="email">
+                    <label>Email</label><br>
+                    <input type="text" id="email-form" name="email" v-model="email" placeholder="Email" />
+                </div>
+                <div id="invalid-email" v-if="invalidEmail">
+                    <p>{{ invalidEmail }}</p>
+                </div>
+                <div id="password">
+                    <label>Password</label><br>
+                    <div class="password-wrap">
+                        <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                        <button type="button" id="show-pw" v-on:click="tooglePassword()">
+                            <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPw"/>
+                            <img src="../assets/eye-off-outline.svg" alt="close eye" v-if="showPw">
+                        </button>
+                    </div>
+                </div>
+                <div id="invalid-password" v-if="invalidPassword">
+                    <p>{{ invalidPassword }}</p>
+                </div>
+                <div id="login-response" v-if="response">
+                    <p>{{ response }}</p>
+                </div>
+                <div id="forget-password">
+                    <a href="http://localhost:5173/forgot">Forget password</a>
+                </div>
+                <div id="login-button">
+                    <button type="button" id="submit-login" v-on:click="login()">Login</button>
+                </div>
             </div>
-            <div id="password">
-                <input type="password" name="password" v-model="password" placeholder="Password" />
-            </div>
-            <div id="invalid-password" v-if="invalidPassword">
-                <p>{{ invalidPassword }}</p>
-            </div>
-            <div id="login-response" v-if="response">
-                <p>{{ response }}</p>
-            </div>
-            <div id="login-button">
-                <button type="button" v-on:click="login()">Login</button>
-            </div>
-            <div id="register-from-login">
-                <a href="http://localhost:5173/register">Register</a>
-            </div>
-            <div id="forget-password">
-                <a href="http://localhost:5173/forgot">Forget password?</a>
+            <div id="register-container">
+                <p>Don't have an account? <a href="http://localhost:5173/register">Sign Up</a></p>
             </div>
         </div>
     </div>
@@ -44,7 +57,8 @@ export default {
             password: "",
             invalidEmail: "",
             invalidPassword: "",
-            response: ""
+            response: "",
+            showPw : false
         };
     },
 
@@ -76,38 +90,131 @@ export default {
                         this.response = error.response.data;
                     });
             }
+        },
+        tooglePassword(){
+            const passwordInput = document.getElementById("password-form");
+            const showButton = document.getElementById("show-pw");
+
+            if(passwordInput.type === "password"){
+                passwordInput.type = "text";
+                this.showPw = true;
+                // showButton.innerHTML = '<img src="../assets/eye-off-outline.svg" alt="closed eye" />';
+            }else{
+                passwordInput.type = "password";
+                this.showPw = false;
+                // showButton.innerHTML = '<img src="../assets/eye-outline.svg" alt="open eye" />';
+            }
         }
     }
 };
 </script>
 
 <style scoped>
-.title {
-    font-weight: 500;
-    margin-bottom: 1rem;
-    color: var(--color-heading);
-}
 
-.login,
-#email,
-#invalid-email,
-#password,
-#invalid-password,
-#login-button,
-#login-response,
-#register-from-login,
-#forget-password {
+.layout{
+    height: 100%;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.5rem;
 }
 
-#invalid-email,
-#invalid-password,
-#login-response {
-    color: red;
+img {
+    width: 70%;
+    height: auto;
+    display: block;
+}
+
+form-container{
+    width: 30%;
+    height: auto;
+    display: block;
+}
+.title{
+    
+}
+
+#email{
+    text-align: left;
+}
+
+#password{
+    margin-top: 8%;
+    text-align: left;
+}
+
+label{
+    margin-left: 5%;
+}
+
+
+#email-form, #password-form{
+    margin-top: 1%;
+    width: 100%;
+    height: 2vw;
+    font-size: 14px;
+    background: rgb(255, 255, 255);
+    border: 1px solid grey;
+    border-radius: 15px;
+    padding: 0 10px 0 10px;
+}
+
+input::placeholder{
+    font-size: 0.8rem;
+}
+
+#forget-password{
+
+}
+
+#login-button{
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+#submit-login{
+    color: white;
+    width: 100%;
+    background: #1f2220;  
+    height: 2.5vw;
+    border-radius: 0.9rem;
+    border-color: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+#submit-login:hover{
+    background: #FFA801;
+    transition: 0.3s;
+}
+
+#register-container{
+    border-top: 2px solid #000;
+}
+
+.password-wrap{
+    position: relative;
+}
+
+#show-pw{
+    position: absolute;
+    top: 55%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 14%;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    outline: none;
+    border: none;
+}
+
+#show-pw img{
+    width: 100%;
+    height: auto;
+    left: 0;
 }
 </style>
+
