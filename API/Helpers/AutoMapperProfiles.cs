@@ -14,6 +14,11 @@ namespace API.Helpers
         {
             CreateMap<Race, RaceDto>();
             CreateMap<RaceRegistration, RaceRegistDto>();
+            CreateMap<RaceAttendance, RaceAttendanceDto>();
+            CreateMap<Photo, PhotoDto>();
+            CreateMap<Account, ProfileDto>();
+            CreateMap<Album, AlbumDto>();
+
         }
     }
 }

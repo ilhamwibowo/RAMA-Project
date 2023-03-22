@@ -48,11 +48,11 @@ namespace API.Controllers
             {
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Task User creation completed");
-                return new UserDto
+                return Ok(new UserDto
                 {
                     Email = user.Email,
                     Token = _tokenService.CreateToken(user)
-                };
+                });
             }
             catch (Exception e)
             {
@@ -91,7 +91,7 @@ namespace API.Controllers
         [HttpPut("forgotpassword/requestotp")]
         public async Task<ActionResult> RequestOTP(string Email)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Email == Email);
+            var user = await _context.Accounts.Select(x => new {x.Email}).FirstOrDefaultAsync(x => x.Email == Email);
             if (user == null)
                 return BadRequest("Account not found");
             var forgotPasswordHistory = await _context.ForgotPasswordHistories.FirstOrDefaultAsync(x => x.Email == Email && x.Date == DateOnly.FromDateTime(DateTime.Now));

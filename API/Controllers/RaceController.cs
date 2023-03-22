@@ -7,6 +7,7 @@ using API.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace API.Controllers
 {
@@ -16,25 +17,22 @@ namespace API.Controllers
         private readonly DataContext _context;
         private readonly ILogger<AccountController> _logger;
         private readonly IPhotoService _photoService;
-        public RaceController(DataContext context, ILogger<AccountController> logger, IPhotoService photoService)
+        private readonly IMapper _mapper;
+
+        public RaceController(DataContext context, ILogger<AccountController> logger, IPhotoService photoService, IMapper mapper)
         {
             _photoService = photoService;
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         } 
         [HttpPost]
         public async Task<ActionResult> CreateRace(RaceDto raceDto)
         {   
             Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
-            Race race = new Race
-                {
-                    RaceName = raceDto.RaceName,
-                    StartTime = raceDto.StartTime,
-                    StartLocation = raceDto.StartLocation,
-                    Distance = raceDto.Distance,
-                    RegistrationFee = raceDto.RegistrationFee
-                };
+            Race race = _mapper.Map<Race>(raceDto);
+
             await _context.Races.AddAsync(race);
             try {
                 await _context.SaveChangesAsync();
@@ -46,16 +44,20 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetRace), new { Id = race.RaceId}, raceDto);
         }
         [AllowAnonymous]
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult<RaceDto>> GetAllRace()
         {
-            List<Race> races = await _context.Races.ToListAsync();
-            if (races == null) return NotFound();
+            List<Race> races = await _context.Races.Include(x => x.StartLocation).ToListAsync();
 
+            if (races == null) return NotFound();
 
             return Ok
                 (
-                    races
+                    new 
+                    {
+                        Races = _mapper.Map<IEnumerable<RaceDto>>(races),
+                        Length = races.Count
+                    }
                 );
         }
         [AllowAnonymous]
@@ -65,24 +67,12 @@ namespace API.Controllers
             Race race = await _context.Races.Include(r => r.StartLocation).FirstOrDefaultAsync(x => x.RaceId == id);
             if (race == null) return NotFound();
 
-            return Ok
-                (
-                    new RaceDto 
-                        {
-                            RaceName = race.RaceName,
-                            StartTime = race.StartTime,
-                            StartLocation = race.StartLocation,
-                            Distance = race.Distance,
-                            RegistrationFee = race.RegistrationFee,
-                            Points = race.Points
-
-                        }
-                );
+            return Ok(_mapper.Map<RaceDto>(race));
         }
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateRace(int id, RaceDto raceDto)
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
 
             Race race = _context.Races.FirstOrDefault(x => x.RaceId == id);
@@ -110,7 +100,7 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRace(int id)
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
 
             Race race = await _context.Races.FirstOrDefaultAsync(x => x.RaceId == id);
@@ -167,16 +157,16 @@ namespace API.Controllers
                         FinishTime = ra.FinishTime
                     })
                     .ToList();
-                var totalCount = race.RaceAttendee.Count();
 
-                return Ok( new{
-                    RaceName = race.RaceName, 
-                    RaceAttendee = raceAttendance,
-                    TotalCount = totalCount,
-                    CurrentPage = page,
-                    PageSize = pageSize,
-                    TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
-                     });
+                return Ok( new LeaderboardDto
+                    {
+                        RaceName = race.RaceName, 
+                        RaceAttendee = raceAttendance,
+                        TotalCount = raceAttendance.Count,
+                        CurrentPage = page,
+                        PageSize = pageSize,
+                        TotalPages = (int)(raceAttendance.Count / pageSize)
+                    });
             } 
             catch (Exception e) 
             {
@@ -223,8 +213,8 @@ namespace API.Controllers
                     .ToList();
 
                 return Ok( new RaceDto {
-                     RaceName = race.RaceName, 
-                     RaceAttendee = raceAttendance
+                        RaceName = race.RaceName, 
+                        RaceAttendee = raceAttendance
                      });
             } 
             catch (Exception e) 

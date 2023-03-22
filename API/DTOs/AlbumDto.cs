@@ -6,6 +6,6 @@ namespace API.DTOs
 
         public string albumName { get; set; }
 
-        public List<PhotoDto> Photos { get; set; }
+        public List<PhotoDto> AlbumPhotos { get; set; }
     }
 }

@@ -86,7 +86,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<RaceHistoryDto>> GetHistory()
         {
-            Account requester = await _context.Accounts.Include(a => a.RaceHistory).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Include(a => a.RaceHistory).Select(a => new { a.AccId, a.RaceHistory }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
 
             if (requester == null) return Unauthorized();
 
@@ -103,7 +103,7 @@ namespace API.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<RaceHistoryDto>> GetHistoryAll()
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
 
             if (requester == null || requester.Role != "Admin") return Unauthorized();
 
@@ -122,7 +122,7 @@ namespace API.Controllers
         [HttpGet("{RaceId}")]
         public async Task<ActionResult<RaceHistoryDto>> GetRaceRegist(int RaceId)
         {
-            Account requester = await _context.Accounts.Include(a => a.RaceHistory).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Include(a => a.RaceHistory).Select(a => new { a.AccId, a.RaceHistory }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
 
             if (requester == null) return Unauthorized();
 
@@ -138,7 +138,8 @@ namespace API.Controllers
         [HttpPut("{RaceId}/{AccId}")]
         public async Task<ActionResult> UpdateRaceRegistration(int RaceId, int AccId, RaceRegistDto rrDto)
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+
 
             if (requester == null || requester.Role != "Admin") return Unauthorized();
 
@@ -167,11 +168,13 @@ namespace API.Controllers
         [HttpDelete("{RaceId}/{AccId}")]
         public async Task<ActionResult> DeleteRaceRegistration(int RaceId, int AccId)
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+
 
             RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId == RaceId && x.AccId == AccId);
 
 
+            if (rr == null) return NotFound();
 
             // Registration can be deleted by Admin
             // and user can also delete their own Registration if its status is still 0.
@@ -180,7 +183,6 @@ namespace API.Controllers
 
 
 
-            if (rr == null) return NotFound();
 
 
             
