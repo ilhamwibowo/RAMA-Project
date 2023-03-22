@@ -88,16 +88,7 @@ namespace API.Controllers
 
             // Remove photo from table
             _context.Remove(photo);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
+            await _context.SaveChangesAsync();
             return Ok();
         }
 

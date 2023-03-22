@@ -50,35 +50,18 @@ namespace API.Controllers
                     RegistrationFee = race.RegistrationFee
                 };
             requester.RaceHistory.Add(newRR);
-            try 
-                {
-                    await _context.SaveChangesAsync();
-                }
-            catch (Exception e) 
-                {
-                    _logger.LogError(e, "Failed to save Race Registration");
-                    return BadRequest("Failed to save Race Registration");
-                }
+            await _context.SaveChangesAsync();
             // email confirmation
-
-            try
+            await _emailService.SendEmailAsync(
+                new MailDto
                 {
-                    await _emailService.SendEmailAsync(
-                        new MailDto
-                        {
-                            ToEmail = requester.Email,
-                            Subject = "Pendaftaran Event | RAMA",
-                            Body = $"Haloo {requester.Name}! Selamat kamu telah berhasil mendaftarkan diri kamu ke Event {race.RaceName}. "+
-                                   $"Namun, Registrasi Belum selesai, kamu masih perlu membayar Fee sebesar {race.RegistrationFee} rupiah untuk menyelesaikan pendaftaran."+
-                                   $"Jangan Lupa yaa. Kami tunggu kehadiranmu di lapangan!!"
-                        }
-                    );
+                    ToEmail = requester.Email,
+                    Subject = "Pendaftaran Event | RAMA",
+                    Body = $"Haloo {requester.Name}! Selamat kamu telah berhasil mendaftarkan diri kamu ke Event {race.RaceName}. "+
+                            $"Namun, Registrasi Belum selesai, kamu masih perlu membayar Fee sebesar {race.RegistrationFee} rupiah untuk menyelesaikan pendaftaran."+
+                            $"Jangan Lupa yaa. Kami tunggu kehadiranmu di lapangan!!"
                 }
-            catch(Exception e)
-                {
-                    _logger.LogError(e, "Failed to send email");
-                    return BadRequest("Failed to send email");
-                }
+            );
 
 
             return CreatedAtAction(nameof(GetRaceRegist), new {RaceId}, _mapper.Map<RaceRegistDto>(newRR));
@@ -153,16 +136,7 @@ namespace API.Controllers
             rr.TakenKitAt = rrDto.TakenKitAt;
             
             _context.RaceRegistrations.Update(rr);
-
-            try 
-                {
-                    await _context.SaveChangesAsync();
-                }
-            catch (Exception e) 
-                {
-                    _logger.LogError(e, "Failed to update Race Registration");
-                    return BadRequest("Failed to update Race Registration");
-                }
+            await _context.SaveChangesAsync();
             return Ok();
         }
         [HttpDelete("{RaceId}/{AccId}")]
@@ -187,16 +161,7 @@ namespace API.Controllers
 
             
             _context.RaceRegistrations.Remove(rr);
-
-            try 
-                {
-                    await _context.SaveChangesAsync();
-                }
-            catch (Exception e) 
-                {
-                    _logger.LogError(e, "Failed to delete Race Registration");
-                    return BadRequest("Failed to delete Race Registration");
-                }
+                await _context.SaveChangesAsync();
             return Ok();
         }
 

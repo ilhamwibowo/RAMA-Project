@@ -86,17 +86,9 @@ namespace API.Controllers
                 user.Name = profile.Name;
             }
             // Update user profile
-            try {
-                _context.Accounts.Update(user);
-                await _context.SaveChangesAsync();
-            }
-            // Update fails
-            catch(Exception e) {
-                _logger.LogError(e, "Failed to save user");
-                return BadRequest("Failed to save user");
-            }
+            _context.Accounts.Update(user);
+            await _context.SaveChangesAsync();
 
-            // Update success
             return Ok();
             
         }
@@ -117,13 +109,7 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
             _context.Accounts.Update(user);
-            try {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e) {
-                _logger.LogError(e, "Failed to save user");
-                return BadRequest("Failed to save user");
-            }
+            await _context.SaveChangesAsync();
             return Ok(_mapper.Map<PhotoDto>(user.ProfilePhoto));
 
         }
