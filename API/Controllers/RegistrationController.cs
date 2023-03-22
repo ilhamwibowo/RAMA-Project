@@ -6,6 +6,7 @@ using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +20,15 @@ namespace API.Controllers
         private readonly ITokenService _tokenService;
         private readonly ILogger<AccountController> _logger;
         private readonly IEmailService _emailService;
+        private readonly IMapper _mapper;
 
-        public RegistrationController(DataContext context, ITokenService tokenService, ILogger<AccountController> logger, IEmailService emailService)
+        public RegistrationController(DataContext context, ITokenService tokenService, ILogger<AccountController> logger, IEmailService emailService, IMapper mapper)
         {
             _context = context;
             _tokenService = tokenService;
             _logger = logger;
             _emailService = emailService;
+            _mapper = mapper;
         }
         [HttpPost("{RaceId}")] 
         public async Task<ActionResult> CreateRaceRegistration(int RaceId)
@@ -78,7 +81,7 @@ namespace API.Controllers
                 }
 
 
-            return CreatedAtAction(nameof(GetRaceRegist), new {RaceId}, newRR);
+            return CreatedAtAction(nameof(GetRaceRegist), new {RaceId}, _mapper.Map<RaceRegistDto>(newRR));
         }
         [HttpGet]
         public async Task<ActionResult<RaceHistoryDto>> GetHistory()
@@ -87,31 +90,11 @@ namespace API.Controllers
 
             if (requester == null) return Unauthorized();
 
-            List<RaceRegistDto> h = new List<RaceRegistDto>();
-
-            foreach (RaceRegistration rr in requester.RaceHistory)
-            {
-                h.Add
-                    (
-                        new RaceRegistDto 
-                        {
-                            AccId = rr.AccId,
-                            RaceId = rr.RaceId,
-                            RegistedAt = rr.RegistedAt,
-                            Status = rr.Status,
-                            StatusAsText = rr.Status.ToString(),
-                            RegistrationFee = rr.RegistrationFee,
-                            PaidAt = rr.PaidAt,
-                            TakenKitAt = rr.TakenKitAt
-                        }
-                    );
-            }
-
             RaceHistoryDto rh = new RaceHistoryDto 
                 {
                     AccId = requester.AccId,
-                    Histories = h,
-                    Length = h.Count
+                    Histories = _mapper.Map<IEnumerable<RaceRegistDto>>(requester.RaceHistory).ToList(),
+                    Length = requester.RaceHistory.Count
                 };
 
             return Ok(rh);
@@ -126,31 +109,11 @@ namespace API.Controllers
 
             List<RaceRegistration> AllRaceHistory = _context.RaceRegistrations.OrderBy(r => r.RegistedAt).ToList();
 
-            List<RaceRegistDto> h = new List<RaceRegistDto>();
-
-            foreach (RaceRegistration rr in AllRaceHistory)
-            {
-                h.Add
-                    (
-                        new RaceRegistDto 
-                        {
-                            AccId = rr.AccId,
-                            RaceId = rr.RaceId,
-                            RegistedAt = rr.RegistedAt,
-                            Status = rr.Status,
-                            StatusAsText = rr.Status.ToString(),
-                            RegistrationFee = rr.RegistrationFee,
-                            PaidAt = rr.PaidAt,
-                            TakenKitAt = rr.TakenKitAt
-                        }
-                    );
-            }
-
             RaceHistoryDto rh = new RaceHistoryDto 
                 {
                     AccId = requester.AccId,
-                    Histories = h,
-                    Length = h.Count
+                    Histories = _mapper.Map<IEnumerable<RaceRegistDto>>(AllRaceHistory).ToList(),
+                    Length = AllRaceHistory.Count
                 };
 
             return Ok(rh);
@@ -167,18 +130,7 @@ namespace API.Controllers
 
             if (rr == null) return NotFound();
 
-            RaceRegistDto rrDto = new RaceRegistDto
-                {
-                    AccId = rr.AccId,
-                    RaceId = rr.RaceId,
-                    RegistedAt = rr.RegistedAt,
-                    Status = rr.Status,
-                    StatusAsText = rr.Status.ToString(),
-                    RegistrationFee = rr.RegistrationFee,
-                    PaidAt = rr.PaidAt,
-                    TakenKitAt = rr.TakenKitAt
-                };
-            return Ok(rr);
+            return Ok(_mapper.Map<RaceRegistDto>(rr));
         }
 
         

@@ -26,5 +26,9 @@ namespace API.Entities
         public DateTime PaidAt{get; set;}
         public DateTime TakenKitAt{get; set;}
         
+        public string GetStatusAsText()
+        {
+            return Status.ToString();
+        }
     }
 }
