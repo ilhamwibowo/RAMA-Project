@@ -46,10 +46,23 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetRace), new { Id = race.RaceId}, raceDto);
         }
         [AllowAnonymous]
+        [HttpGet()]
+        public async Task<ActionResult<RaceDto>> GetAllRace()
+        {
+            List<Race> races = await _context.Races.ToListAsync();
+            if (races == null) return NotFound();
+
+
+            return Ok
+                (
+                    races
+                );
+        }
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<RaceDto>> GetRace(int id)
         {
-            Race race = await _context.Races.FirstOrDefaultAsync(x => x.RaceId == id);
+            Race race = await _context.Races.Include(r => r.StartLocation).FirstOrDefaultAsync(x => x.RaceId == id);
             if (race == null) return NotFound();
 
             return Ok
