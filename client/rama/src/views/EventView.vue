@@ -36,7 +36,11 @@
                             <p class="status-publish-not" id="notPublished" v-if="!isPublished">Unpublished</p>
                         </td>
                         <td class="table-data">
-                            <button class="detail-button">Detail</button>
+                            <button class="detail-button">
+                                <router-link :to="{params: {id : index+1}, name: 'detailEvent'}">
+                                    Detail
+                                </router-link>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -83,7 +87,7 @@ export default {
             });
         },
         seeDetail(){
-            
+
         }
     },
     mounted(){
