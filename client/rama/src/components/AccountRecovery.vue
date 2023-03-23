@@ -120,7 +120,7 @@ a {
 }
 
 .subtext {
-    width: 200px;
+    width: 250px;
     color:var(--color-heading);
     font-size: 1rem;
     margin-bottom: 50px;

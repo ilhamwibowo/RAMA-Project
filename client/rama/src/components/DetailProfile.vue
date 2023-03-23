@@ -18,16 +18,27 @@ export default {
 
 <style scoped>
 .title {
-    color: aliceblue;
-    font-weight: bold;
-    font-size: medium;
+    color: rgb(28, 28, 29);
+    font-size: 1.5rem;
+    margin-left: 20px;
+}
+
+.detail-profile {
+    text-align: left;
 }
 .text {
     border: 2px solid #5f5f5f;
-    border-radius: 5px;
     padding: 5px 10px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 2px solid grey;
+    color: rgb(63, 62, 62);
+    font-size:1.5rem;
+    font-weight: 600;
 }
 .detail-profile {
-    margin: 10px 0px;
+    margin: 10px 15px 10px 15px;
 }
 </style>
