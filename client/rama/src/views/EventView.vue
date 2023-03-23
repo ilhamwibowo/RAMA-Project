@@ -65,7 +65,7 @@ export default {
         async getEvent(){
             const token = localStorage.getItem("token");
 
-        // Configuration for API
+            // Configuration for API
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
@@ -86,9 +86,6 @@ export default {
                 console.log(err);
             });
         },
-        seeDetail(){
-
-        }
     },
     mounted(){
         this.getEvent();
@@ -138,7 +135,6 @@ export default {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     letter-spacing: 2px;
-
 }
 .table-container{
     width: 80%;
