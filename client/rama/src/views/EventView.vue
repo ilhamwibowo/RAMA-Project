@@ -22,16 +22,18 @@
                     </tr>
                 </thead>
                 <tbody class="table-body">
-                    <tr class="table-row-body">
-                        <td class="table-data">Judul</td>
-                        <td class="table-data">Lokasi</td>
-                        <td class="table-data">tanggal</td>
-                        <td class="table-data">Umum</td>
+                    <tr class="table-row-body" v-for="(event, index) in events" :key="index" >
+                        <td class="table-data" v-text="event.raceName"></td>
+                        <td class="table-data" v-text="event.startLocation"></td>
+                        <td class="table-data" v-text="event.startTime"></td>
+                        <td class="table-data">h</td>
                         <td class="table-data">
-                            <p class="open-regis">Opened</p>
+                            <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
+                            <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
                         </td>
                         <td class="table-data">
-                            <p class="status-publish">Published</p>
+                            <p class="status-publish" id="published" v-if="isPublished">Published</p>
+                            <p class="status-publish-not" id="notPublished" v-if="!isPublished">Unpublished</p>
                         </td>
                         <td class="table-data">
                             <button class="detail-button">Detail</button>
@@ -45,8 +47,51 @@
 
 
 <script>
+import axios from 'axios';
+export default {
+    name: "EventView",
+    data(){
+        return {
+            events: [],
+            isRegistered: false,
+            isPublished: true
+        };
+    },
+    methods: {
+        async getEvent(){
+            const token = localStorage.getItem("token");
 
+        // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            axios
+            .get(import.meta.env.VITE_API_URI + "/race", config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    this.events = response.data.races;
+                    // for debug
+                    // console.log(this.events);
+                    // console.log(this.events[0].raceName);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        },
+        seeDetail(){
+            
+        }
+    },
+    mounted(){
+        this.getEvent();
+    }
+}
 </script>
+
 <style scoped>
 .layout{
     height: 100%;
@@ -128,11 +173,27 @@
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+.close-regis{
+    background: #EC7B7B;
+    border-radius: 15px;
+    left: 25%;
+    width: 50%;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
 .status-publish{
     background: #72E48B;
     border-radius: 15px;
     left: 25%;
     width: 50%;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.status-publish-not{
+    background: #EC7B7B;
+    border-radius: 15px;
+    left: 25%;
+    width: 60%;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
