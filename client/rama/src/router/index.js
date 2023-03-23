@@ -48,6 +48,10 @@ const router = createRouter({
             path: "/album",
             name: "album"
             // component: () => import("../views/AlbumView.vue")
+        },{
+            path: "/event",
+            name: "event",
+            component: () => import("../views/EventView.vue")
         }
     ]
 });
