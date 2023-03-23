@@ -4,6 +4,7 @@ using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +20,14 @@ namespace API.Controllers
         private readonly ITokenService _tokenService;
         private readonly ILogger<AccountController> _logger;
         private readonly IPhotoService _photoService;
-        public UserController(DataContext context, ITokenService tokenService, ILogger<AccountController> logger, IPhotoService photoService)
+        private readonly IMapper _mapper;
+        public UserController(DataContext context, ITokenService tokenService, ILogger<AccountController> logger, IPhotoService photoService, IMapper mapper)
         {
             _photoService = photoService;
             _tokenService = tokenService;
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         } 
 
         [HttpGet]
@@ -36,26 +39,9 @@ namespace API.Controllers
             if(user == null) {
                 return BadRequest("User not found");
             }
-            PhotoDto Photo;
-            if (user.ProfilePhoto == null) {
-                Photo = null;
-            }
-            else {
-                Photo = new PhotoDto{
-                    Id = user.ProfilePhoto.PhotoId,
-                    Url = user.ProfilePhoto.Url
-                };
-            }
+            
             //return user profile
-            return Ok(new ProfileDto{
-                Name = user.Name,
-                Email = user.Email,
-                Role = user.Role,
-                KTP = user.KTP,
-                No_HP = user.No_HP,
-                Birthday = user.Birthday,
-                ProfilePhoto = Photo
-            });
+            return Ok(_mapper.Map<ProfileDto>(user));
         }
 
         [HttpPut("edit")]
@@ -100,18 +86,10 @@ namespace API.Controllers
                 user.Name = profile.Name;
             }
             // Update user profile
-            try {
-                _context.Accounts.Update(user);
-                await _context.SaveChangesAsync();
-            }
-            // Update fails
-            catch(Exception e) {
-                _logger.LogError(e, "Failed to save user");
-                return BadRequest("Failed to save user");
-            }
+            _context.Accounts.Update(user);
+            await _context.SaveChangesAsync();
 
-            // Update success
-            return Ok("Success");
+            return Ok();
             
         }
         [HttpPost("add-photo")]
@@ -131,18 +109,8 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
             _context.Accounts.Update(user);
-            try {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e) {
-                _logger.LogError(e, "Failed to save user");
-                return BadRequest("Failed to save user");
-            }
-            return Ok(new PhotoDto
-            {
-                Id = user.ProfilePhoto.PhotoId,
-                Url = user.ProfilePhoto.Url
-            });
+            await _context.SaveChangesAsync();
+            return Ok(_mapper.Map<PhotoDto>(user.ProfilePhoto));
 
         }
         private bool isImage(string filename){

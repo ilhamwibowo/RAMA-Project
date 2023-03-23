@@ -7,6 +7,7 @@ using API.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace API.Controllers
 {
@@ -16,46 +17,41 @@ namespace API.Controllers
         private readonly DataContext _context;
         private readonly ILogger<AccountController> _logger;
         private readonly IPhotoService _photoService;
-        public RaceController(DataContext context, ILogger<AccountController> logger, IPhotoService photoService)
+        private readonly IMapper _mapper;
+
+        public RaceController(DataContext context, ILogger<AccountController> logger, IPhotoService photoService, IMapper mapper)
         {
             _photoService = photoService;
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         } 
         [HttpPost]
         public async Task<ActionResult> CreateRace(RaceDto raceDto)
         {   
             Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
-            Race race = new Race
-                {
-                    RaceName = raceDto.RaceName,
-                    StartTime = raceDto.StartTime,
-                    StartLocation = raceDto.StartLocation,
-                    Distance = raceDto.Distance,
-                    RegistrationFee = raceDto.RegistrationFee
-                };
+            Race race = _mapper.Map<Race>(raceDto);
+
             await _context.Races.AddAsync(race);
-            try {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e) {
-                _logger.LogError(e, "Failed to save Race");
-                return BadRequest("Failed to save Race");
-            }
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetRace), new { Id = race.RaceId}, raceDto);
         }
         [AllowAnonymous]
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult<RaceDto>> GetAllRace()
         {
-            List<Race> races = await _context.Races.ToListAsync();
-            if (races == null) return NotFound();
+            List<Race> races = await _context.Races.Include(x => x.StartLocation).ToListAsync();
 
+            if (races == null) return NotFound();
 
             return Ok
                 (
-                    races
+                    new 
+                    {
+                        Races = _mapper.Map<IEnumerable<RaceDto>>(races),
+                        Length = races.Count
+                    }
                 );
         }
         [AllowAnonymous]
@@ -65,24 +61,12 @@ namespace API.Controllers
             Race race = await _context.Races.Include(r => r.StartLocation).FirstOrDefaultAsync(x => x.RaceId == id);
             if (race == null) return NotFound();
 
-            return Ok
-                (
-                    new RaceDto 
-                        {
-                            RaceName = race.RaceName,
-                            StartTime = race.StartTime,
-                            StartLocation = race.StartLocation,
-                            Distance = race.Distance,
-                            RegistrationFee = race.RegistrationFee,
-                            Points = race.Points
-
-                        }
-                );
+            return Ok(_mapper.Map<RaceDto>(race));
         }
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateRace(int id, RaceDto raceDto)
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
 
             Race race = _context.Races.FirstOrDefault(x => x.RaceId == id);
@@ -95,38 +79,21 @@ namespace API.Controllers
             race.RegistrationFee = raceDto.RegistrationFee;
 
             _context.Races.Update(race);
-            try 
-                {
-                    await _context.SaveChangesAsync();
-                }
-            catch (Exception e)
-                {
-                    _logger.LogError(e, "Failed to save Race");
-                    return BadRequest("Failed to save Race");
-                }
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRace(int id)
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
 
             Race race = await _context.Races.FirstOrDefaultAsync(x => x.RaceId == id);
             if (race == null) return NotFound();
 
             _context.Races.Remove(race);
-
-            try 
-                {
-                    await _context.SaveChangesAsync();
-                }
-            catch (Exception e)
-                {
-                    _logger.LogError(e, "Failed to delete Race");
-                    return BadRequest("Failed to delete Race");
-                }
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -136,52 +103,45 @@ namespace API.Controllers
         [HttpGet("{raceId}/attendees")]
         public async Task<ActionResult<RaceDto>> GetRaceAttendance(int raceId, int page = 1, int pageSize = 10)
         {
-            try
+            // Get race as per raceId
+            var race = await _context.Races
+                .AsNoTracking()
+                .Where(r => r.RaceId == raceId)
+                .Include(r => r.RaceAttendee)
+                .ThenInclude(ra => ra.Runner.ProfilePhoto)
+                .FirstOrDefaultAsync();
+            
+            // Race not found
+            if (race == null)
             {
-                // Get race as per raceId
-                var race = await _context.Races
-                    .AsNoTracking()
-                    .Where(r => r.RaceId == raceId)
-                    .Include(r => r.RaceAttendee)
-                    .ThenInclude(ra => ra.Runner.ProfilePhoto)
-                    .FirstOrDefaultAsync();
-                
-                // Race not found
-                if (race == null)
+                return NotFound();
+            }
+            
+            // Get race attendance
+            var raceAttendance = race.RaceAttendee
+                .OrderBy(ra => ra.Position)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(ra => new RaceAttendanceDto
                 {
-                    return NotFound();
-                }
-                
-                // Get race attendance
-                var raceAttendance = race.RaceAttendee
-                    .OrderBy(ra => ra.Position)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(ra => new RaceAttendanceDto
-                    {
-                        ProfilePhotoUrl = ra.Runner.ProfilePhoto?.Url,
-                        Name = ra.Runner.Name,
-                        BibNumber = ra.BibNumber,
-                        Position = ra.Position,
-                        Duration = ra.Duration,
-                        FinishTime = ra.FinishTime
-                    })
-                    .ToList();
-                var totalCount = race.RaceAttendee.Count();
+                    ProfilePhotoUrl = ra.Runner.ProfilePhoto?.Url,
+                    Name = ra.Runner.Name,
+                    BibNumber = ra.BibNumber,
+                    Position = ra.Position,
+                    Duration = ra.Duration,
+                    FinishTime = ra.FinishTime
+                })
+                .ToList();
 
-                return Ok( new{
+            return Ok( new LeaderboardDto
+                {
                     RaceName = race.RaceName, 
                     RaceAttendee = raceAttendance,
-                    TotalCount = totalCount,
+                    TotalCount = raceAttendance.Count,
                     CurrentPage = page,
                     PageSize = pageSize,
-                    TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
-                     });
-            } 
-            catch (Exception e) 
-            {
-                return BadRequest(e.Message);
-            }
+                    TotalPages = (int)(raceAttendance.Count / pageSize)
+                });
 
         }
 
@@ -192,45 +152,39 @@ namespace API.Controllers
         [HttpGet("{raceId}/attendance")]
         public async Task<ActionResult<RaceDto>> GetAllRaceAttendance(int raceId)
         {
-            try
+            // Get race as per raceId
+            var race = await _context.Races
+                .AsNoTracking()
+                .Where(r => r.RaceId == raceId)
+                .Include(r => r.RaceAttendee)
+                .ThenInclude(ra => ra.Runner.ProfilePhoto)
+                .FirstOrDefaultAsync();
+            
+            // Race not found
+            if (race == null)
             {
-                // Get race as per raceId
-                var race = await _context.Races
-                    .AsNoTracking()
-                    .Where(r => r.RaceId == raceId)
-                    .Include(r => r.RaceAttendee)
-                    .ThenInclude(ra => ra.Runner.ProfilePhoto)
-                    .FirstOrDefaultAsync();
-                
-                // Race not found
-                if (race == null)
-                {
-                    return NotFound();
-                }
-                
-                // Get race attendance
-                var raceAttendance = race.RaceAttendee
-                    .OrderBy(ra => ra.Position)
-                    .Select(ra => new RaceAttendanceDto
-                    {
-                        ProfilePhotoUrl = ra.Runner.ProfilePhoto?.Url,
-                        Name = ra.Runner.Name,
-                        BibNumber = ra.BibNumber,
-                        Position = ra.Position,
-                        Duration = ra.Duration,
-                        FinishTime = ra.FinishTime
-                    })
-                    .ToList();
-
-                return Ok( new RaceDto {
-                     RaceName = race.RaceName, 
-                     RaceAttendee = raceAttendance
-                     });
-            } 
-            catch (Exception e) 
-            {
-                return BadRequest(e.Message);
+                return NotFound();
             }
+            
+            // Get race attendance
+            var raceAttendance = race.RaceAttendee
+                .OrderBy(ra => ra.Position)
+                .Select(ra => new RaceAttendanceDto
+                {
+                    ProfilePhotoUrl = ra.Runner.ProfilePhoto?.Url,
+                    Name = ra.Runner.Name,
+                    BibNumber = ra.BibNumber,
+                    Position = ra.Position,
+                    Duration = ra.Duration,
+                    FinishTime = ra.FinishTime
+                })
+                .ToList();
+
+            return Ok( new RaceDto {
+                    RaceName = race.RaceName, 
+                    RaceAttendee = raceAttendance
+                    });
+            
         } 
 
 
