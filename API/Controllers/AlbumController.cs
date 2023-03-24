@@ -43,14 +43,9 @@ namespace API.Controllers
             if (result.Error != null) return BadRequest(result.Error.Message);
 
             List<string> stringtag = await _photoService.GetText(result.SecureUrl.AbsoluteUri);
-<<<<<<< HEAD
             if (stringtag.Count > 0) {
                 stringtag.RemoveAt(0);
             };
-=======
-
-            if (stringtag.Count > 0) stringtag.RemoveAt(0);
->>>>>>> 5f7e8819c007e09a8568d7d3ef32a40aa3ec94ba
             //remove bcs the first index isinya semua tag yang digabungin dengan "\n", tidak dibutuhkan
             Photo photo = new Photo
             {
