@@ -4,7 +4,10 @@
             <h1>RAMA</h1>
         </div>
         <div class="list">
-            <AdminSidebarList iconSrc="" text="Ikan" />
+            <AdminSidebarList iconSrc="dashboard-icon.png" text="Dashboard" />
+            <AdminSidebarList iconSrc="accounts-icon.png" text="Accounts" />
+            <AdminSidebarList iconSrc="events-page-icon.png" text="Events" isPage="True"/>
+            <AdminSidebarList iconSrc="album-icon.png" text="Album" />
         </div>
     </div>
 </template>
@@ -38,5 +41,9 @@ export default {
 }
 .list {
     grid-area: list;
+    margin: 100px 70px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 38px;
 }
 </style>
