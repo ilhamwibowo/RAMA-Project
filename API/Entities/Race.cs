@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Google.Api.Gax.ResourceNames;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -8,7 +9,8 @@ namespace API.Entities
     public class Race
     {
         [Key]
-        public int RaceId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid RaceId { get; set; }
 
         public string RaceName { get; set; }
 

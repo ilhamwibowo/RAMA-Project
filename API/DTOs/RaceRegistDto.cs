@@ -8,8 +8,8 @@ namespace API.Entities
 {
     public class RaceRegistDto
     {
-        public int RaceId { get; set; }
-        public int AccId { get; set; }
+        public Guid RaceId { get; set; }
+        public Guid AccId { get; set; }
         public DateTime RegistedAt{ get; set; } = DateTime.UtcNow;
 
         public int RegistrationFee{ get; set; }

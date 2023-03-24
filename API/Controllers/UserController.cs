@@ -1,5 +1,4 @@
 using API.Data;
-using API.Data.Migrations;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -34,7 +33,7 @@ namespace API.Controllers
         public async Task<ActionResult<ProfileDto>> getProfile() {
             // Get user based on id
             int id = User.GetUserId();
-            var user = await _context.Accounts.Include(p => p.ProfilePhoto).FirstOrDefaultAsync(x => x.AccId == id);
+            var user = await _context.Accounts.Include(p => p.ProfilePhoto).FirstOrDefaultAsync(x => x.AccId.Equals(id));
 
             if(user == null) {
                 return BadRequest("User not found");
@@ -47,7 +46,7 @@ namespace API.Controllers
         [HttpPut("edit")]
         public async Task<ActionResult> editProfile(ProfileDto profile) {
             int id = User.GetUserId();
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == id);
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(id));
 
             if (user == null) {
                 return BadRequest("User not found");
@@ -69,7 +68,7 @@ namespace API.Controllers
                     return BadRequest("Invalid KTP");
                 }
                 var checkUser = await _context.Accounts.FirstOrDefaultAsync(x => x.KTP == profile.KTP);
-                if (checkUser != null && checkUser.AccId != id) {            
+                if (checkUser != null && !checkUser.AccId.Equals(id)) {            
                     return BadRequest("KTP already registered");
                 }
                 user.KTP = profile.KTP;
@@ -95,7 +94,7 @@ namespace API.Controllers
         [HttpPost("add-photo")]
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
             if (user == null) return Unauthorized("User not found");
             if (file == null) return BadRequest("No file");
             if (!isImage(file.FileName)) return BadRequest("File must be an Image");
