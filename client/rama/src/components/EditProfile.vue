@@ -1,54 +1,57 @@
 <template>
     <div class="profile">
-        <h1>Edit Profile</h1>
-
-        <!-- Container Image -->
-        <div class="container-image">
-            <input
+        <div class="flex-container"> 
+            <!-- Container Image -->
+            <div class="container-image">
+                <input
                 type="file"
                 id="image"
                 accept="image/*"
                 @change="changePhoto"
                 style="display: none"
-            />
-            <img :src="previewImageUrl" />
-            <div class="edit" @click="uploadPhoto">
-                <div class="circle"></div>
+                />
+                <img :src="previewImageUrl" />
+                <div class="edit" @click="uploadPhoto">
+                    <div class="circle"></div>
+                </div>
+            </div>
+            
+            <!-- Container Detail Profile -->
+            <div class="input-container">
+
+                <div class="container-detail">
+                    <h3 class="title">Name</h3>
+                    <input class="input" v-model="user.name" />
+                </div>
+                <div class="container-detail">
+                    <h3 class="title">Email</h3>
+                    <input class="input" v-model="user.email" />
+                </div>
+                <div class="container-detail">
+                    <h3 class="title">Identity Card</h3>
+                    <input class="input" v-model="user.ktp" />
+                </div>
+                <div class="container-detail">
+                    <h3 class="title">Phone Number</h3>
+                    <input class="input" v-model="user.no_HP" />
+                </div>
+                <div class="container-detail">
+                    <h3 class="title">Birthday</h3>
+                    <input class="input" v-model="user.birthday" />
+                </div>
+            </div>
+
+            <!-- Container Button -->
+            <div class="container-btn">
+                <!-- <router-link :to="{path: '/profile'}"> -->
+                    <button class="btn-save" @click="updateUser">Save</button>
+                    <!-- </router-link> -->
+                    <router-link :to="{ path: `/profile` }">
+                        <button class="btn-cancel">Cancel</button>
+                    </router-link>
+                </div>
             </div>
         </div>
-
-        <!-- Container Detail Profile -->
-        <div class="container-detail">
-            <h3 class="title">Name</h3>
-            <input class="input" v-model="user.name" />
-        </div>
-        <div class="container-detail">
-            <h3 class="title">Email</h3>
-            <input class="input" v-model="user.email" />
-        </div>
-        <div class="container-detail">
-            <h3 class="title">Identity Card</h3>
-            <input class="input" v-model="user.ktp" />
-        </div>
-        <div class="container-detail">
-            <h3 class="title">Phone Number</h3>
-            <input class="input" v-model="user.no_HP" />
-        </div>
-        <div class="container-detail">
-            <h3 class="title">Birthday</h3>
-            <input class="input" v-model="user.birthday" />
-        </div>
-
-        <!-- Container Button -->
-        <div class="container-btn">
-            <!-- <router-link :to="{path: '/profile'}"> -->
-            <button class="btn save" @click="updateUser">Save</button>
-            <!-- </router-link> -->
-            <router-link :to="{ path: `/profile` }">
-                <button class="btn cancel">Cancel</button>
-            </router-link>
-        </div>
-    </div>
 </template>
 
 <script>
@@ -191,24 +194,26 @@ export default {
 </script>
 
 <style scoped>
-    .title {
-        color:black;
-        font-weight: bold;
-        font-size:medium
-    }
-    .input {
-        width:auto;
-        font-size: medium;
-        border: 2px solid #5f5f5f;
-        border-radius: 5px;
-        padding: 5px 10px;
-        background-color: rgba(0,0,0,0);
-        color: black
-    }
-    .edit-detail-profile {
-        margin: 10px 0px 
-    }
-    .container-image {
+.title {
+    color: rgb(10, 10, 10);
+    font-size: 1.5rem;
+    margin-left:20px
+}
+.input {
+    border: 2px solid #5f5f5f;
+    padding: 5px 10px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 2px solid grey;
+    color: rgb(63, 62, 62);
+    font-size: 20px;
+}
+.edit-detail-profile {
+    margin: 10px 0px;
+}
+.container-image {
     display: flex;
     margin: 0 auto;
     width: 150px;
@@ -242,4 +247,87 @@ img {
 .circle:hover {
     opacity: 0.3;
 }
+
+.container-detail {
+    text-align: left;
+}
+.flex-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: auto;
+    grid-gap: 20px;
+    margin-left:125px;
+    margin-right: 125px;
+  }
+
+.input-container {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.container-btn {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    justify-self: center;
+}
+
+
+.btn-save, .btn-cancel {
+  width: 100px;
+  height: 40px;
+  padding: 10px;
+
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+  transition: background-color 0.2s;
+  margin: 5px;
+}
+
+.btn-save {
+    background-color: #1f2220;
+    color: #fff;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: #000000;
+    border:2px solid grey;
+}
+
+.btn-save:hover  {
+  background-color: #171817;
+}
+.btn-cancel:hover {
+    background-color: #b5b9b5
+}
+  /** Make the website responsive */
+  @media screen and (max-width: 768px) {
+    .flex-container {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      margin-left:20px;
+    margin-right: 20px;
+    }
+
+    .container-image {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      justify-self: center;
+    }
+
+    .input-container {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+    }
+
+    .container-btn {
+      grid-column: 1 / 2;
+      grid-row: 3 / 4;
+      justify-self: center;
+    }
+  }
+
 </style>
