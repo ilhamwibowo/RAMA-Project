@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Entities
 {
     public class Photo
     {
         [Key]
-        public int PhotoId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid PhotoId { get; set; }
         public string Url { get; set; }
         public string PublicId { get; set; }
 
