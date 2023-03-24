@@ -4,7 +4,7 @@
             <button class="edit-button">EDIT</button>
         </div>
         <div class="image-container">
-            <img src="./contohGambar.png" alt="GambarEvent">
+            <img src="./contohGambar.png" alt="GambarEvent" id="race-photo">
         </div>
         <div class="information-container">
             <div class="row-one">
@@ -69,7 +69,7 @@
             </table>
         </div>
         <div class="maps">
-            <img src="./contohGambar.png" alt="maps maraton">
+            <img src="./maps-image.png" alt="maps maraton" id="maps-image">
         </div>
     </div>
 </template>
@@ -122,7 +122,7 @@ export default {
 .layout{
     background: #FFF;
     width: 90%;
-    height: 150%;
+    height: auto;
     left: 5%;
     justify-content: center;
     border-radius: 15px;
@@ -146,6 +146,12 @@ export default {
 
 .image-container{
     margin-top: 2%;
+    height: 20%;
+}
+
+#race-photo{
+    height: auto;
+    width: 20%;
 }
 .information-container{
     margin-top: 2%;
@@ -233,6 +239,12 @@ label{
 
 .maps{
     margin-bottom: 10%;
+    height: 30%;
+}
+
+#maps-image{
+    width: 40%;
+    height: auto;
 }
 
 </style>
