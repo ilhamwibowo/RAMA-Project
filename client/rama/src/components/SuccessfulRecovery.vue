@@ -26,10 +26,14 @@ export default {
     align-items: center;
     justify-content: center;
     margin-bottom: 0.5rem;
+    width: 100%;
+    height: 720px;
 }
 
 .title {
-    font-weight: 500;
+
+    font-weight: 300;
+    font-size: 20px;
     margin-bottom: 1rem;
     color: var(--color-heading);
 }

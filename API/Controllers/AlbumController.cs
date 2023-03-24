@@ -4,6 +4,7 @@ using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using API.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,28 +17,40 @@ namespace API.Controllers
         private readonly DataContext _context;
         private readonly ILogger<AccountController> _logger;
         private readonly IPhotoService _photoService;
-        public AlbumController(DataContext context, ILogger<AccountController> logger, IPhotoService photoService)
+        private readonly IMapper _mapper;
+        public AlbumController(DataContext context, ILogger<AccountController> logger, IPhotoService photoService, IMapper mapper)
         {
             _photoService = photoService;
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
         [HttpPost("{albumId}")]
         public async Task<ActionResult> AddPhoto(int albumId, IFormFile file)
         {
-            Account requester = _context.Accounts.FirstOrDefault(x => x.AccId == User.GetUserId());
-            // if (requester.Role != "Admin") Unauthorized("No Permission!");
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+
+            if (requester == null || requester.Role != "Admin") Unauthorized("No Permission!");
+
             if (!isImage(file.FileName)) return BadRequest("File must be an Image");
 
             Album album = _context.Albums.FirstOrDefault(x => x.AlbumId == albumId);
+
             if (album == null) return BadRequest("Album Not Found");
+            
             var result = await _photoService.AddPhototoAlbumAsync(file, album.AlbumName);
 
             if (result.Error != null) return BadRequest(result.Error.Message);
+
             List<string> stringtag = await _photoService.GetText(result.SecureUrl.AbsoluteUri);
+<<<<<<< HEAD
             if (stringtag.Count > 0) {
                 stringtag.RemoveAt(0);
             };
+=======
+
+            if (stringtag.Count > 0) stringtag.RemoveAt(0);
+>>>>>>> 5f7e8819c007e09a8568d7d3ef32a40aa3ec94ba
             //remove bcs the first index isinya semua tag yang digabungin dengan "\n", tidak dibutuhkan
             Photo photo = new Photo
             {
@@ -49,7 +62,7 @@ namespace API.Controllers
             album.AlbumPhotos.Add(photo);
             _context.Albums.Update(album);
             await _context.SaveChangesAsync();
-            return Ok();
+            return CreatedAtAction(nameof(GetAlbums), new {id = albumId}, _mapper.Map<PhotoDto>(photo));
         }
 
         [HttpGet("{id}")]
@@ -60,36 +73,18 @@ namespace API.Controllers
 
             List<String> queryList = query.ToLower().Split(new char[] { ',', ' ', '\n', ';' }).ToList();
             var album = await _context.Albums.Include(x => x.AlbumPhotos).FirstOrDefaultAsync(a => a.AlbumId == id);
-            // return Ok(album);
-            var photos = album.AlbumPhotos;
-            if (query != string.Empty)
-                photos = photos.FindAll(photo => queryList.Any(q => photo.BibTags.Contains(q)));
-            var photoDtos = new List<PhotoDto>();
-            foreach (var photo in photos)
-            {
-                photoDtos.Add(new PhotoDto
-                {
-                    Id = photo.PhotoId,
-                    Url = photo.Url,
-
-                });
-            }
-            return Ok(
-                new AlbumDto
-                {
-                    albumId = album.AlbumId,
-                    albumName = album.AlbumName,
-                    Photos = photoDtos,
-
-                }
-            );
+            
+            return Ok(_mapper.Map<AlbumDto>(album));
 
         }
 
         [HttpDelete("photos/{photoId}")]
         public async Task<IActionResult> DeletePhoto(int photoId)
         {
-            // Find photo
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+
+            if (requester == null || requester.Role != "Admin") Unauthorized("No Permission!");
+
             var photo = await _context.Photo.FindAsync(photoId);
             if (photo == null) return NotFound();
 
@@ -99,16 +94,7 @@ namespace API.Controllers
 
             // Remove photo from table
             _context.Remove(photo);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
