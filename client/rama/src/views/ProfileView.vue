@@ -1,6 +1,5 @@
 <template>
     <div class="view">
-        <Header class="header" />
         <Profile class="body" />
         <div class="footer"></div>
     </div>
@@ -8,12 +7,10 @@
 
 <script>
 import Profile from "../components/Profile.vue";
-import Header from "../components/Header.vue";
 export default {
     name: "ProfileView",
     components: {
         Profile,
-        Header
     }
 };
 </script>

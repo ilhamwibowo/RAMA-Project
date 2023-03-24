@@ -7,11 +7,11 @@
             <RouterLink to="/">Home</RouterLink>
             <RouterLink to="/album">Album</RouterLink>
         </nav>
-        <nav class="subtitle user-manager" v-if="checkLogin()">
+        <nav class="subtitle user-manager" v-if="checkLogin">
             <RouterLink to="/login">Login</RouterLink>
             <RouterLink to="/register">Register</RouterLink>
         </nav>
-        <nav class="subtitle profile" v-if="!checkLogin()">
+        <nav class="subtitle profile" v-if="!checkLogin">
             <RouterLink to="/profile">Hello, {{ this.username }}!</RouterLink>
         </nav>
     </header>
@@ -36,10 +36,10 @@ export default {
             username: "name"
         })
     },
-    
+
     methods: {
         checkLogin() {
-            return localStorage.getItem('token') === null;
+            return localStorage.getItem("token") === null;
         }
     }
 };
