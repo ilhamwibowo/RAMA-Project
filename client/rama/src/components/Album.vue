@@ -12,6 +12,7 @@
         </div>
         <br><br><br><br>
         <AlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
+        <br><br><br><br>
         <Pagination :totalPage="totalPage" :pager="pager" :page="page" @changePage="updatePage" @changePager="updatePager"/>
     </div>
 </template>
@@ -114,8 +115,9 @@ export default {
             inputPhotos.forEach((file) => {
                 this.sendPostPhoto(file)
             })
+            this.albumPaginationKey += 1;
         },
-        sendPostPhoto(file) {
+        async sendPostPhoto(file) {
             var status
 
             // get token
@@ -133,7 +135,7 @@ export default {
                 }
             };
             
-            axios
+            await axios
                 .post(import.meta.env.VITE_API_URI + "/Album/" + this.albumId, formData, configPhoto)
                 .then((response => console.log(response)))
                 .catch((err) => console.log(err))
