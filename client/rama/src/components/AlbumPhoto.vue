@@ -26,7 +26,7 @@ export default {
     },
     props: {
         photoUrl: String,
-        photoId: String,
+        photoId: Number,
     },
     methods: {
         onClickCheck(event) {

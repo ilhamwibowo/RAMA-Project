@@ -17,8 +17,7 @@ export default {
         AlbumPhoto
     },
     props: {
-        photosInput: Array,
-        key: String
+        photosInput: Array
     }
     /** TODO: cek setiap foto ada di list atau nggak, kalau ada nanti send check ke album photo, trus nanti di handle di photo kalau nilainya true atau false */
 }
