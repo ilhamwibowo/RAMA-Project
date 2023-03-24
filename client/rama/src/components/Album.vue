@@ -1,14 +1,16 @@
 <template>
     <div>
         <p class="title">Album Page</p>
-        <AlbumSearch @searchInput="search"/>
-        
-        <div>
-            <input type="file" id="image" accept="image/*" multiple="multiple" @change="uploadPhoto" style="display:none;"/>
-            <button class="btn upload" @click="uploadClicked" >Upload</button>
-            <button class="btn download" @click="download">Download</button>
+        <br>
+        <div id="box">
+            <AlbumSearch @searchInput="search" id="search"/>
+            <div id="button">
+                <input type="file" id="image" accept="image/*" multiple="multiple" @change="uploadPhoto" style="display:none;"/>
+                <button class="btn upload" @click="uploadClicked" >Upload</button>
+                <button class="btn download" @click="download">Download</button>
+            </div>
         </div>
-
+        <br><br><br><br>
         <AlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
         <Pagination :totalPage="totalPage" :pager="pager" :page="page" @changePage="updatePage" @changePager="updatePager"/>
     </div>
@@ -50,9 +52,6 @@ export default {
 
         /** Search */
         async search(keySearch) {
-            console.log("Key: ", keySearch);
-            /** TODO: Fetch data according to keySearch */
-
             // Get data
             const token = localStorage.getItem("token");
 
@@ -66,21 +65,18 @@ export default {
                 .get(import.meta.env.VITE_API_URI + "/Album/" + this.albumId + "?query=" + encodeURI(keySearch), config)
                 .then((response) => {
                     this.listPhotos = response.data.photos
-                    console.log(response)
                 })
                 .catch((err) => {
                     console.log(err);
                 });
 
-
-            console.log(this.listPhotos)
-
+            this.totalPhoto = this.listPhotos.length
+            
             this.updatePage(this.page)
         },
 
         /** Download */
         download() {
-            console.log("download");
             const zip = new JSZip();
 
             const listCheck = photos.PhotosCheckUrl();
@@ -161,6 +157,7 @@ export default {
         updatePager(n) {
             this.pager = n;
             this.totalPage = Math.ceil(this.totalPhoto/this.pager)
+            
 
             let page = this.page
             let pager = this.pager
@@ -185,25 +182,34 @@ export default {
             .get(import.meta.env.VITE_API_URI + "/Album/" + this.albumId, config)
             .then((response) => {
                 this.listPhotos = response.data.photos
-                console.log(response)
             })
             .catch((err) => {
                 console.log(err);
             });
 
-
-        console.log(this.listPhotos)
-
+        this.totalPhoto = this.listPhotos.length
         this.updatePage(this.page)
+        this.updatePager(this.pager)
     }
 
 }
 </script>
 
 <style scoped>
-.photo-container {
-    column-count: 3;
-    column-gap: 25px;
+#box {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas: 
+    "none search button";
+}
+#search {
+    grid-area: search;
+    justify-content: center;
+}
+#button {
+    display: flex;
+    grid-area: button;
+    justify-content: end;
 }
 .btn {
     font-family: "Bebas Neue";
