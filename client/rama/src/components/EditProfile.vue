@@ -55,16 +55,12 @@
 </template>
 
 <script>
-import DetailProfile from "./DetailProfile.vue";
-import EditDetailProfile from "./EditDetailProfile.vue";
-import axios from "axios";
+import axios from 'axios';
+
+const env = import.meta.env;
 
 export default {
-    name: "Profile",
-    components: {
-        DetailProfile,
-        EditDetailProfile
-    },
+    name: 'Profile',
     data() {
         return {
             user: Object,
@@ -82,6 +78,7 @@ export default {
             // console.log(this.previewImageUrl)
             console.log(this.flagPhoto);
 
+            // If user upload new photo
             if (this.flagPhoto) {
                 console.log("A");
                 // Configuration for post api
@@ -95,6 +92,10 @@ export default {
                 // Create FormData file for post api
                 var formData = new FormData();
                 formData.append("file", this.previewImage);
+
+                for (const value of formData.values()) {
+                    console.log(value);
+                }
 
                 // Axios Post
                 await axios

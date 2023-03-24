@@ -44,21 +44,17 @@ namespace API.Controllers
             };
 
             _context.Accounts.Add(user);
-            try
-            {
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Task User creation completed");
-                return new UserDto
-                {
-                    Email = user.Email,
-                    Token = _tokenService.CreateToken(user)
-                };
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Failed to save user");
-                return BadRequest("Failed to save user");
-            }
+            
+            await _context.SaveChangesAsync();
+
+            return Ok
+            (
+                new UserDto
+                    {
+                        Email = user.Email,
+                        Token = _tokenService.CreateToken(user)
+                    }
+            );
         }
 
         // Login Endpoint here
@@ -91,7 +87,7 @@ namespace API.Controllers
         [HttpPut("forgotpassword/requestotp")]
         public async Task<ActionResult> RequestOTP(string Email)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Email == Email);
+            var user = await _context.Accounts.Select(x => new {x.Email}).FirstOrDefaultAsync(x => x.Email == Email);
             if (user == null)
                 return BadRequest("Account not found");
             var forgotPasswordHistory = await _context.ForgotPasswordHistories.FirstOrDefaultAsync(x => x.Email == Email && x.Date == DateOnly.FromDateTime(DateTime.Now));
@@ -104,21 +100,14 @@ namespace API.Controllers
                 await _context.SaveChangesAsync();
                 _logger.LogInformation(forgotPasswordHistory.Otp);
                 _logger.LogInformation(forgotPasswordHistory.Email);
-                try{
-                    await _emailService.SendEmailAsync(
-                        new MailDto
-                        {
-                            ToEmail = Email,
-                            Subject = "Forgot Password OTP",
-                            Body = $"Your OTP is {forgotPasswordHistory.Otp}"
-                        }
-                    );
-                }
-                catch(Exception e){
-                    _logger.LogError(e, "Failed to send email");
-                    return BadRequest("Failed to send email");
-                }
-
+                await _emailService.SendEmailAsync(
+                    new MailDto
+                    {
+                        ToEmail = Email,
+                        Subject = "Forgot Password OTP",
+                        Body = $"Your OTP is {forgotPasswordHistory.Otp}"
+                    }
+                );
                 return NoContent();
             }
             else {
@@ -131,20 +120,14 @@ namespace API.Controllers
                 };
                 _context.ForgotPasswordHistories.Add(fph);
                 await _context.SaveChangesAsync();
-                try{
-                    await _emailService.SendEmailAsync(
-                        new MailDto
-                        {
-                            ToEmail = Email,
-                            Subject = "Forgot Password OTP",
-                            Body = $"Your OTP is {fph.Otp}"
-                        }
-                    );
-                }
-                catch(Exception e){
-                    _logger.LogError(e, "Failed to send email");
-                    return BadRequest("Failed to send email");
-                }
+                await _emailService.SendEmailAsync(
+                    new MailDto
+                    {
+                        ToEmail = Email,
+                        Subject = "Forgot Password OTP",
+                        Body = $"Your OTP is {fph.Otp}"
+                    }
+                );
                 return NoContent();
             }
         }
