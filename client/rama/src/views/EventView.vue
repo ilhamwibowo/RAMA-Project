@@ -78,7 +78,7 @@ export default {
             };
 
             axios
-            .get(import.meta.env.VITE_API_URI + "/Race/1", config)
+            .get(import.meta.env.VITE_API_URI + "/Race", config)
             .then((response) => {
                 if(response.status !== 200){
                     console.log(response);

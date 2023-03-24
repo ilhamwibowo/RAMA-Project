@@ -6,7 +6,7 @@
         <div class="list">
             <AdminSidebarList iconSrc="dashboard-icon.png" text="Dashboard" />
             <AdminSidebarList iconSrc="accounts-icon.png" text="Accounts" />
-            <AdminSidebarList iconSrc="events-page-icon.png" text="Events" isPage="True"/>
+            <AdminSidebarList iconSrc="events-page-icon.png" text="Events" isPage="true"/>
             <AdminSidebarList iconSrc="album-icon.png" text="Album" />
         </div>
     </div>
