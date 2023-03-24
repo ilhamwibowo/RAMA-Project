@@ -1,7 +1,7 @@
 <template>
     <div class="search">
-        <input type="text" class="search" v-model=keySearch @input="sendInput">
-        <p>{{ text }}</p>
+        <input type="text" id="input-search" v-model=keySearch @input="sendInput">
+        <img src="search.png" id="img-search" >
     </div>    
 </template>
 
@@ -23,8 +23,6 @@ export default {
             }
             this.timer = setTimeout(() => {
                 /** Search input */
-                // console.log(this.keySearch);
-                // this.text = this.keySearch;
                 this.$emit("searchInput", this.keySearch)
             }, 800);
         }
@@ -33,5 +31,31 @@ export default {
 </script>
 
 <style scoped>
+.search {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: auto;
+    grid-template-areas: 
+    "icon box";
+}
 
+#img-search {
+    grid-area: icon;
+    height: 50px;
+    padding-top: 10px;
+    padding-left: 15px;
+}
+
+#input-search {
+    grid-area: icon;
+    background-color: white;
+    border: black 1px solid;
+    padding: 20px 20px 20px 60px;
+    height: 60px;
+    width: 50vw;
+    max-width: 700px;
+    border-radius: 100px;
+    font-size: 22px;
+    font-family: 'darker grotesque';
+}
 </style>
