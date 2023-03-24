@@ -1,16 +1,16 @@
 <template>
     <div class="photo-container">
-            <AlbumPhoto
+        <AlbumPhoto
             v-for="photo in this.photosInput"
             :key="photo.id"
             :photoId="photo.id"
-            :photoUrl="photo.url"/>
-            
-        </div>
+            :photoUrl="photo.url"
+        />
+    </div>
 </template>
 
 <script>
-import AlbumPhoto from '../components/AlbumPhoto.vue';
+import AlbumPhoto from "../components/AlbumPhoto.vue";
 export default {
     name: "AlbumPagination",
     components: {
@@ -20,7 +20,7 @@ export default {
         photosInput: Array
     }
     /** TODO: cek setiap foto ada di list atau nggak, kalau ada nanti send check ke album photo, trus nanti di handle di photo kalau nilainya true atau false */
-}
+};
 </script>
 
 <style scoped>

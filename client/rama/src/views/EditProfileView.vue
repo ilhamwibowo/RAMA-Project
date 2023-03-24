@@ -10,7 +10,7 @@ import EditProfile from "../components/EditProfile.vue";
 export default {
     name: "EditProfileView",
     components: {
-        EditProfile,
+        EditProfile
     }
 };
 </script>

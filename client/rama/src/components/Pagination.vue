@@ -1,8 +1,16 @@
 <template>
     <div class="pagination">
-        <button @click="onClickPrev" id="btn-prev"><img src="left-arrow.png"></button>
-        <button v-for="n in this.totalPage" :key="n" class="btn-page" :id="n" @click="onClickPage(n)">{{ n }}</button>
-        <button @click="onClickNext" id="btn-next"><img src="right-arrow.png"></button>
+        <button @click="onClickPrev" id="btn-prev"><img src="left-arrow.png" /></button>
+        <button
+            v-for="n in this.totalPage"
+            :key="n"
+            class="btn-page"
+            :id="n"
+            @click="onClickPage(n)"
+        >
+            {{ n }}
+        </button>
+        <button @click="onClickNext" id="btn-next"><img src="right-arrow.png" /></button>
         <select id="pager" @change="onClickPager">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -22,12 +30,12 @@ export default {
     methods: {
         onClickPrev() {
             if (this.page !== 1) {
-                this.$emit("changePage", this.page-1);
+                this.$emit("changePage", this.page - 1);
             }
         },
         onClickNext() {
             if (this.page !== this.totalPage) {
-                this.$emit("changePage", this.page+1);
+                this.$emit("changePage", this.page + 1);
             }
         },
         onClickPage(n) {
@@ -37,12 +45,11 @@ export default {
         },
         onClickPager() {
             var e = document.getElementById("pager");
-            var value = e.value
-            if (value !== this.pager)
-                this.$emit("changePager", value);
+            var value = e.value;
+            if (value !== this.pager) this.$emit("changePager", value);
         }
     }
-}
+};
 </script>
 
 <style scoped>
@@ -54,24 +61,23 @@ export default {
 }
 #btn-prev {
     border: 0px;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 #btn-next {
     border: 0px;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .btn-page {
     padding: 5px;
     height: 36px;
     width: 36px;
-    font-family: 'Bebas Neue';
+    font-family: "Bebas Neue";
     font-size: 24px;
     border: 0px;
-    background-color: #D9D9D9;
-    border-radius:5px;
+    background-color: #d9d9d9;
+    border-radius: 5px;
     justify-content: center;
 }
-
 </style>

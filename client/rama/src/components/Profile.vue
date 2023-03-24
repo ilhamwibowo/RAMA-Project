@@ -1,8 +1,7 @@
 <template>
     <div class="profile">
         <div class="flex-container">
-
-                <!-- Container Image -->
+            <!-- Container Image -->
             <div class="container-image">
                 <img :src="previewImageUrl" />
             </div>
@@ -15,7 +14,7 @@
                 <DetailProfile title="Phone Number" :text="user.no_HP" />
                 <DetailProfile title="Birthday" :text="user.birthday" />
             </div>
-            
+
             <!-- Container Button -->
             <div class="container-btn">
                 <router-link :to="{ path: '/profile/edit/' }">
@@ -110,65 +109,63 @@ img {
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: auto;
     grid-gap: 20px;
-    margin-left:125px;
+    margin-left: 125px;
     margin-right: 125px;
-  }
-
+}
 
 .container-detail {
     grid-column: 2 / 3;
     grid-row: 1 / 2;
 }
 
-  .container-btn {
+.container-btn {
     grid-column: 3 / 4;
     grid-row: 1 / 2;
     justify-self: center;
-  }
-
+}
 
 .btn-edit {
-  width: 100px;
-  height: 40px;
-  padding: 10px;
-  background-color: #1f2220;
-  color: #fff;
-  border-radius: 30px;
-  border: none;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+    width: 100px;
+    height: 40px;
+    padding: 10px;
+    background-color: #1f2220;
+    color: #fff;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
     font-weight: bold;
-  transition: background-color 0.2s;
+    transition: background-color 0.2s;
 }
 
 .btn-edit:hover {
-  background-color: #171817;
+    background-color: #171817;
 }
 
-  /** Make the website responsive */
-  @media screen and (max-width: 768px) {
+/** Make the website responsive */
+@media screen and (max-width: 768px) {
     .flex-container {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto auto auto;
-      margin-left:20px;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        margin-left: 20px;
         margin-right: 20px;
     }
 
     .container-image {
-      grid-column: 1 / 2;
-      grid-row: 1 / 2;
-      justify-self: center;
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        justify-self: center;
     }
 
     .container-detail {
-      grid-column: 1 / 2;
-      grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
     }
 
     .container-btn {
-      grid-column: 1 / 2;
-      grid-row: 3 / 4;
-      justify-self: center;
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+        justify-self: center;
     }
-  }
+}
 </style>
