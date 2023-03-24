@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="album">
         <Album/>
     </div>
 </template>
@@ -15,4 +15,7 @@ export default {
 </script>
 
 <style scoped>
+.album {
+    margin: 0 300px 0 300px;
+}
 </style>
