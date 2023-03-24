@@ -7,7 +7,102 @@
                     <h1 class="title-page">EVENTS</h1>
                 </div>
                 <div class="button-add-container">
-                    <button class="add-button">ADD</button>
+                    <button class="add-button" @click="toggleForm">ADD</button>
+                
+                <!-- POP UP FORM FOR CREATING NEW EVENT -->
+                <form v-if="showForm">
+                   <!-- <div class="container-image">
+                       <input
+                           type="file"
+                           id="image"
+                           accept="image/*"
+                           @change="changePhoto"
+                       />
+                       <img :src="previewImageUrl" />
+                   </div> -->
+                   <div class="form-grid">
+                       <!-- Left column -->
+                       <div class="grid-item">
+                           <label for="name">Name</label>
+                           <input type="text" id="name" v-model="name">
+                           
+                           <label for="city">City</label>
+                           <input type="number" id="city" v-model="city" placeholder="TBI">
+                           
+                           <label for="start-date">Start Date</label>
+                           <input type="datetime-local" id="start-date" v-model="startDate">
+                           
+                       </div>
+                       
+                       <!-- Right column -->
+                       <div class="grid-item">
+                           <label for="startlocation">Start Location</label>
+                           <input type="text" id="startlocation" v-model="startLocation">
+
+                           <label for="latitude">Latitude</label>
+                           <input type="text" id="latitude" v-model="latitude">
+
+                           <label for="longitude">Longitude</label>
+                           <input type="text" id="longitude" v-model="longitude">
+
+                       </div>
+                       
+                       <!-- Bottom row -->
+                       <div class="grid-item">
+                           <div class="row">
+                               <div class="row-item">
+                                   <label for="course-map">Course Map</label>
+                                   <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
+                               </div>
+
+                           </div>           
+                           
+
+                       </div>
+
+                       <div class="grid-item">
+                           <div class="row">
+                               <label for="isPublish">Published</label>
+                               <input id="isPublish" type="checkbox" v-model="isPublish">
+                               <label for="isAttending">Open Registration</label>
+                               <input id="isOpen" type="checkbox" v-model="isOpen">
+                           </div>
+                       </div>
+
+                       <div class="grid-item">
+                           <div class="row-item">
+                               <label for="category">Category</label>
+                               <input type="text" id="category" v-model="category">
+                           </div>
+
+                       </div>
+
+                       <div class="grid-item">
+                           <div class="row">
+                               <div class="row-item"> 
+                                   <label for="distance"> Distance</label>
+                                   <input type="number" id="distance" v-model="distance">
+                               </div>
+
+                               <div class="row-item"> 
+                                   <label for="price">Price</label>
+                                   <input type="number" id="price" v-model="price">
+                               </div>
+                           </div>
+                       </div>
+
+                       <div class="grid-item"></div>
+                       <div class="grid-item">
+                           <div class="button-container"> 
+                               <button class="btn-cancel" @click="toggleForm">CANCEL</button>
+                               <button class="btn-save" @click="saveEvent">SAVE</button>
+                           </div> 
+                       </div>                      
+                       </div>
+               </form>
+               <div class="overlay" v-if="showForm"></div>
+
+               <!-- END OF POP UP FORM -->
                 </div>
             </div>
             <div class="table-container">
@@ -62,7 +157,21 @@ export default {
         return {
             events: [],
             isRegistered: false,
-            isPublished: true
+            isPublished: true,
+            showForm: false,
+            name: "", 
+            city: "", 
+            startDate: "",
+            startLocation: "",
+            latitude: "",
+            longitude: "",
+            courseMap: "",
+            isOpen: false,
+            isPublish:false,
+            category: "",
+            distance: "",
+            price: "",
+            previewImageUrl: ""
         };
     },
     components: {
@@ -93,6 +202,69 @@ export default {
                 console.log(err);
             });
         },
+        // This method is for creating a new event which is used 
+        // in the "Save" button on the form
+        async saveEvent() {
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            // Convert local time to UTC time
+            const startTime = new Date(this.startDate).toISOString();
+            
+            const data = {
+                raceName: this.name,
+                city: this.city,
+                startTime: startTime,
+                startLocation: {
+                    name : this.startLocation,
+                    latitude: this.latitude,
+                    longitude: this.longitude,
+                    category: this.category
+                },
+                distance: this.distance,
+                registrationFee: this.price,
+                
+                // This is still unused for now, but will be used.
+                // Since it does not matter, I put it in anyway.
+                courseMap: this.courseMap,
+                isOpen: this.isOpen,
+                isPublished: this.isPublished
+            };
+
+            axios
+            .post(import.meta.env.VITE_API_URI + "/Race", data, config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    // Refresh the event list.
+                    alert("succeszzz");
+                    this.getEvent();
+                    // Close the form.
+                    this.showForm = false;
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }, toggleForm() {
+            this.showForm = !this.showForm;
+            if (this.showForm) {
+                // add event listener to close form on escape key press
+                document.addEventListener("keydown", this.handleEscapeKey);
+            } else {
+                // remove event listener when form is closed
+                document.removeEventListener("keydown", this.handleEscapeKey);
+            }
+        },handleEscapeKey(event) {
+            if (event.keyCode === 27) {
+                this.showForm = false;
+            }
+        },
     },
     mounted(){
         this.getEvent();
@@ -110,6 +282,123 @@ export default {
     "sidebar main";
 }
 
+/********************** FORMS ****************/
+form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 999;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: left;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+
+  }
+  
+.form-grid .grid-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 10px;
+  }
+  
+
+  /* Optional styling for labels and inputs */
+label {
+    font-weight: bold;
+}
+  
+input {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .form-grid input[type=text], 
+  .form-grid input[type=number],
+  .form-grid input[type=datetime-local] {
+    border: 2px solid #5f5f5f;
+    padding: 5px 10px;
+    width: 100%;
+    border-radius: 20px;
+    border: 2px solid grey;
+    color: rgb(63, 62, 62);
+    font-size: 20px;
+  }
+
+  .form-grid label {
+    margin-left:10px;
+  }
+  
+.form-grid button {
+    width: 100px;
+    height: 40px;
+    padding: 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    margin: 5px;
+}
+
+.btn-save {
+    background-color: #1f2220;
+    color: #fff;
+}
+.btn-cancel {
+    background-color: transparent;
+    color: #000000;
+    border:2px solid grey;
+}
+.btn-save:hover  {
+  background-color: #171817;
+}
+.btn-cancel:hover {
+    background-color: #b5b9b5
+}
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap:10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: right;
+    flex-wrap: nowrap;
+    gap:10px;
+}
+.row label {
+  margin-right: 10px;
+}
+.row input {
+  flex-grow: 1;
+}
+
+
+/********************** Base (Table and else) ****************/
 .sidebar {
     grid-area: sidebar;
 }
@@ -145,16 +434,23 @@ export default {
 }
 .add-button{
     width: 10%;
-    height: 70%;
+    height: 80%;
     right: 20%;
     top: 10%;
-    background: #353642 ;
+    background-color: #1f2220;
+    color: #fff;
+    cursor:pointer;
     border: 1px solid grey;
     border-radius: 15px;
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     letter-spacing: 2px;
 }
+
+.add-button:hover {
+    background-color: #171817;
+}
+
 .table-container{
     width: 80%;
     left: 10%;
