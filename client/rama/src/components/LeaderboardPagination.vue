@@ -126,6 +126,7 @@ export default {
 
 <style scoped>
 ul {
+    margin-top: 2em;
     padding: 0 0 !important;
 }
 
