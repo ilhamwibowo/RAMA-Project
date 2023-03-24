@@ -4,7 +4,7 @@
             <button class="edit-button">EDIT</button>
         </div>
         <div class="image-container">
-            <img src="./contohGambar.png" alt="GambarEvent">
+            <img src="./contohGambar.png" alt="GambarEvent" />
         </div>
         <div class="information-container">
             <div class="row-one">
@@ -69,15 +69,14 @@
             </table>
         </div>
         <div class="maps">
-            <img src="./contohGambar.png" alt="maps maraton">
+            <img src="./contohGambar.png" alt="maps maraton" />
         </div>
     </div>
 </template>
 
 <style scoped>
-
-.layout{
-    background: #FFF;
+.layout {
+    background: #fff;
     width: 90%;
     height: 100%;
     left: 5%;
@@ -85,32 +84,33 @@
     border-radius: 15px;
 }
 
-
-.edit-button{
+.edit-button {
     position: absolute;
     right: 2%;
     margin-top: 2%;
     height: 2rem;
     width: 4rem;
-    background: #000 ;
+    background: #000;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: bold;
     letter-spacing: 2px;
-    color: #FFF;
+    color: #fff;
 }
 
-.image-container{
+.image-container {
     margin-top: 2%;
 }
-.information-container{
+.information-container {
     margin-top: 2%;
     width: 100%;
     height: 20%;
 }
 
-.row-one, .row-two, .row-three{
+.row-one,
+.row-two,
+.row-three {
     width: 100%;
     height: auto;
     display: flex;
@@ -118,14 +118,21 @@
     justify-content: center;
 }
 
-.race-name, .race-date, .race-province, .race-city, .race-start-regis, .race-end-regis{
+.race-name,
+.race-date,
+.race-province,
+.race-city,
+.race-start-regis,
+.race-end-regis {
     width: 50%;
     height: auto;
     text-align: left;
 }
 
-.race-name-container, .race-province-container, .race-start-regis-container{
-    background: #FFF;
+.race-name-container,
+.race-province-container,
+.race-start-regis-container {
+    background: #fff;
     border-radius: 15px;
     border: 2px solid #000;
     width: 50%;
@@ -134,8 +141,10 @@
     height: 2rem;
 }
 
-.race-date-container, .race-city-container, .race-end-regis-container{
-    background: #FFF;
+.race-date-container,
+.race-city-container,
+.race-end-regis-container {
+    background: #fff;
     border-radius: 15px;
     border: 2px solid #000;
     width: 50%;
@@ -143,32 +152,36 @@
     left: 5%;
 }
 
-p{
+p {
     color: #000;
     left: 5%;
     bottom: 6%;
     font-size: 1.25rem;
 }
 
-label{
-    font-size : 1.25rem;
+label {
+    font-size: 1.25rem;
     color: #000;
 }
-.label-race-name, .label-race-province, .label-race-start-regis{
+.label-race-name,
+.label-race-province,
+.label-race-start-regis {
     left: 46%;
 }
 
-.label-race-date, .label-race-city, .label-race-end-regis{
+.label-race-date,
+.label-race-city,
+.label-race-end-regis {
     left: 6%;
 }
 
-.category-container{
+.category-container {
     width: 50%;
     left: 25%;
     margin-bottom: 2.5rem;
 }
 
-.category-table{
+.category-table {
     border-collapse: collapse;
     text-align: center;
     margin-bottom: 1rem;
@@ -177,19 +190,17 @@ label{
     color: #000;
 }
 
-.table-row-header{
+.table-row-header {
     border-bottom: 2px solid #272626;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-size: 1.25rem;
 }
 
-.table-row-body{
+.table-row-body {
     font-size: 1.25rem;
 }
 
-.maps{
+.maps {
     margin-bottom: 10%;
 }
-
-
 </style>

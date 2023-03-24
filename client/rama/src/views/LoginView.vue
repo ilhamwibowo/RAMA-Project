@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="layout">
         <div class="loginImange">
-            <img src="loginImage.png" alt="loginImage"/>
+            <img src="loginImage.png" alt="loginImage" />
         </div>
         <div class="form-container">
             <div class="title">
@@ -9,19 +9,35 @@
             </div>
             <div id="login">
                 <div id="email">
-                    <label>Email</label><br>
-                    <input type="text" id="email-form" name="email" v-model="email" placeholder="Email" />
+                    <label>Email</label><br />
+                    <input
+                        type="text"
+                        id="email-form"
+                        name="email"
+                        v-model="email"
+                        placeholder="Email"
+                    />
                 </div>
                 <div id="invalid-email" v-if="invalidEmail">
                     <p>{{ invalidEmail }}</p>
                 </div>
                 <div id="password">
-                    <label>Password</label><br>
+                    <label>Password</label><br />
                     <div class="password-wrap">
-                        <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                        <input
+                            type="password"
+                            id="password-form"
+                            name="password"
+                            v-model="password"
+                            placeholder="Password"
+                        />
                         <button type="button" id="show-pw" v-on:click="tooglePassword()">
-                            <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPw"/>
-                            <img src="../assets/eye-off-outline.svg" alt="close eye" v-if="showPw">
+                            <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPw" />
+                            <img
+                                src="../assets/eye-off-outline.svg"
+                                alt="close eye"
+                                v-if="showPw"
+                            />
                         </button>
                     </div>
                 </div>
@@ -58,7 +74,7 @@ export default {
             invalidEmail: "",
             invalidPassword: "",
             response: "",
-            showPw : false
+            showPw: false
         };
     },
 
@@ -91,15 +107,15 @@ export default {
                     });
             }
         },
-        tooglePassword(){
+        tooglePassword() {
             const passwordInput = document.getElementById("password-form");
             const showButton = document.getElementById("show-pw");
 
-            if(passwordInput.type === "password"){
+            if (passwordInput.type === "password") {
                 passwordInput.type = "text";
                 this.showPw = true;
                 // showButton.innerHTML = '<img src="../assets/eye-off-outline.svg" alt="closed eye" />';
-            }else{
+            } else {
                 passwordInput.type = "password";
                 this.showPw = false;
                 // showButton.innerHTML = '<img src="../assets/eye-outline.svg" alt="open eye" />';
@@ -110,8 +126,7 @@ export default {
 </script>
 
 <style scoped>
-
-.layout{
+.layout {
     height: 100%;
     width: 100%;
     display: flex;
@@ -125,30 +140,29 @@ img {
     display: block;
 }
 
-form-container{
+form-container {
     width: 30%;
     height: auto;
     display: block;
 }
-.title{
-    
+.title {
 }
 
-#email{
+#email {
     text-align: left;
 }
 
-#password{
+#password {
     margin-top: 8%;
     text-align: left;
 }
 
-label{
+label {
     margin-left: 5%;
 }
 
-
-#email-form, #password-form{
+#email-form,
+#password-form {
     margin-top: 1%;
     width: 100%;
     height: 2vw;
@@ -159,45 +173,44 @@ label{
     padding: 0 10px 0 10px;
 }
 
-input::placeholder{
+input::placeholder {
     font-size: 0.8rem;
 }
 
-#forget-password{
-
+#forget-password {
 }
 
-#login-button{
+#login-button {
     margin-top: 10%;
     margin-bottom: 10%;
 }
 
-#submit-login{
+#submit-login {
     color: white;
     width: 100%;
-    background: #1f2220;  
+    background: #1f2220;
     height: 2.5vw;
     border-radius: 0.9rem;
     border-color: transparent;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
 }
 
-#submit-login:hover{
-    background: #FFA801;
+#submit-login:hover {
+    background: #ffa801;
     transition: 0.3s;
 }
 
-#register-container{
+#register-container {
     border-top: 2px solid #000;
 }
 
-.password-wrap{
+.password-wrap {
     position: relative;
 }
 
-#show-pw{
+#show-pw {
     position: absolute;
     top: 55%;
     right: 0.5rem;
@@ -211,10 +224,9 @@ input::placeholder{
     border: none;
 }
 
-#show-pw img{
+#show-pw img {
     width: 100%;
     height: auto;
     left: 0;
 }
 </style>
-

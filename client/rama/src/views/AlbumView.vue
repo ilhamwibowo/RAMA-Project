@@ -1,18 +1,17 @@
 <template>
     <div>
-        <Album/>
+        <Album />
     </div>
 </template>
 
 <script>
-import Album from '../components/Album.vue'
+import Album from "../components/Album.vue";
 export default {
     name: "AlbumView",
     components: {
         Album
     }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

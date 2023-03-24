@@ -1,12 +1,10 @@
 ﻿<template>
     <div class="reset-password">
-        
         <div class="left-column">
-            <img src="forgotPasswordImage.png" alt="loginImage"/>
+            <img src="forgotPasswordImage.png" alt="loginImage" />
         </div>
 
         <div class="right-column">
-
             <div class="title">
                 <h2>Reset Password</h2>
             </div>
@@ -16,19 +14,19 @@
             <div id="new-password" class="input-field">
                 <label class="ml-2">New Password</label>
                 <input
-                type="password"
-                name="new-password"
-                v-model="newPassword"
-                placeholder="New password"
+                    type="password"
+                    name="new-password"
+                    v-model="newPassword"
+                    placeholder="New password"
                 />
             </div>
             <div id="confirm-password" class="input-field">
                 <label class="ml-2">Confirm Password</label>
                 <input
-                type="password"
-                name="confirm-password"
-                v-model="confirmPassword"
-                placeholder="Re-enter new password"
+                    type="password"
+                    name="confirm-password"
+                    v-model="confirmPassword"
+                    placeholder="Re-enter new password"
                 />
             </div>
             <div id="invalid-password" v-if="invalidPassword">
@@ -37,11 +35,7 @@
 
             <div id="otp-code" class="input-field">
                 <label class="ml-2">OTP Code</label>
-                <input 
-                    type="text" 
-                    name="otp-code" 
-                    v-model="OTPCode" 
-                    placeholder="OTP code" />
+                <input type="text" name="otp-code" v-model="OTPCode" placeholder="OTP code" />
             </div>
 
             <div id="request-response" v-if="response">
@@ -50,7 +44,7 @@
             <div id="reset-button">
                 <button type="button" id="btn-reset" v-on:click="reset()">Reset Password</button>
             </div>
-            <hr>
+            <hr />
             <div id="back-forget">
                 <p>Back to <RouterLink to="/forgot">forget password</RouterLink></p>
             </div>
@@ -126,7 +120,7 @@ export default {
 }
 
 a {
-    color:black;
+    color: black;
 }
 
 .ml-2 {
@@ -134,7 +128,7 @@ a {
 }
 
 .reset-password {
-    display:flex;
+    display: flex;
     flex-direction: row;
     width: 100%;
     flex-wrap: wrap;
@@ -149,13 +143,13 @@ hr {
     width: 300px;
 }
 
-input[type="text"], input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 20px;
-  border: 2px solid rgb(105, 105, 105);
-
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 2px solid rgb(105, 105, 105);
 }
 
 .input-field {
@@ -165,47 +159,47 @@ input[type="text"], input[type="password"] {
 }
 
 .left-column {
-  flex: 1;
-  min-width: 300px;
+    flex: 1;
+    min-width: 300px;
 }
 
 .subtext {
     width: 200px;
-    color:var(--color-heading);
+    color: var(--color-heading);
     font-size: 1rem;
     margin-bottom: 30px;
 }
 
 .left-column img {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 .right-column {
-  flex: 1;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #btn-reset {
-  height: 3vw;
-  width: 300px;
-  padding: 10px;
-  background-color: #1f2220;
-  color: #fff;
-  border-radius: 30px;
-  border: none;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+    height: 3vw;
+    width: 300px;
+    padding: 10px;
+    background-color: #1f2220;
+    color: #fff;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
     font-weight: bold;
-  transition: background-color 0.2s;
+    transition: background-color 0.2s;
 }
 
 #btn-reset:hover {
-  background-color: #1b1d1b;
+    background-color: #1b1d1b;
 }
 
 h4,
