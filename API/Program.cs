@@ -4,6 +4,7 @@ using API.Interfaces;
 using API.Services;
 using API.Extensions;
 using Microsoft.EntityFrameworkCore;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAppServices(builder.Configuration);
 builder.Services.AddIdentityService(builder.Configuration);
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,7 +28,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins(builder.Configuration["AllowedOrigins"]));
+
+
 
 app.UseAuthentication();
 app.UseAuthorization();
