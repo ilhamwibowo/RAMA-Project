@@ -1,50 +1,53 @@
 <template>
     <div class="layout">
-        <div class="header">
-            <div class="title-page-container">
-                <h1 class="title-page">EVENTS</h1>
+        <AdminSidebar class="sidebar"/>
+        <div class="main">
+            <div class="header">
+                <div class="title-page-container">
+                    <h1 class="title-page">EVENTS</h1>
+                </div>
+                <div class="button-add-container">
+                    <button class="add-button">ADD</button>
+                </div>
             </div>
-            <div class="button-add-container">
-                <button class="add-button">ADD</button>
+            <div class="table-container">
+                <table class="event-table">
+                    <thead class="table-head">
+                        <tr class="table-row-header">
+                            <th class="table-header" scope="col">Title</th>
+                            <th class="table-header" scope="col">Location</th>
+                            <th class="table-header" scope="col">Date</th>
+                            <th class="table-header" scope="col">Category</th>
+                            <th class="table-header" scope="col">Registration</th>
+                            <th class="table-header" scope="col">Status</th>
+                            <th class="table-header" scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        <tr class="table-row-body" v-for="(event, index) in events" :key="index" >
+                            <td class="table-data" v-text="event.raceName"></td>
+                            <td class="table-data" v-text="event.startLocation"></td>
+                            <td class="table-data" v-text="event.startTime"></td>
+                            <td class="table-data">h</td>
+                            <td class="table-data">
+                                <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
+                                <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
+                            </td>
+                            <td class="table-data">
+                                <p class="status-publish" id="published" v-if="isPublished">Published</p>
+                                <p class="status-publish-not" id="notPublished" v-if="!isPublished">Unpublished</p>
+                            </td>
+                            <td class="table-data">
+                                <button class="detail-button">
+                                    <router-link :to="{params: {id : index+1}, name: 'detailEvent'}">
+                                        Detail
+                                    </router-link>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-        <div class="table-container">
-            <table class="event-table">
-                <thead class="table-head">
-                    <tr class="table-row-header">
-                        <th class="table-header" scope="col">Title</th>
-                        <th class="table-header" scope="col">Location</th>
-                        <th class="table-header" scope="col">Date</th>
-                        <th class="table-header" scope="col">Category</th>
-                        <th class="table-header" scope="col">Registration</th>
-                        <th class="table-header" scope="col">Status</th>
-                        <th class="table-header" scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="table-body">
-                    <tr class="table-row-body" v-for="(event, index) in events" :key="index" >
-                        <td class="table-data" v-text="event.raceName"></td>
-                        <td class="table-data" v-text="event.startLocation"></td>
-                        <td class="table-data" v-text="event.startTime"></td>
-                        <td class="table-data">h</td>
-                        <td class="table-data">
-                            <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
-                            <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
-                        </td>
-                        <td class="table-data">
-                            <p class="status-publish" id="published" v-if="isPublished">Published</p>
-                            <p class="status-publish-not" id="notPublished" v-if="!isPublished">Unpublished</p>
-                        </td>
-                        <td class="table-data">
-                            <button class="detail-button">
-                                <router-link :to="{params: {id : index+1}, name: 'detailEvent'}">
-                                    Detail
-                                </router-link>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </template>
@@ -52,6 +55,7 @@
 
 <script>
 import axios from 'axios';
+import AdminSidebar from '../components/AdminSidebar.vue';
 export default {
     name: "EventView",
     data(){
@@ -60,6 +64,9 @@ export default {
             isRegistered: false,
             isPublished: true
         };
+    },
+    components: {
+        AdminSidebar
     },
     methods: {
         async getEvent(){
@@ -71,7 +78,7 @@ export default {
             };
 
             axios
-            .get(import.meta.env.VITE_API_URI + "/race", config)
+            .get(import.meta.env.VITE_API_URI + "/Race/1", config)
             .then((response) => {
                 if(response.status !== 200){
                     console.log(response);
@@ -95,8 +102,20 @@ export default {
 
 <style scoped>
 .layout{
+    display: grid;
     height: 100%;
     width: 100%;
+    grid-template-columns: 333px auto;
+    grid-template-areas: 
+    "sidebar main";
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.main {
+    grid-area: main;
 }
 
 .header{
@@ -126,7 +145,7 @@ export default {
 }
 .add-button{
     width: 10%;
-    height: 80%;
+    height: 100px;
     right: 20%;
     top: 10%;
     background: #353642 ;
