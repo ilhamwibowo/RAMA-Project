@@ -245,6 +245,7 @@ label{
 #maps-image{
     width: 40%;
     height: auto;
+    border-radius: 15px;
 }
 
 </style>
