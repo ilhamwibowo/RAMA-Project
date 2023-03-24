@@ -26,17 +26,17 @@ namespace API.Controllers
             _mapper = mapper;
         }
         [HttpPost("{albumId}")]
-        public async Task<ActionResult> AddPhoto(int albumId, IFormFile file)
+        public async Task<ActionResult> AddPhoto(Guid albumId, IFormFile file)
         {
-            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
             if (requester == null || requester.Role != "Admin") Unauthorized("No Permission!");
 
             if (!isImage(file.FileName)) return BadRequest("File must be an Image");
 
-            Album album = _context.Albums.FirstOrDefault(x => x.AlbumId == albumId);
+            Album album = _context.Albums.FirstOrDefault(x => x.AlbumId.Equals(albumId));
 
-            if (album == null) return BadRequest("Album Not Found");
+            if (album == null) return NotFound("Album Not Found");
             
             var result = await _photoService.AddPhototoAlbumAsync(file, album.AlbumName);
 
@@ -59,24 +59,32 @@ namespace API.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetAlbums), new {id = albumId}, _mapper.Map<PhotoDto>(photo));
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetAllAlbums()
+        {
+            var album = await _context.Albums.ToListAsync();
+            
+            return Ok(new { Albums = _mapper.Map<IEnumerable<AlbumDto>>(album), Length = album.Count});
 
+        }
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult> GetAlbums(int id, string query = null)
+        public async Task<ActionResult> GetAlbums(Guid id, string query = null)
         {
             if (query == null) query = string.Empty;
 
             List<String> queryList = query.ToLower().Split(new char[] { ',', ' ', '\n', ';' }).ToList();
-            var album = await _context.Albums.Include(x => x.AlbumPhotos).FirstOrDefaultAsync(a => a.AlbumId == id);
+            var album = await _context.Albums.Include(x => x.AlbumPhotos).FirstOrDefaultAsync(a => a.AlbumId.Equals(id));
             
             return Ok(_mapper.Map<AlbumDto>(album));
 
         }
 
         [HttpDelete("photos/{photoId}")]
-        public async Task<IActionResult> DeletePhoto(int photoId)
+        public async Task<IActionResult> DeletePhoto(Guid photoId)
         {
-            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
             if (requester == null || requester.Role != "Admin") Unauthorized("No Permission!");
 

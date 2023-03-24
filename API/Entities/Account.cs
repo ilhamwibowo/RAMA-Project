@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace API.Entities
@@ -6,7 +7,8 @@ namespace API.Entities
     public class Account
     {
         [Key]
-        public int AccId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid AccId { get; set; }
         [Required]
         public string Email { get; set; }
         public string Name { get; set; }

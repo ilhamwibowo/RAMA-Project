@@ -31,13 +31,13 @@ namespace API.Controllers
             _mapper = mapper;
         }
         [HttpPost("{RaceId}")] 
-        public async Task<ActionResult> CreateRaceRegistration(int RaceId)
+        public async Task<ActionResult> CreateRaceRegistration(Guid RaceId)
         {
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
             if (requester == null) return Unauthorized();
 
-            Race race = await _context.Races.FirstOrDefaultAsync(r => r.RaceId == RaceId);
+            Race race = await _context.Races.FirstOrDefaultAsync(r => r.RaceId.Equals(RaceId));
 
             if (race == null) return NotFound();
 
@@ -69,7 +69,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<RaceHistoryDto>> GetHistory()
         {
-            var requester = await _context.Accounts.Include(a => a.RaceHistory).Select(a => new { a.AccId, a.RaceHistory }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Include(a => a.RaceHistory).Select(a => new { a.AccId, a.RaceHistory }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
             if (requester == null) return Unauthorized();
 
@@ -86,7 +86,7 @@ namespace API.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<RaceHistoryDto>> GetHistoryAll()
         {
-            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
             if (requester == null || requester.Role != "Admin") return Unauthorized();
 
@@ -103,13 +103,13 @@ namespace API.Controllers
         }
 
         [HttpGet("{RaceId}")]
-        public async Task<ActionResult<RaceHistoryDto>> GetRaceRegist(int RaceId)
+        public async Task<ActionResult<RaceHistoryDto>> GetRaceRegist(Guid RaceId)
         {
-            var requester = await _context.Accounts.Include(a => a.RaceHistory).Select(a => new { a.AccId, a.RaceHistory }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Include(a => a.RaceHistory).Select(a => new { a.AccId, a.RaceHistory }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
             if (requester == null) return Unauthorized();
 
-            RaceRegistration rr = requester.RaceHistory.FirstOrDefault(r => r.RaceId == RaceId);
+            RaceRegistration rr = requester.RaceHistory.FirstOrDefault(r => r.RaceId.Equals(RaceId));
 
             if (rr == null) return NotFound();
 
@@ -119,14 +119,14 @@ namespace API.Controllers
         
 
         [HttpPut("{RaceId}/{AccId}")]
-        public async Task<ActionResult> UpdateRaceRegistration(int RaceId, int AccId, RaceRegistDto rrDto)
+        public async Task<ActionResult> UpdateRaceRegistration(Guid RaceId, Guid AccId, RaceRegistDto rrDto)
         {
-            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
 
             if (requester == null || requester.Role != "Admin") return Unauthorized();
 
-            RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId == RaceId && x.AccId == AccId);
+            RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId.Equals(RaceId) && x.AccId.Equals(AccId));
 
             if (rr == null) return NotFound();
 
@@ -140,28 +140,22 @@ namespace API.Controllers
             return Ok();
         }
         [HttpDelete("{RaceId}/{AccId}")]
-        public async Task<ActionResult> DeleteRaceRegistration(int RaceId, int AccId)
+        public async Task<ActionResult> DeleteRaceRegistration(Guid RaceId, Guid AccId)
         {
-            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
 
-            RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId == RaceId && x.AccId == AccId);
+            RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId.Equals(RaceId) && x.AccId.Equals(AccId));
 
 
             if (rr == null) return NotFound();
 
             // Registration can be deleted by Admin
             // and user can also delete their own Registration if its status is still 0.
-            if (requester == null || (  requester.Role != "Admin" && (rr.Status != RaceRegistration.PaymentStatus.Waiting || requester.AccId != AccId) )) return Unauthorized();
-            _logger.LogInformation($"{requester.Role != "Admin"}, {rr.Status != RaceRegistration.PaymentStatus.Waiting}, {requester.AccId != AccId}");
-
-
-
-
-
+            if (requester == null || (  requester.Role != "Admin" && (rr.Status != RaceRegistration.PaymentStatus.Waiting || !requester.AccId.Equals(AccId)) )) return Unauthorized();
             
             _context.RaceRegistrations.Remove(rr);
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
