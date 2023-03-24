@@ -120,7 +120,7 @@ export default {
 
 .header{
     width: 100%;
-    height: 30%;
+    height: 10%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,7 +145,7 @@ export default {
 }
 .add-button{
     width: 10%;
-    height: 100px;
+    height: 70%;
     right: 20%;
     top: 10%;
     background: #353642 ;
