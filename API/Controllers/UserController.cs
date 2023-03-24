@@ -32,7 +32,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<ProfileDto>> getProfile() {
             // Get user based on id
-            int id = User.GetUserId();
+            Guid id = User.GetUserId();
             var user = await _context.Accounts.Include(p => p.ProfilePhoto).FirstOrDefaultAsync(x => x.AccId.Equals(id));
 
             if(user == null) {
@@ -45,7 +45,7 @@ namespace API.Controllers
 
         [HttpPut("edit")]
         public async Task<ActionResult> editProfile(ProfileDto profile) {
-            int id = User.GetUserId();
+            Guid id = User.GetUserId();
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(id));
 
             if (user == null) {

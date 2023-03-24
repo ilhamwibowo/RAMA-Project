@@ -9,9 +9,9 @@ namespace API.Extensions
             return user.FindFirst("email")?.Value;
         }
 
-        public static int GetUserId(this ClaimsPrincipal user)
+        public static Guid GetUserId(this ClaimsPrincipal user)
         {
-            return int.Parse(user.FindFirst("id")?.Value);
+            return Guid.Parse(user.FindFirst("id")?.Value);
         }
     }
 }
