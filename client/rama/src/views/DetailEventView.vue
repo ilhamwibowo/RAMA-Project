@@ -4,7 +4,7 @@
             <button class="edit-button">EDIT</button>
         </div>
         <div class="image-container">
-            <img src="./contohGambar.png" alt="GambarEvent" id="race-photo">
+            <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
         </div>
         <div class="information-container">
             <div class="row-one">
@@ -69,7 +69,7 @@
             </table>
         </div>
         <div class="maps">
-            <img src="./maps-image.png" alt="maps maraton" id="maps-image">
+            <img src="../../public/maps-image.png" alt="maps maraton" id="maps-image">
         </div>
     </div>
 </template>
