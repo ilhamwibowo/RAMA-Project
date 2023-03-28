@@ -26,7 +26,7 @@ export default {
 
     data() {
         return {
-            raceId: 1,
+            raceId: "b0f2af19-5148-49cb-83ed-19740a015ca9",
             raceData: [],
             currentPage: 1,
             pageCount: 1,
@@ -45,7 +45,7 @@ export default {
                         "/attendees?page=" +
                         this.currentPage +
                         "&pageSize=" +
-                        this.pageCount
+                        this.perPage
                 )
                 .then((response) => {
                     this.raceData = response.data.raceAttendee;
@@ -73,7 +73,7 @@ export default {
                     "/attendees?page=" +
                     this.currentPage +
                     "&pageSize=" +
-                    this.pageCount
+                    this.perPage
             )
             .then((response) => {
                 this.raceData = response.data.raceAttendee;
