@@ -21,15 +21,15 @@ namespace API.Data.Migrations
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("API.Entities.Account", b =>
                 {
-                    b.Property<int>("AccId")
+                    b.Property<Guid>("AccId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AccId"));
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
 
                     b.Property<DateOnly>("Birthday")
                         .HasColumnType("date");
@@ -56,8 +56,8 @@ namespace API.Data.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("bytea");
 
-                    b.Property<int?>("ProfilePhotoPhotoId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("ProfilePhotoPhotoId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Role")
                         .HasColumnType("text");
@@ -74,11 +74,10 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Album", b =>
                 {
-                    b.Property<int>("AlbumId")
+                    b.Property<Guid>("AlbumId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AlbumId"));
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
 
                     b.Property<string>("AlbumName")
                         .HasColumnType("text");
@@ -112,11 +111,10 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Location", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
 
                     b.Property<string>("Category")
                         .HasColumnType("text");
@@ -130,8 +128,8 @@ namespace API.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("RaceId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("RaceId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -142,14 +140,13 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
-                    b.Property<int>("PhotoId")
+                    b.Property<Guid>("PhotoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PhotoId"));
-
-                    b.Property<int?>("AlbumId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("AlbumId")
+                        .HasColumnType("uuid");
 
                     b.Property<List<string>>("BibTags")
                         .HasColumnType("text[]");
@@ -169,17 +166,16 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Race", b =>
                 {
-                    b.Property<int>("RaceId")
+                    b.Property<Guid>("RaceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RaceId"));
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("uuid_generate_v4()");
 
                     b.Property<int>("Distance")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("RaceAlbumAlbumId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("RaceAlbumAlbumId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("RaceName")
                         .HasColumnType("text");
@@ -187,8 +183,8 @@ namespace API.Data.Migrations
                     b.Property<int>("RegistrationFee")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("StartLocationId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("StartLocationId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
@@ -204,8 +200,8 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.RaceAttendance", b =>
                 {
-                    b.Property<int>("RaceId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RaceId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BibNumber")
                         .HasColumnType("text");
@@ -219,8 +215,8 @@ namespace API.Data.Migrations
                     b.Property<int>("Position")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("RunnerAccId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("RunnerAccId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("RaceId", "BibNumber");
 
@@ -231,17 +227,17 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.RaceRegistration", b =>
                 {
-                    b.Property<int>("RaceId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RaceId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("AccId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AccId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("RegistedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("AccountAccId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("AccountAccId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("PaidAt")
                         .HasColumnType("timestamp with time zone");

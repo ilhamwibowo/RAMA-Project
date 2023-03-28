@@ -10,7 +10,7 @@ import Profile from "../components/Profile.vue";
 export default {
     name: "ProfileView",
     components: {
-        Profile,
+        Profile
     }
 };
 </script>

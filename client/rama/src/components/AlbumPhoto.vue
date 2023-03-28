@@ -1,16 +1,28 @@
 <template>
     <figure>
-        <img :src="photoUrl" @click="onClickPhoto">
-        <input id="check" class="checkbox" type="checkbox" :value=photoId @change="onClickCheck($event)" :checked="isCheck">
+        <img :src="photoUrl" @click="onClickPhoto" />
+        <input
+            id="check"
+            class="checkbox"
+            type="checkbox"
+            :value="photoId"
+            @change="onClickCheck($event)"
+            :checked="isCheck"
+        />
         <teleport to="body">
-            <AlbumPhotoDetail v-if="isOpen" :id="photoId" :url="photoUrl" @closeClicked="onClickClose"/>
+            <AlbumPhotoDetail
+                v-if="isOpen"
+                :id="photoId"
+                :url="photoUrl"
+                @closeClicked="onClickClose"
+            />
         </teleport>
     </figure>
 </template>
 
 <script>
-import { useProductStore } from '../stores/photos';
-import AlbumPhotoDetail from '../components/AlbumPhotoDetail.vue'
+import { useProductStore } from "../stores/photos";
+import AlbumPhotoDetail from "../components/AlbumPhotoDetail.vue";
 const photos = useProductStore();
 
 export default {
@@ -19,14 +31,14 @@ export default {
         return {
             isCheck: false,
             isOpen: false
-        }
+        };
     },
     components: {
         AlbumPhotoDetail
     },
     props: {
         photoUrl: String,
-        photoId: Number,
+        photoId: Number
     },
     methods: {
         onClickCheck(event) {
@@ -36,8 +48,8 @@ export default {
             // this.$emit("updateCheck", {'isCheck': isCheck, 'url': url, 'id': id})
 
             let isCheck = event.target.checked;
-            let photo = {'id': this.photoId, 'url': this.photoUrl};
-            this.isCheck = isCheck
+            let photo = { id: this.photoId, url: this.photoUrl };
+            this.isCheck = isCheck;
             if (isCheck) {
                 photos.addPhoto(photo);
             } else {
@@ -52,9 +64,9 @@ export default {
         }
     },
     async created() {
-        this.isCheck = (photos.isFound({'id': this.photoId, 'url': this.photoUrl})) 
+        this.isCheck = photos.isFound({ id: this.photoId, url: this.photoUrl });
     }
-}
+};
 </script>
 
 <style scoped>

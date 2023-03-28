@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="layout">
         <div class="registerImage">
-            <img src="registerImage.png" alt="registerImage">
+            <img src="registerImage.png" alt="registerImage" />
         </div>
         <div class="form-container">
             <div class="register-container">
@@ -10,29 +10,67 @@
                 </div>
                 <div id="register">
                     <div id="email">
-                        <label>Email</label><br>
-                        <input type="text" id="email-form" name="email" v-model="email" placeholder="E-mail" />
+                        <label>Email</label><br />
+                        <input
+                            type="text"
+                            id="email-form"
+                            name="email"
+                            v-model="email"
+                            placeholder="E-mail"
+                        />
                     </div>
                     <div id="invalid-email" v-if="invalidEmail">
                         <p>{{ invalidEmail }}</p>
                     </div>
                     <div id="password">
-                        <label>Password</label><br>
+                        <label>Password</label><br />
                         <div class="password-wrap">
-                            <input type="password" id="password-form" name="password" v-model="password" placeholder="Password" />
+                            <input
+                                type="password"
+                                id="password-form"
+                                name="password"
+                                v-model="password"
+                                placeholder="Password"
+                            />
                             <button type="button" id="show-pw" v-on:click="tooglePassword()">
-                                <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPw"/>
-                                <img src="../assets/eye-off-outline.svg" alt="close eye" v-if="showPw">
+                                <img
+                                    src="../assets/eye-outline.svg"
+                                    alt="open eye"
+                                    v-if="!showPw"
+                                />
+                                <img
+                                    src="../assets/eye-off-outline.svg"
+                                    alt="close eye"
+                                    v-if="showPw"
+                                />
                             </button>
                         </div>
                     </div>
                     <div id="confirm-password">
-                        <label>Confirm Password</label><br>
+                        <label>Confirm Password</label><br />
                         <div class="password-confirm-wrap">
-                            <input type="password" id="password-confirm" name="confirm-password" v-model="confirmPassword" placeholder="Re-enter new password" />
-                            <button type="button" id="show-pw-confirm" v-on:click="tooglePasswordConfirm()">
-                                <img src="../assets/eye-outline.svg" alt="open eye" v-if="!showPwConfirm"/>
-                                <img src="../assets/eye-off-outline.svg" alt="close eye" v-if="showPwConfirm">
+                            <input
+                                type="password"
+                                id="password-confirm"
+                                name="confirm-password"
+                                v-model="confirmPassword"
+                                placeholder="Re-enter new password"
+                            />
+                            <button
+                                type="button"
+                                id="show-pw-confirm"
+                                v-on:click="tooglePasswordConfirm()"
+                            >
+                                <img
+                                    src="../assets/eye-outline.svg"
+                                    alt="open eye"
+                                    v-if="!showPwConfirm"
+                                />
+                                <img
+                                    src="../assets/eye-off-outline.svg"
+                                    alt="close eye"
+                                    v-if="showPwConfirm"
+                                />
                             </button>
                         </div>
                     </div>
@@ -43,7 +81,9 @@
                         <p>{{ response }}</p>
                     </div>
                     <div id="register-button">
-                        <button type="button" id="submit-register" v-on:click="register()">Sign Up</button>
+                        <button type="button" id="submit-register" v-on:click="register()">
+                            Sign Up
+                        </button>
                     </div>
                 </div>
                 <div class="login-container">
@@ -68,7 +108,7 @@ export default {
             invalidEmail: "",
             invalidPassword: "",
             response: "",
-            showPw : false,
+            showPw: false,
             showPwConfirm: false
         };
     },
@@ -109,24 +149,24 @@ export default {
                     });
             }
         },
-        tooglePassword(){
+        tooglePassword() {
             const passwordInput = document.getElementById("password-form");
             const showButton = document.getElementById("show-pw");
 
-            if(passwordInput.type === "password"){
+            if (passwordInput.type === "password") {
                 passwordInput.type = "text";
                 this.showPw = true;
-            }else{
+            } else {
                 passwordInput.type = "password";
                 this.showPw = false;
             }
         },
-        tooglePasswordConfirm(){
+        tooglePasswordConfirm() {
             const passwordInput = document.getElementById("password-confirm");
-            if(passwordInput.type == "password"){
+            if (passwordInput.type == "password") {
                 passwordInput.type = "text";
                 this.showPwConfirm = true;
-            }else{
+            } else {
                 passwordInput.type = "password";
                 this.showPwConfirm = false;
             }
@@ -136,8 +176,7 @@ export default {
 </script>
 
 <style scoped>
-
-.layout{
+.layout {
     height: 100%;
     width: 100%;
     display: flex;
@@ -145,11 +184,11 @@ export default {
     justify-content: center;
 }
 
-.registerImage{
+.registerImage {
     width: 65%;
     height: 100%;
 }
-img{
+img {
     top: 15%;
     left: 20%;
     width: 50%;
@@ -157,37 +196,38 @@ img{
     display: block;
 }
 
-.form-container{
+.form-container {
     width: 35%;
     height: 100;
     align-items: center;
     justify-content: center;
 }
 
-.register-container{
+.register-container {
     margin-top: 10%;
     width: 50%;
     height: auto;
 }
-#email{
+#email {
     text-align: left;
 }
 
-#password{
+#password {
     margin-top: 8%;
     text-align: left;
 }
 
-#confirm-password{
+#confirm-password {
     margin-top: 8%;
     text-align: left;
 }
 
-
-label{
-    margin-left:4%;
+label {
+    margin-left: 4%;
 }
-#email-form, #password-form, #password-confirm{
+#email-form,
+#password-form,
+#password-confirm {
     margin-top: 1%;
     width: 100%;
     height: 2vw;
@@ -198,36 +238,36 @@ label{
     padding: 0 10px 0 10px;
 }
 
-input::placeholder{
+input::placeholder {
     font-size: 0.8rem;
 }
 
-#register-button{
+#register-button {
     margin-top: 10%;
     margin-bottom: 10%;
 }
 
-#submit-register{
+#submit-register {
     color: white;
     width: 100%;
-    background: #1f2220;  
+    background: #1f2220;
     height: 2.5vw;
     border-radius: 0.9rem;
     border-color: transparent;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
 }
 
-.login-container{
-    border-top : 2px solid #000;
+.login-container {
+    border-top: 2px solid #000;
 }
 
-.password-wrap{
+.password-wrap {
     position: relative;
 }
 
-#show-pw{
+#show-pw {
     position: absolute;
     top: 55%;
     right: 0.5rem;
@@ -241,21 +281,21 @@ input::placeholder{
     border: none;
 }
 
-#show-pw img{
+#show-pw img {
     width: 100%;
     height: auto;
     left: 0;
 }
 
-.password-confirm-wrap{
-    position : relative;
-}
-
-.password-wrap{
+.password-confirm-wrap {
     position: relative;
 }
 
-#show-pw-confirm{
+.password-wrap {
+    position: relative;
+}
+
+#show-pw-confirm {
     position: absolute;
     top: 55%;
     right: 0.5rem;
@@ -269,14 +309,14 @@ input::placeholder{
     border: none;
 }
 
-#show-pw-confirm img{
+#show-pw-confirm img {
     width: 100%;
     height: auto;
     left: 0;
 }
 
-#submit-register:hover{
-    background: #FFA801;
+#submit-register:hover {
+    background: #ffa801;
     transition: 0.3s;
 }
 /* .title {

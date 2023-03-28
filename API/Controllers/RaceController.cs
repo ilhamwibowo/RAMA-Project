@@ -29,7 +29,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateRace(RaceDto raceDto)
         {   
-            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
             Race race = _mapper.Map<Race>(raceDto);
 
@@ -56,20 +56,20 @@ namespace API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<ActionResult<RaceDto>> GetRace(int id)
+        public async Task<ActionResult<RaceDto>> GetRace(Guid id)
         {
-            Race race = await _context.Races.Include(r => r.StartLocation).FirstOrDefaultAsync(x => x.RaceId == id);
+            Race race = await _context.Races.Include(r => r.StartLocation ).Include(r => r.RaceAlbum).FirstOrDefaultAsync(x => x.RaceId.Equals(id));
             if (race == null) return NotFound();
 
             return Ok(_mapper.Map<RaceDto>(race));
         }
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRace(int id, RaceDto raceDto)
+        public async Task<ActionResult> UpdateRace(Guid id, RaceDto raceDto)
         {
-            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
 
-            Race race = _context.Races.FirstOrDefault(x => x.RaceId == id);
+            Race race = _context.Races.FirstOrDefault(x => x.RaceId.Equals(id));
             if (race == null) return NotFound();
 
             race.RaceName = raceDto.RaceName;
@@ -84,12 +84,12 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteRace(int id)
+        public async Task<ActionResult> DeleteRace(Guid id)
         {
-            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId == User.GetUserId());
+            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
 
-            Race race = await _context.Races.FirstOrDefaultAsync(x => x.RaceId == id);
+            Race race = await _context.Races.FirstOrDefaultAsync(x => x.RaceId.Equals(id));
             if (race == null) return NotFound();
 
             _context.Races.Remove(race);
@@ -101,12 +101,12 @@ namespace API.Controllers
         // Page and pageSize required in query
         [AllowAnonymous]
         [HttpGet("{raceId}/attendees")]
-        public async Task<ActionResult<RaceDto>> GetRaceAttendance(int raceId, int page = 1, int pageSize = 10)
+        public async Task<ActionResult<RaceDto>> GetRaceAttendance(Guid raceId, int page = 1, int pageSize = 10)
         {
             // Get race as per raceId
             var race = await _context.Races
                 .AsNoTracking()
-                .Where(r => r.RaceId == raceId)
+                .Where(r => r.RaceId.Equals(raceId))
                 .Include(r => r.RaceAttendee)
                 .ThenInclude(ra => ra.Runner.ProfilePhoto)
                 .FirstOrDefaultAsync();
@@ -150,12 +150,12 @@ namespace API.Controllers
         // For testing purposes, maybe necessary
         [AllowAnonymous]
         [HttpGet("{raceId}/attendance")]
-        public async Task<ActionResult<RaceDto>> GetAllRaceAttendance(int raceId)
+        public async Task<ActionResult<RaceDto>> GetAllRaceAttendance(Guid raceId)
         {
             // Get race as per raceId
             var race = await _context.Races
                 .AsNoTracking()
-                .Where(r => r.RaceId == raceId)
+                .Where(r => r.RaceId.Equals(raceId))
                 .Include(r => r.RaceAttendee)
                 .ThenInclude(ra => ra.Runner.ProfilePhoto)
                 .FirstOrDefaultAsync();

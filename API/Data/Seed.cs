@@ -52,7 +52,7 @@ namespace API.Data
                     new RaceAttendance
                     {
                         RaceId= race.RaceId,
-                        BibNumber= acc.AccId.ToString(),
+                        BibNumber = pos.ToString(),
                         Runner = acc,
                         Position = pos++,
                         Duration = new TimeSpan(1,23 + pos, pos),

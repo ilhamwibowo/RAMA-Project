@@ -35,7 +35,7 @@ export default {
     border-radius: 20px;
     border: 2px solid grey;
     color: rgb(63, 62, 62);
-    font-size:1.5rem;
+    font-size: 1.5rem;
     font-weight: 600;
 }
 .detail-profile {

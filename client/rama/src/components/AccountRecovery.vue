@@ -1,14 +1,17 @@
 ﻿<template>
     <div class="email-recovery">
         <div class="left-column">
-            <img src="forgotPasswordImage.png" alt="loginImage"/>
+            <img src="forgotPasswordImage.png" alt="loginImage" />
         </div>
-        <div class="right-column ">
+        <div class="right-column">
             <div class="title">
                 <h2>FORGOT PASSWORD</h2>
             </div>
             <div class="subtext">
-                <p>Please enter the email address you'd like your password reset information sent to</p>
+                <p>
+                    Please enter the email address you'd like your password reset information sent
+                    to
+                </p>
             </div>
             <div id="recovery-email">
                 <label class="ml-2">Email</label>
@@ -23,11 +26,11 @@
             <div id="recover-button">
                 <button type="button" id="btn-recover" v-on:click="request()">SEND</button>
             </div>
-            <hr>
+            <hr />
             <div id="back-link">
                 <p>Back to <RouterLink to="/login">Sign In</RouterLink></p>
             </div>
-            <br>
+            <br />
         </div>
     </div>
 </template>
@@ -79,38 +82,37 @@ export default {
 
 <style scoped>
 .email-recovery {
-    display:flex;
+    display: flex;
     flex-direction: row;
     width: 100%;
     flex-wrap: wrap;
 }
 
 a {
-    color:black;
+    color: black;
 }
 .ml-2 {
     margin-left: 20px;
 }
 
 .left-column {
-  flex: 1;
-  min-width: 300px;
+    flex: 1;
+    min-width: 300px;
 }
 
 .left-column img {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 .right-column {
-  flex: 1;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
-
 
 .title {
     font-weight: 300;
@@ -121,7 +123,7 @@ a {
 
 .subtext {
     width: 250px;
-    color:var(--color-heading);
+    color: var(--color-heading);
     font-size: 1rem;
     margin-bottom: 50px;
 }
@@ -136,29 +138,28 @@ hr {
 }
 
 input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 20px;
-  border: 2px solid grey;
-
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 2px solid grey;
 }
 
 #btn-recover {
-  width: 300px;
-  padding: 10px;
-  background-color: #1f2220;
-  color: #fff;
-  border-radius: 30px;
-  border: none;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+    width: 300px;
+    padding: 10px;
+    background-color: #1f2220;
+    color: #fff;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
     font-weight: bold;
-  transition: background-color 0.2s;
+    transition: background-color 0.2s;
 }
 
 #btn-recover:hover {
-  background-color: #1b1d1b;
+    background-color: #1b1d1b;
 }
 
 #recovery-email {

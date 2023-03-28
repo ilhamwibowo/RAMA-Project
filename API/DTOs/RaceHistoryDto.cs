@@ -8,7 +8,7 @@ namespace API.Entities
 {
     public class RaceHistoryDto
     {
-        public int AccId { get; set; }
+        public Guid AccId { get; set; }
         public List<RaceRegistDto> Histories { get; set; } 
 
         public int Length {get; set;}
