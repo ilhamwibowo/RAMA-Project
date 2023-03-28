@@ -17,13 +17,7 @@
 body {
     color: black;
     background-color: #f3f2ee;
-    margin: 0 300px 0 300px;
     text-align: center;
-}
-
-#app {
-    display: grid;
-    grid-template-areas:
-        "nav"
-        "content";
+    height: 100%;
+    width: 100%;
 }

@@ -4,20 +4,24 @@
             <button class="edit-button">EDIT</button>
         </div>
         <div class="image-container">
+<<<<<<< HEAD
             <img src="/contohGambar.png" alt="GambarEvent" />
+=======
+            <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
+>>>>>>> 9bbb661d6c65fbd5b0241f3f04ab5723a8b7f0ea
         </div>
         <div class="information-container">
             <div class="row-one">
                 <div class="race-name">
                     <label class="label-race-name">Name</label>
                     <div class="race-name-container">
-                        <p>race1</p>
+                        <p v-text="this.event.raceName"></p>
                     </div>
                 </div>
                 <div class="race-date">
                     <label class="label-race-date">Date</label>
                     <div class="race-date-container">
-                        <p>27 agus 2023</p>
+                        <p v-text="this.event.startTime"></p>
                     </div>
                 </div>
             </div>
@@ -25,13 +29,13 @@
                 <div class="race-province">
                     <label class="label-race-province">Province</label>
                     <div class="race-province-container">
-                        <p>Jawa Barat</p>
+                        <p v-text="this.event.startLocation"></p>
                     </div>
                 </div>
                 <div class="race-city">
                     <label class="label-race-city">City</label>
                     <div class="race-city-container">
-                        <p>Bandung</p>
+                        <p></p>
                     </div>
                 </div>
             </div>
@@ -39,13 +43,13 @@
                 <div class="race-start-regis">
                     <label class="label-race-start-regis">Start Date Registration</label>
                     <div class="race-start-regis-container">
-                        <p>17 april 2023</p>
+                        <p></p>
                     </div>
                 </div>
                 <div class="race-end-regis">
                     <label class="label-race-end-regis">End Date Registration</label>
                     <div class="race-end-regis-container">
-                        <p>22 agus 2023</p>
+                        <p></p>
                     </div>
                 </div>
             </div>
@@ -74,11 +78,54 @@
     </div>
 </template>
 
+
+<script>
+import axios from 'axios';
+export default {
+    name: "detailEvent",
+    data(){
+        return {
+            event: [],
+            id :this.$route.params.id
+        };
+    },
+
+    methods: {
+        async getData(){
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            axios
+            .get(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    this.event = response.data;
+                    // for debug
+                    // console.log(this.event);
+                    // console.log(this.events[0].raceName);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        },
+    },
+    mounted(){
+        this.getData();
+    }
+}
+</script>
 <style scoped>
 .layout {
     background: #fff;
     width: 90%;
-    height: 100%;
+    height: auto;
     left: 5%;
     justify-content: center;
     border-radius: 15px;
@@ -101,11 +148,18 @@
 
 .image-container {
     margin-top: 2%;
+    height: 20%;
+}
+
+#race-photo{
+    height: auto;
+    width: 20%;
 }
 .information-container {
     margin-top: 2%;
     width: 100%;
-    height: 20%;
+    height: auto;
+    margin-bottom: 2%;
 }
 
 .row-one,
@@ -202,5 +256,13 @@ label {
 
 .maps {
     margin-bottom: 10%;
+    height: 30%;
 }
+
+#maps-image{
+    width: 40%;
+    height: auto;
+    border-radius: 15px;
+}
+
 </style>
