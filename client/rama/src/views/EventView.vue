@@ -144,50 +144,6 @@
                 </table>
             </div>
         </div>
-        <div class="table-container">
-            <table class="event-table">
-                <thead class="table-head">
-                    <tr class="table-row-header">
-                        <th class="table-header" scope="col">Title</th>
-                        <th class="table-header" scope="col">Location</th>
-                        <th class="table-header" scope="col">Date</th>
-                        <th class="table-header" scope="col">Category</th>
-                        <th class="table-header" scope="col">Registration</th>
-                        <th class="table-header" scope="col">Status</th>
-                        <th class="table-header" scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="table-body">
-                    <tr class="table-row-body" v-for="(event, index) in events" :key="index">
-                        <td class="table-data" v-text="event.raceName"></td>
-                        <td class="table-data" v-text="event.startLocation"></td>
-                        <td class="table-data" v-text="event.startTime"></td>
-                        <td class="table-data">h</td>
-                        <td class="table-data">
-                            <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
-                            <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
-                        </td>
-                        <td class="table-data">
-                            <p class="status-publish" id="published" v-if="isPublished">
-                                Published
-                            </p>
-                            <p class="status-publish-not" id="notPublished" v-if="!isPublished">
-                                Unpublished
-                            </p>
-                        </td>
-                        <td class="table-data">
-                            <button class="detail-button">
-                                <router-link
-                                    :to="{ params: { id: index + 1 }, name: 'detailEvent' }"
-                                >
-                                    Detail
-                                </router-link>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 </template>
 
@@ -319,9 +275,18 @@ export default {
 .layout {
     height: 100%;
     width: 100%;
+    display: grid;
     grid-template-columns: 333px auto;
     grid-template-areas: 
     "sidebar main";
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.main {
+    grid-area: main;
 }
 
 /********************** FORMS ****************/
@@ -360,7 +325,7 @@ form {
     display: grid;
     grid-template-columns: 1fr;
     grid-row-gap: 10px;
-  }
+}
   
 
   /* Optional styling for labels and inputs */
