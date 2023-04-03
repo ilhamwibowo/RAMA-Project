@@ -13,6 +13,8 @@ namespace API.Entities
         public Guid RaceId { get; set; }
 
         public string RaceName { get; set; }
+        public string RaceDesc { get; set; }
+        public Photo RaceThumbnail { get; set; }
 
         public DateTime StartTime { get; set; }
 
@@ -27,5 +29,12 @@ namespace API.Entities
         public List<RaceAttendance> RaceAttendee { get; set; } = new List<RaceAttendance>();
 
         public Album RaceAlbum { get; set; }
+        public DateOnly StartDateRegistration { get; set; }
+        public DateOnly EndDateRegistration { get; set; }
+        public bool IsPublished { get; set; }
+        public bool IsOpened()
+        {
+            return StartDateRegistration < DateOnly.FromDateTime(DateTime.UtcNow) && DateOnly.FromDateTime(DateTime.UtcNow) < EndDateRegistration;
+        }
     }
 }

@@ -8,5 +8,9 @@ namespace API.Interfaces
         Task<ImageUploadResult> AddPhototoAlbumAsync(IFormFile file, string AlbumName);
         Task<DeletionResult> DeletePhotoAsync(string publicId);
         Task<List<string>> GetText(string Url);
+        public static bool isImage(string filename){
+            string[] ext = {".jpg",".bmp",".gif",".png"};
+            return ext.Any(x => filename.EndsWith(x));
+        }
     }
 }

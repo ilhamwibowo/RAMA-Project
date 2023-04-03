@@ -97,7 +97,7 @@ namespace API.Controllers
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
             if (user == null) return Unauthorized("User not found");
             if (file == null) return BadRequest("No file");
-            if (!isImage(file.FileName)) return BadRequest("File must be an Image");
+            if (!IPhotoService.isImage(file.FileName)) return BadRequest("File must be an Image");
             var result = await _photoService.AddPhotoAsync(file);
             
             if (result.Error != null) return BadRequest(result.Error.Message);
@@ -112,9 +112,6 @@ namespace API.Controllers
             return Ok(_mapper.Map<PhotoDto>(user.ProfilePhoto));
 
         }
-        private bool isImage(string filename){
-            string[] ext = {".jpg",".bmp",".gif",".png"};
-            return ext.Any(x => filename.EndsWith(x));
-        }
+        
     }
 }

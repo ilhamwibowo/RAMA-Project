@@ -31,5 +31,9 @@ namespace API.Entities
 
         public List<RaceRegistration> RaceHistory { get; set; }= new List<RaceRegistration>();
 
+        public string GetPhotoUrl(){
+            return ProfilePhoto?.Url;
+        }
+
     }
 }
