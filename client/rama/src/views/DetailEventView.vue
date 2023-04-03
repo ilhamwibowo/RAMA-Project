@@ -1,168 +1,171 @@
 <template>
-    <div class="layout">
-        <div class="edit-button-container">
-            <button class="edit-button" @click="toggleForm()" >EDIT</button>
-            <form v-if="showForm">
-                <!-- <div class="container-image">
-                    <input
-                        type="file"
-                        id="image"
-                        accept="image/*"
-                        @change="changePhoto"
-                    />
-                    <img :src="previewImageUrl" />
-                </div> -->
-                <div class="form-grid">
-                    <!-- Left column -->
-                    <div class="grid-item">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" v-model="name">
+    <div class="detail-event">
+        <AdminSidebar class="sidebar"/>
+        <div class="layout">
+            <div class="edit-button-container">
+                <button class="edit-button" @click="toggleForm()" >EDIT</button>
+                <form v-if="showForm">
+                    <!-- <div class="container-image">
+                        <input
+                            type="file"
+                            id="image"
+                            accept="image/*"
+                            @change="changePhoto"
+                        />
+                        <img :src="previewImageUrl" />
+                    </div> -->
+                    <div class="form-grid">
+                        <!-- Left column -->
+                        <div class="grid-item">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" v-model="name">
+                            
+                            <label for="city">City</label>
+                            <input type="number" id="city" v-model="city" placeholder="TBI">
+                            
+                            <label for="start-date">Start Date</label>
+                            <input type="datetime-local" id="start-date" v-model="startDate">
+                            
+                        </div>
                         
-                        <label for="city">City</label>
-                        <input type="number" id="city" v-model="city" placeholder="TBI">
+                        <!-- Right column -->
+                        <div class="grid-item">
+                            <label for="startlocation">Start Location</label>
+                            <input type="text" id="startlocation" v-model="startLocation">
+        
+                            <label for="latitude">Latitude</label>
+                            <input type="text" id="latitude" v-model="latitude">
+        
+                            <label for="longitude">Longitude</label>
+                            <input type="text" id="longitude" v-model="longitude">
+        
+                        </div>
                         
-                        <label for="start-date">Start Date</label>
-                        <input type="datetime-local" id="start-date" v-model="startDate">
-                        
-                    </div>
-                    
-                    <!-- Right column -->
-                    <div class="grid-item">
-                        <label for="startlocation">Start Location</label>
-                        <input type="text" id="startlocation" v-model="startLocation">
-    
-                        <label for="latitude">Latitude</label>
-                        <input type="text" id="latitude" v-model="latitude">
-    
-                        <label for="longitude">Longitude</label>
-                        <input type="text" id="longitude" v-model="longitude">
-    
-                    </div>
-                    
-                    <!-- Bottom row -->
-                    <div class="grid-item">
-                        <div class="row">
+                        <!-- Bottom row -->
+                        <div class="grid-item">
+                            <div class="row">
+                                <div class="row-item">
+                                    <label for="course-map">Course Map</label>
+                                    <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
+                                </div>
+        
+                            </div>           
+                            
+        
+                        </div>
+        
+                        <div class="grid-item">
+                            <div class="row">
+                                <label for="isPublish">Published</label>
+                                <input id="isPublish" type="checkbox" v-model="isPublish">
+                                <label for="isAttending">Open Registration</label>
+                                <input id="isOpen" type="checkbox" v-model="isOpen">
+                            </div>
+                        </div>
+        
+                        <div class="grid-item">
                             <div class="row-item">
-                                <label for="course-map">Course Map</label>
-                                <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
+                                <label for="category">Category</label>
+                                <input type="text" id="category" v-model="category">
                             </div>
-    
-                        </div>           
-                        
-    
-                    </div>
-    
-                    <div class="grid-item">
-                        <div class="row">
-                            <label for="isPublish">Published</label>
-                            <input id="isPublish" type="checkbox" v-model="isPublish">
-                            <label for="isAttending">Open Registration</label>
-                            <input id="isOpen" type="checkbox" v-model="isOpen">
+        
                         </div>
-                    </div>
-    
-                    <div class="grid-item">
-                        <div class="row-item">
-                            <label for="category">Category</label>
-                            <input type="text" id="category" v-model="category">
-                        </div>
-    
-                    </div>
-    
-                    <div class="grid-item">
-                        <div class="row">
-                            <div class="row-item"> 
-                                <label for="distance"> Distance</label>
-                                <input type="number" id="distance" v-model="distance">
-                            </div>
-    
-                            <div class="row-item"> 
-                                <label for="price">Price</label>
-                                <input type="number" id="price" v-model="price">
+        
+                        <div class="grid-item">
+                            <div class="row">
+                                <div class="row-item"> 
+                                    <label for="distance"> Distance</label>
+                                    <input type="number" id="distance" v-model="distance">
+                                </div>
+        
+                                <div class="row-item"> 
+                                    <label for="price">Price</label>
+                                    <input type="number" id="price" v-model="price">
+                                </div>
                             </div>
                         </div>
+        
+                        <div class="grid-item"></div>
+                        <div class="grid-item">
+                            <div class="button-container"> 
+                                <button class="btn-cancel" @click="toggleForm">CANCEL</button>
+                                <button class="btn-save" @click="saveEvent">SAVE</button>
+                            </div> 
+                        </div>                      
+                        </div>
+                </form>
+                <div class="overlay" v-if="showForm"></div>
+            </div>
+        
+                   <!-- END OF POP UP FORM -->
+            <div class="image-container">
+                <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
+            </div>
+            <div class="information-container">
+                <div class="row-one">
+                    <div class="race-name">
+                        <label class="label-race-name">Name</label>
+                        <div class="race-name-container">
+                            <p v-text="this.event.raceName"></p>
+                        </div>
                     </div>
-    
-                    <div class="grid-item"></div>
-                    <div class="grid-item">
-                        <div class="button-container"> 
-                            <button class="btn-cancel" @click="toggleForm">CANCEL</button>
-                            <button class="btn-save" @click="saveEvent">SAVE</button>
-                        </div> 
-                    </div>                      
-                    </div>
-            </form>
-            <div class="overlay" v-if="showForm"></div>
-        </div>
-
-               <!-- END OF POP UP FORM -->
-        <div class="image-container">
-            <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
-        </div>
-        <div class="information-container">
-            <div class="row-one">
-                <div class="race-name">
-                    <label class="label-race-name">Name</label>
-                    <div class="race-name-container">
-                        <p v-text="this.event.raceName"></p>
+                    <div class="race-date">
+                        <label class="label-race-date">Date</label>
+                        <div class="race-date-container">
+                            <p v-text="this.event.startTime"></p>
+                        </div>
                     </div>
                 </div>
-                <div class="race-date">
-                    <label class="label-race-date">Date</label>
-                    <div class="race-date-container">
-                        <p v-text="this.event.startTime"></p>
+                <div class="row-two">
+                    <div class="race-province">
+                        <label class="label-race-province">Province</label>
+                        <div class="race-province-container">
+                            <p v-text="this.event.startLocation"></p>
+                        </div>
+                    </div>
+                    <div class="race-city">
+                        <label class="label-race-city">City</label>
+                        <div class="race-city-container">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-three">
+                    <div class="race-start-regis">
+                        <label class="label-race-start-regis">Start Date Registration</label>
+                        <div class="race-start-regis-container">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="race-end-regis">
+                        <label class="label-race-end-regis">End Date Registration</label>
+                        <div class="race-end-regis-container">
+                            <p></p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row-two">
-                <div class="race-province">
-                    <label class="label-race-province">Province</label>
-                    <div class="race-province-container">
-                        <p v-text="this.event.startLocation"></p>
-                    </div>
-                </div>
-                <div class="race-city">
-                    <label class="label-race-city">City</label>
-                    <div class="race-city-container">
-                        <p></p>
-                    </div>
-                </div>
+            <div class="category-container">
+                <table class="category-table">
+                    <thead class="table-head">
+                        <tr class="table-row-header">
+                            <th class="table-header">Category</th>
+                            <th class="table-header">Distance</th>
+                            <th class="table-header">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        <tr class="table-row-body">
+                            <th class="table-item">Ultramaraton</th>
+                            <th class="table-item">50</th>
+                            <th class="table-item">150000</th>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="row-three">
-                <div class="race-start-regis">
-                    <label class="label-race-start-regis">Start Date Registration</label>
-                    <div class="race-start-regis-container">
-                        <p></p>
-                    </div>
-                </div>
-                <div class="race-end-regis">
-                    <label class="label-race-end-regis">End Date Registration</label>
-                    <div class="race-end-regis-container">
-                        <p></p>
-                    </div>
-                </div>
+            <div class="maps">
+                <img src="/maps.png" alt="maps maraton" />
             </div>
-        </div>
-        <div class="category-container">
-            <table class="category-table">
-                <thead class="table-head">
-                    <tr class="table-row-header">
-                        <th class="table-header">Category</th>
-                        <th class="table-header">Distance</th>
-                        <th class="table-header">Price</th>
-                    </tr>
-                </thead>
-                <tbody class="table-body">
-                    <tr class="table-row-body">
-                        <th class="table-item">Ultramaraton</th>
-                        <th class="table-item">50</th>
-                        <th class="table-item">150000</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="maps">
-            <img src="/maps.png" alt="maps maraton" />
         </div>
     </div>
 </template>
@@ -170,8 +173,12 @@
 
 <script>
 import axios from 'axios';
+import AdminSidebar from '../components/AdminSidebar.vue';
 export default {
     name: "detailEvent",
+    components: {
+        AdminSidebar
+    },
     data(){
         return {
             event: [],
@@ -240,11 +247,25 @@ export default {
 }
 </script>
 <style scoped>
+
+.detail-event{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: 333px auto;
+    grid-template-areas: 
+    "sidebar main";
+}
+.sidebar {
+    grid-area: sidebar;
+} 
 .layout {
+    grid-area: main;
     background: #fff;
-    width: 90%;
-    height: auto;
-    left: 5%;
+    width: 100%;
+    margin: 30px 20px 30px 20px;
+    position: absolute;
     justify-content: center;
     border-radius: 15px;
 }
