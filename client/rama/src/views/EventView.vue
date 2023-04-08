@@ -122,15 +122,15 @@
                         <tr class="table-row-body" v-for="(event, index) in events" :key="event.raceId" >
                             <td class="table-data" v-text="event.raceName"></td>
                             <td class="table-data" v-text="event.startLocation"></td>
-                            <td class="table-data" v-text="event.startTime"></td>
+                            <td class="table-data" v-text="event.startTime.slice(0,10)"></td>
                             <!-- <td class="table-data">h</td> -->
                             <td class="table-data">
-                                <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
-                                <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
+                                <p class="open-regis" id="open-regis" v-if="event.isOpened">Opened</p>
+                                <p class="close-regis" id="close-regis" v-if="!event.isOpened">Closed</p>
                             </td>
                             <td class="table-data">
-                                <p class="status-publish" id="published" v-if="isPublished">Published</p>
-                                <p class="status-publish-not" id="notPublished" v-if="!isPublished">Unpublished</p>
+                                <p class="status-publish" id="published" v-if="event.isPublished">Published</p>
+                                <p class="status-publish-not" id="notPublished" v-if="!event.isPublished">Unpublished</p>
                             </td>
                             <td class="table-data">
                                 <button class="detail-button">
@@ -156,7 +156,7 @@ export default {
         return {
             events: [],
             isRegistered: false,
-            isPublished: true,
+            isPublished: false,
             showForm: false,
             name: "", 
             city: "", 
@@ -170,7 +170,7 @@ export default {
             category: "",
             distance: "",
             price: "",
-            previewImageUrl: ""
+            previewImageUrl: "",
         };
     },
     components: {
@@ -192,9 +192,11 @@ export default {
                     console.log(response);
                 }else{
                     this.events = response.data.races;
-                    // for debug
-                    // console.log(this.events);
-                    // console.log(this.events[0].raceName);
+                    //cek apakah registasi untuk event sudag dibuka atau belum
+                    // this.isRegistered = this.events.isOpened;
+                    //cek apakah event sudah dipublish atau belum
+                    // this.isPublish = this.events.isPublish;
+                    //untuk format tanggal, dari datelocal dijadikan date
                 }
             })
             .catch((err) => {
