@@ -71,8 +71,8 @@
 
                        <div class="grid-item">
                            <div class="row-item">
-                               <label for="category">Category</label>
-                               <input type="text" id="category" v-model="category">
+                               <label for="category">Description</label>
+                               <input type="text" id="category" v-model="description">
                            </div>
 
                        </div>
@@ -171,6 +171,7 @@ export default {
             distance: "",
             price: "",
             previewImageUrl: "",
+            description: ""
         };
     },
     components: {
@@ -192,11 +193,6 @@ export default {
                     console.log(response);
                 }else{
                     this.events = response.data.races;
-                    //cek apakah registasi untuk event sudag dibuka atau belum
-                    // this.isRegistered = this.events.isOpened;
-                    //cek apakah event sudah dipublish atau belum
-                    // this.isPublish = this.events.isPublish;
-                    //untuk format tanggal, dari datelocal dijadikan date
                 }
             })
             .catch((err) => {
@@ -216,35 +212,43 @@ export default {
             // Convert local time to UTC time
             const startTime = new Date(this.startDate).toISOString();
             
-            const data = {
-                raceName: this.name,
-                city: this.city,
-                startTime: startTime,
-                startLocation: {
-                    name : this.startLocation,
-                    latitude: this.latitude,
-                    longitude: this.longitude,
-                    category: this.category
-                },
-                distance: this.distance,
-                registrationFee: this.price,
+            // const data = {
+            //     raceName: this.name,
+            //     city: this.city,
+            //     startTime: startTime,
+            //     startLocation: {
+            //         name : this.startLocation,
+            //         latitude: this.latitude,
+            //         longitude: this.longitude,
+            //         category: this.category
+            //     },
+            //     distance: this.distance,
+            //     registrationFee: this.price,
                 
-                // This is still unused for now, but will be used.
-                // Since it does not matter, I put it in anyway.
-                courseMap: this.courseMap,
-                isOpen: this.isOpen,
-                isPublished: this.isPublished
-            };
-
+            //     // This is still unused for now, but will be used.
+            //     // Since it does not matter, I put it in anyway.
+            //     courseMap: this.courseMap,
+            //     isOpen: this.isOpen,
+            //     isPublished: this.isPublished
+            // };
+            const formData = new FormData();
+            formData.append('RaceName', this.name);
+            formData.append('RaceDesc', this.description);
+            formData.append('StartTime', startTime);
+            formData.append('Distance', this.distance);
+            formData.append('RegistrationFee', this.price);
+            formData.append('isPublished', this.isPublished);
+            formData.append('isOpened', this.isOpen);
+            
             axios
-            .post(import.meta.env.VITE_API_URI + "/Race", data, config)
+            .post(import.meta.env.VITE_API_URI + "/Race", formData, config)
             .then((response) => {
                 if(response.status !== 200){
                     console.log(response);
                 }else{
                     // Refresh the event list.
                     alert("succeszzz");
-                    this.getEvent();
+                    // this.getEvent();
                     // Close the form.
                     this.showForm = false;
                 }
