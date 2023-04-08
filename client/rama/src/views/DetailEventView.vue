@@ -48,10 +48,7 @@
                                     <label for="course-map">Course Map</label>
                                     <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
                                 </div>
-        
                             </div>           
-                            
-        
                         </div>
         
                         <div class="grid-item">
@@ -98,7 +95,16 @@
             </div>
                    <!-- END OF POP UP FORM -->
             <div class="delete-button-container">
-                <button class="delete-button" @click="deleteRace">DELETE</button>
+                <button class="delete-button" @click="showDeleteForm = true">DELETE</button>
+                <div class="delete-form-overlay" v-if="showDeleteForm">
+                    <div class="delete-form">
+                        <p>Are you sure you want to delete this event?</p>
+                        <div class="delete-form-buttons">
+                            <button class="delete-form-button cancel" @click="showDeleteForm = false">Cancel</button>
+                            <button class="delete-form-button confirm" @click="deleteRace">Confirm</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="image-container">
                 <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
@@ -198,10 +204,8 @@ export default {
             courseMap: "",
             isOpen: false,
             isPublish:false,
-            // category: "",
-            // distance: "",
-            // price: "",
-            previewImageUrl: ""
+            previewImageUrl: "",
+            showDeleteForm : false
         };
     },
 
@@ -243,6 +247,7 @@ export default {
                 this.showForm = false;
             }
         },deleteRace(){
+            // console.log("event di delete")
             const token = localStorage.getItem("token");
 
             // Configuration for API
@@ -529,6 +534,62 @@ input {
     font-weight: bold;
     transition: background-color 0.2s;
     margin: 5px;
+}
+
+.delete-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-form {
+  width: 300px;
+  height: 150px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-form p {
+  margin-bottom: 20px;
+}
+
+.delete-form-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-form-button {
+  width: 100px;
+  height: 40px;
+  border-radius: 20px;
+  margin: 0 10px;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+.delete-form-button.cancel {
+  background-color: lightgray;
+  color: black;
+}
+
+.delete-form-button.confirm {
+  background-color: red;
+  color: white;
 }
 
 </style>
