@@ -18,13 +18,13 @@
                         <!-- Left column -->
                         <div class="grid-item">
                             <label for="name">Name</label>
-                            <input type="text" id="name" v-model="name">
+                            <input type="text" id="name" v-model="name" :placeholder="this.event.raceName">
                             
                             <label for="city">City</label>
-                            <input type="number" id="city" v-model="city" placeholder="TBI">
+                            <input type="text" id="city" v-model="city" placeholder="TBI">
                             
                             <label for="start-date">Start Date</label>
-                            <input type="datetime-local" id="start-date" v-model="startDate">
+                            <input type="datetime-local" id="start-date" v-model="startDate" :placeholder="this.event.startTime">
                             
                         </div>
                         
@@ -63,7 +63,7 @@
                             </div>
                         </div>
         
-                        <div class="grid-item">
+                        <!-- <div class="grid-item">
                             <div class="row-item">
                                 <label for="category">Category</label>
                                 <input type="text" id="category" v-model="category">
@@ -83,7 +83,7 @@
                                     <input type="number" id="price" v-model="price">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
         
                         <div class="grid-item"></div>
                         <div class="grid-item">
@@ -96,8 +96,10 @@
                 </form>
                 <div class="overlay" v-if="showForm"></div>
             </div>
-        
                    <!-- END OF POP UP FORM -->
+            <div class="delete-button-container">
+                <button class="delete-button" @click="deleteRace">DELETE</button>
+            </div>
             <div class="image-container">
                 <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
             </div>
@@ -145,7 +147,7 @@
                     </div>
                 </div>
             </div>
-            <div class="category-container">
+            <!-- <div class="category-container">
                 <table class="category-table">
                     <thead class="table-head">
                         <tr class="table-row-header">
@@ -162,9 +164,10 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
+            <h2>Course Map</h2>
             <div class="maps">
-                <img src="/maps.png" alt="maps maraton" />
+                <img src="/maps.png" alt="maps maraton" id="maps-image" />
             </div>
         </div>
     </div>
@@ -195,9 +198,9 @@ export default {
             courseMap: "",
             isOpen: false,
             isPublish:false,
-            category: "",
-            distance: "",
-            price: "",
+            // category: "",
+            // distance: "",
+            // price: "",
             previewImageUrl: ""
         };
     },
@@ -239,7 +242,29 @@ export default {
             if (event.keyCode === 27) {
                 this.showForm = false;
             }
-        },
+        },deleteRace(){
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            axios.delete(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    this.$router.push("/event");
+                    // for debug
+                    // console.log(this.event);
+                    // console.log(this.events[0].raceName);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
     },
     mounted(){
         this.getData();
@@ -275,7 +300,7 @@ export default {
     right: 2%;
     margin-top: 2%;
     height: 2rem;
-    width: 4rem;
+    width: 4.5rem;
     background: #000;
     border: 1px solid grey;
     border-radius: 15px;
@@ -285,15 +310,33 @@ export default {
     color: #fff;
 }
 
+.delete-button-container{
+    position: absolute;
+    right: 2%;
+    margin-top: 5%;
+}
+
+.delete-button{
+    height: 2rem;
+    width: 4.5rem;
+    background: rgb(234, 54, 54);
+    border: 1px solid grey;
+    border-radius: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold;
+    /* letter-spacing: 2px; */
+    color: #fff;
+}
 .image-container {
     margin-top: 2%;
     height: 20%;
-    width: 80%;
+    width: 60%;
+    left: 20%;
 }
 
 #race-photo{
     height: auto;
-    width: 20%;
+    width: 50%;
 }
 .information-container {
     margin-top: 2%;
@@ -367,6 +410,11 @@ label {
 .label-race-city,
 .label-race-end-regis {
     left: 6%;
+}
+
+h2 {
+    font-size: 1.25rem;
+    color: #000;
 }
 
 .category-container {

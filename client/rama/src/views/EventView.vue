@@ -112,18 +112,18 @@
                             <th class="table-header" scope="col">Title</th>
                             <th class="table-header" scope="col">Location</th>
                             <th class="table-header" scope="col">Date</th>
-                            <th class="table-header" scope="col">Category</th>
+                            <!-- <th class="table-header" scope="col">Category</th> -->
                             <th class="table-header" scope="col">Registration</th>
                             <th class="table-header" scope="col">Status</th>
                             <th class="table-header" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody class="table-body">
-                        <tr class="table-row-body" v-for="(event, index) in events" :key="index" >
+                        <tr class="table-row-body" v-for="(event, index) in events" :key="event.raceId" >
                             <td class="table-data" v-text="event.raceName"></td>
                             <td class="table-data" v-text="event.startLocation"></td>
                             <td class="table-data" v-text="event.startTime"></td>
-                            <td class="table-data">h</td>
+                            <!-- <td class="table-data">h</td> -->
                             <td class="table-data">
                                 <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
                                 <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
@@ -134,7 +134,7 @@
                             </td>
                             <td class="table-data">
                                 <button class="detail-button">
-                                    <router-link :to="{params: {id : index+1}, name: 'detailEvent'}">
+                                    <router-link :to="{params: {id : event.raceId}, name: 'detailEvent'}">
                                         Detail
                                     </router-link>
                                 </button>
