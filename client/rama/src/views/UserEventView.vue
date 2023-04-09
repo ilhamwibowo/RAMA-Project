@@ -10,15 +10,15 @@
           v-for="event in events"
           :key="event.id"
           class="event-card"
-          @click="goToEvent(event.id)"
+          @click="goToEvent(event.raceId)"
         >
-          <img :src="event.image" :alt="event.name" />
-          <h3>{{ event.name }}</h3>
-          <p>{{ event.location }}</p>
-            <p>{{ formatDate(event.date) }}</p>
+          <img :src="event.raceThumbnail" :alt="event.raceName" />
+          <h3>{{ event.raceName }}</h3>
+          <p>{{ event.startLocation }}</p>
+            <p>{{ formatDate2(event.startTime) }}</p>
             <p>{{ event.distance }}</p>
             <div class = "registration-fee">
-                <p>RP 10000</p>
+                <p>{{ event.registrationFee }}</p>
             </div>
         </div>
       </div>
@@ -36,48 +36,48 @@
           // Populate this array with your events
           // Example:
           {
-            id: 1,
-            name: 'JAWA TIMUR MARATHON SPECIAL',
-            location: 'Bandung, Jawa Barat', 
-            date: new Date(),
+            raceId: 1,
+            raceName: 'JAWA TIMUR MARATHON SPECIAL',
+            startLocation: 'Bandung, Jawa Barat', 
+            startTime: '2001-01-01T00:00:00',
             distance: '42KM',
-            image: '3.jpg',
+            raceThumbnail: '3.jpg',
           },          {
-            id: 2,
-            name: 'Jawa Timur Marathon Festival',
-            location: 'Bandung, Jawa Barat', 
-            date: new Date(),
+            raceId: 2,
+            raceName: 'Jawa Timur Marathon Festival',
+            startLocation: 'Bandung, Jawa Barat', 
+            startTime: new Date(),
             distance: '42KM',
-            image: '2.jpg',
+            raceThumbnail: '2.jpg',
           },
           {
-            id: 3,
-            name: 'Jawa Timur Marathon Festival',
-            location: 'Bandung, Jawa Barat', 
-            date: new Date(),
+            raceId: 3,
+            raceName: 'Jawa Timur Marathon Festival',
+            startLocation: 'Bandung, Jawa Barat', 
+            startTime: new Date(),
             distance: '42KM',
-            image: '1.jpg',
+            raceThumbnail: '1.jpg',
           },          {
-            id: 4,
-            name: 'Jawa Timur Marathon Festival',
-            location: 'Bandung, Jawa Barat', 
-            date: new Date(),
+            raceId: 4,
+            raceName: 'Jawa Timur Marathon Festival',
+            startLocation: 'Bandung, Jawa Barat', 
+            startTime: new Date(),
             distance: '42KM',
-            image: '4.jpg',
+            raceThumbnail: '4.jpg',
           },          {
-            id: 3,
-            name: 'Jawa Timur Marathon Festival',
-            location: 'Bandung, Jawa Barat', 
-            date: new Date(),
+            raceId: 3,
+            raceName: 'Jawa Timur Marathon Festival',
+            startLocation: 'Bandung, Jawa Barat', 
+            startTime: new Date(),
             distance: '42KM',
-            image: '5.jpg',
+            raceThumbnail: '5.jpg',
           },          {
-            id: 4,
-            name: 'Jawa Timur Marathon Festival',
-            location: 'Bandung, Jawa Barat', 
-            date: new Date(),
+            raceId: 4,
+            raceName: 'Jawa Timur Marathon Festival',
+            startLocation: 'Bandung, Jawa Barat', 
+            startTime: new Date(),
             distance: '42KM',
-            image: '6.jpg',
+            raceThumbnail: '6.jpg',
           },
         ],
       };
@@ -104,9 +104,21 @@
       formatDate(date) {
         return new Intl.DateTimeFormat('en-US').format(date);
       },
+      formatDate2(dateString) {
+        const months = [
+          "January", "February", "March", "April", "May", "June", 
+          "July", "August", "September", "October", "November", "December"
+        ];
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const monthIndex = date.getMonth();
+        const year = date.getFullYear();
+
+        return `${day} ${months[monthIndex]} ${year}`;
+      },
       goToEvent(eventId) {
         // Replace 'event-details' with the name of the route to the event details page
-        this.$router.push({ name: 'detailEvent', params: { id: 1 } });
+        this.$router.push({ name: 'userEventDetail', params: { id: eventId } });
       },
     },
   };
