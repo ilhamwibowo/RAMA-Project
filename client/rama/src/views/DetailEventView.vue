@@ -2,9 +2,7 @@
     <div class="detail-event">
         <AdminSidebar class="sidebar"/>
         <div class="layout">
-            <div class="edit-button-container">
-                <button class="edit-button" @click="toggleForm()" >EDIT</button>
-                <form v-if="showForm">
+            <form v-if="showForm">
                    <div class="container-image">
                        <input
                            type="file"
@@ -90,16 +88,21 @@
                        </div>
                </form>
                 <div class="overlay" v-if="showForm"></div>
-            </div>
-                   <!-- END OF POP UP FORM -->
-            <div class="delete-button-container">
-                <button class="delete-button" @click="showDeleteForm = true">DELETE</button>
-                <div class="delete-form-overlay" v-if="showDeleteForm">
-                    <div class="delete-form">
-                        <p>Are you sure you want to delete this event?</p>
-                        <div class="delete-form-buttons">
-                            <button class="delete-form-button cancel" @click="showDeleteForm = false">Cancel</button>
-                            <button class="delete-form-button confirm" @click="deleteRace">Confirm</button>
+
+            <div class="buttons-container">
+                <div class="edit-button-container">
+                    <button class="edit-button" @click="toggleForm()" >EDIT</button> 
+                </div>
+                    <!-- END OF POP UP FORM -->
+                <div class="delete-button-container">
+                    <button class="delete-button" @click="showDeleteForm = true">DELETE</button>
+                    <div class="delete-form-overlay" v-if="showDeleteForm">
+                        <div class="delete-form">
+                            <p>Are you sure you want to delete this event?</p>
+                            <div class="delete-form-buttons">
+                                <button class="delete-form-button cancel" @click="showDeleteForm = false">Cancel</button>
+                                <button class="delete-form-button confirm" @click="deleteRace">Confirm</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -375,7 +378,7 @@ export default {
 
 .detail-event{
     height: 100%;
-    width: 100%;
+    margin-right: 50px;
     position: relative;
     display: grid;
     grid-template-columns: 333px auto;
@@ -396,11 +399,9 @@ export default {
 }
 
 .edit-button {
-    position: absolute;
-    right: 2%;
     margin-top: 2%;
-    height: 2rem;
-    width: 5rem;
+    height: 30px;
+    width: 100px;
     background: #000;
     border: 1px solid grey;
     border-radius: 15px;
@@ -408,17 +409,28 @@ export default {
     font-weight: bold;
     letter-spacing: 2px;
     color: #fff;
+    cursor:pointer;
+    transition:0.3s;
+}
+.buttons-container {
+    position: absolute;
+    right:20px;
+    top:20px;
+    text-align: center;
+    z-index: 1;
+}
+.edit-button:hover {
+    background-color: #1d1c1c;
 }
 
 .delete-button-container{
-    position: absolute;
-    right: 2%;
-    margin-top: 5%;
+    width: 100%;
+    margin-top:10px;
 }
 
 .delete-button{
-    height: 2rem;
-    width: 5rem;
+    height: 30px;
+    width: 100px;
     background: rgb(234, 54, 54);
     border: 1px solid grey;
     border-radius: 15px;
@@ -426,8 +438,13 @@ export default {
     font-weight: bold;
     /* letter-spacing: 2px; */
     color: #fff;
+    cursor:pointer;
+    transition: 0.3s;
 }
 
+.delete-button:hover {
+    background-color: rgb(216, 50, 50);
+}
 .participant-button-container{
     position: absolute;
     right: 2%;
