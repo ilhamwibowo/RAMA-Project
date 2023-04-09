@@ -203,9 +203,24 @@ export default {
 
             // Convert local time to UTC time
             const startTime = new Date(this.startDate).toISOString();
-            // const startRegistration = new Date(this.startRegis).toISOString();
-            // const endRegistration = new Date(this.endRegis).toISOString();
-            console.log("masuk sini1")
+
+            //convert start registration date to object format
+            const regisDate = new Date(this.startRegis);
+            var yearRegis = regisDate.getFullYear();
+            var monthRegis = regisDate.getMonth() + 1;
+            var dayRegis = regisDate.getDate();
+            const startRegistration = yearRegis+"-"+monthRegis+"-"+dayRegis;
+            console.log
+
+            //convert end registration date to object format
+            const EndDate = new Date(this.endRegis);
+            var yearEnd = EndDate.getFullYear();
+            var monthEnd = EndDate.getMonth() + 1;
+            var dayEnd = EndDate.getDate();
+            const endRegistration = yearEnd+"-"+monthEnd+"-"+dayEnd;
+
+
+            // console.log(myDate)
             //ini baru bagian yang wajib diisi
             let formData = new FormData();
             formData.append('RaceName', this.name);
@@ -215,8 +230,8 @@ export default {
             formData.append('Distance', this.distance);
             formData.append('RegistrationFee', this.price);
             formData.append('isPublished', this.isPublish);
-            // formData.append('StartDateRegistration', startRegistration);
-            // formData.append('EndtDateRegistration', endRegistration);
+            formData.append('StartDateRegistration', startRegistration);
+            formData.append('EndDateRegistration', endRegistration);
             // formData.append('isOpened', this.isOpen);
             
             console.log([...formData]);

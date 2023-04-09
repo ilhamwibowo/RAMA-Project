@@ -12,7 +12,9 @@
                 <input type="checkbox" name="select-all">
                 <label for="select-all">select all</label>
             </div>
-            <div class="photo-container"></div>
+            <div class="photo-container">
+                <h1>disini foto</h1>
+            </div>
         </div>
     </div>
 </template>
@@ -99,6 +101,9 @@ export default {
     font-weight: bold;
     letter-spacing: 2px;
     color: #fff;
+}
+.photo-container{
+    margin-top: 2%;
 }
 
 </style>

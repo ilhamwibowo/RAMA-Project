@@ -18,10 +18,10 @@
                        <!-- Left column -->
                        <div class="grid-item">
                            <label for="name">Name</label>
-                           <input type="text" id="name" v-model="name" :placeholder="this.event.raceName">
+                           <input type="text" id="name" v-model="name" >
                            
                            <label for="city">City</label>
-                           <input type="text" id="city" v-model="city" :placeholder="this.event.startLocation?.name">
+                           <input type="text" id="city" v-model="city">
                            
                            <label for="start-date">Start Date</label>
                            <input type="datetime-local" id="start-date" v-model="startDate">
@@ -31,7 +31,7 @@
                        <!-- Right column -->
                        <div class="grid-item">
                            <label for="startlocation">Description</label>
-                           <input type="text" id="startlocation" v-model="description" :placeholder="this.event?.raceDesc">
+                           <input type="text" id="startlocation" v-model="description">
 
                            <label for="latitude">Start Registration</label>
                            <input type="datetime-local" id="latitude" v-model="startRegis">
@@ -51,7 +51,7 @@
                                         <option value="">Pilih Album</option>
                                         <option v-for="namaAlbum in this.album" :value="namaAlbum.albumId">{{ namaAlbum.albumName }}</option>
                                     </select>
-                                    <!-- <p>{{ this.albumid }}</p> -->
+                                    <p>{{ this.albumid }}</p>
                                </div>
 
                            </div>           
@@ -62,7 +62,7 @@
                        <div class="grid-item">
                            <div class="row">
                                <label for="isPublish">Published</label>
-                               <input id="isPublish" type="checkbox" v-model="isPublish" :placeholder="this.event?.isPublished">
+                               <input id="isPublish" type="checkbox" v-model="isPublish">
                            </div>
                        </div>
 
@@ -70,12 +70,12 @@
                            <div class="row">
                                <div class="row-item"> 
                                    <label for="distance"> Distance</label>
-                                   <input type="number" id="distance" v-model="distance" :placeholder="this.event?.distance">
+                                   <input type="number" id="distance" v-model="distance">
                                </div>
 
                                <div class="row-item"> 
                                    <label for="price">Price</label>
-                                   <input type="number" id="price" v-model="price" :placeholder="this.event?.registrationFee">
+                                   <input type="number" id="price" v-model="price" >
                                </div>
                            </div>
                        </div>
@@ -178,8 +178,6 @@ export default {
             event: [],
             album: [],
             id :this.$route.params.id,
-            isRegistered: false,
-            isPublished: true,
             showForm: false,
             name: "", 
             city: "", 
@@ -195,7 +193,8 @@ export default {
             description: "",
             startRegis: "",
             endRegis: "",
-            albumId: ""
+            albumId: "",
+            price: ""
         };
     },
 
@@ -215,9 +214,20 @@ export default {
                     console.log(response);
                 }else{
                     this.event = response.data;
+                    this.name = this.event.raceName;
+                    this.description = this.event.raceDesc;
+                    this.city = this.event.startLocation.name;
+                    this.startRegis = this.event.startDateRegistration;
+                    this.endRegis = this.event.endDateRegistration;
+                    this.startDate = this.event.startTime;
+                    this.isPublish = this.event.isPublished;
+                    this.distance = this.event.distance;
+                    this.price = this.event.registrationFee;
+
                     // for debug
                     // console.log(this.event);
                     // console.log(this.events[0].raceName);
+                    // console.log(this.event);
                 }
             })
             .catch((err) => {
@@ -284,6 +294,7 @@ export default {
             // formData.append('StartDateRegistration', startRegistration);
             // formData.append('EndtDateRegistration', endRegistration);
             // formData.append('isOpened', this.isOpen);
+            console.log(this.albumId);
             
             console.log([...formData]);
             axios
