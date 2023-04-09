@@ -4,14 +4,12 @@ import { RouterView } from "vue-router";
 
 <template>
     <div class="app">
-        <NavigationBar v-if="isUser" class="navbar"/>
         <RouterView class="content"/>
     </div>
 </template>
 
 <script>
 import axios from "axios";
-import NavigationBar from "./components/NavigationBar.vue";
 
 export default {
     name: "App",
@@ -19,9 +17,6 @@ export default {
         return{
          isUser: true,
         }
-    },
-    components: {
-        NavigationBar
     },
     async created() {
         const token = localStorage.getItem("token");
