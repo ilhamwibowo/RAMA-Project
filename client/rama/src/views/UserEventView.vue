@@ -129,24 +129,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin : 0 100px 0 100px;
+    margin: 0 100px;
   }
   
   .header {
-  position: relative;
-  width: 1100px;
-  height: 300px;
-  overflow: hidden;
-  border-radius: 20px;
-}
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 20px;
+  }
   
-.header img {
+  .header img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
+  }
   
-.event-list {
+  .event-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -154,9 +155,10 @@
     margin-top: 16px;
     width: 100%;
   }
-
+  
   .event-card {
-    width: 350px;
+    width: 100%;
+    max-width: 350px;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 12px;
@@ -185,32 +187,53 @@
   .event-card p {
     margin: 0;
   }
-
+  
   .header-title {
-  position: absolute;
-  bottom: 20px; /* Adjust the value to set the distance from the bottom */
-  left: 20px; /* Adjust the value to set the distance from the left */
-  color: #000;
-  font-size: 36px;
-  font-weight: bold;
-  text-align: left;
-  font-family: "Montserrat", sans-serif;
-  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); */
-}
-.registration-fee {
     position: absolute;
-  bottom: 0;
-  right:0;
-  width: 100%;
-  font-size: 20px;
-  color: #FFA801;
-  text-align: right;
-  margin-right: 20px;
-  margin-bottom: 10px;
-}
-
-.registration-fee p {
+    bottom: 20px;
+    left: 20px;
+    color: #000;
+    font-size: 36px;
     font-weight: bold;
-}
+    text-align: left;
+    font-family: "Montserrat", sans-serif;
+  }
+  
+  .registration-fee {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    font-size: 20px;
+    color: #FFA801;
+    text-align: right;
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .registration-fee p {
+    font-weight: bold;
+  }
+  
+  /* Media queries */
+  @media screen and (max-width: 1024px) {
+    .layout {
+      margin: 0 50px;
+    }
+  
+    .header-title {
+      font-size: 28px;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .layout {
+      margin: 0 20px;
+    }
+  
+    .header-title {
+      font-size: 24px;
+    }
+  }
   </style>
   

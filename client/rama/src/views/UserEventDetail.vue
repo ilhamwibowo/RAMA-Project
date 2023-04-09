@@ -119,7 +119,6 @@
   .event-detail {
     display: flex;
     margin:20px 50px 0 50px;
-
   }
   
   .left-side {
@@ -130,7 +129,6 @@
   
   .right-side {
     flex: 1;
-    
   }
   
   .sticky-container {
@@ -145,7 +143,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #fff;
   }
-
+  
   .details {
     text-align: left;
   }
@@ -161,7 +159,7 @@
     margin-bottom:20px;
     margin-top:10px;
   }
-
+  
   .register-button {
     width: 100px;
     height: 30px;
@@ -172,12 +170,11 @@
     cursor:pointer;
     transition: 0.3s;
   }
-
+  
   .register-button:hover {
     background-color: #df9205;
-
   }
-
+  
   .view-album-button {
     width: 200px;
     height: 40px;
@@ -189,9 +186,28 @@
     border-radius: 5px;
     transition:0.3s;
   }
-
+  
   .view-album-button:hover {
     box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);;
   }
-  </style>
   
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .event-detail {
+      flex-direction: column;
+    }
+  
+    .left-side {
+      padding-right: 0;
+    }
+  
+    .right-side {
+      order: 1;
+    }
+  
+    .sticky-container {
+      margin-top: 20px;
+      position: static;
+    }
+  }
+  </style>
