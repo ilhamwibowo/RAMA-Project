@@ -160,6 +160,11 @@ export default {
     margin: 5px 0px 5px 0px;
 }
 
+input[type="text"] {
+    font-family: "Darker Grotesque";
+    font-size: 125%;
+}
+
 #show-pw {
     position: absolute;
     right: 10px;
