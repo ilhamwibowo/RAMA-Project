@@ -92,8 +92,8 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateRace(Guid id, [FromForm] RaceEditDto raceDto)
         {
-            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
-            // if (requester.Role != "Admin") Unauthorized("No Permission!");
+            var requester = await _context.Accounts.Select(x => new { x.AccId, x.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
+            if (requester.Role != "Admin") Unauthorized("No Permission!");
 
             Race race = _context.Races.FirstOrDefault(x => x.RaceId.Equals(id));
             Album newalbum = await _context.Albums.FirstOrDefaultAsync(x => x.AlbumId.Equals(raceDto.AlbumId));
