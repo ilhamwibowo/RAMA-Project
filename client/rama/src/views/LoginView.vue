@@ -51,6 +51,7 @@ export default {
 
 .login-image {
     grid-area: image;
+    text-align: center;
 }
 
 .login-image > img {

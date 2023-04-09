@@ -1,11 +1,11 @@
 <template>
-    <div class="form-container">
+    <div class="register-container">
         <div class="title">
-            <h1>LOG IN</h1>
+            <h1>SIGN UP</h1>
         </div>
-        <div class="login">
+        <div class="register">
             <div class="form" id="email">
-                <label>Email</label><br/>
+                <label>Email</label><br />
                 <input
                     type="text"
                     class="input"
@@ -14,24 +14,28 @@
                     v-model="email"
                     placeholder=""
                 />
-                <div class="alert" id="invalid-email" v-if="invalidEmail">
-                    <img src="alert.png">
-                    <p>{{ invalidEmail }}</p>
-                </div>
+            </div>
+            <div class="alert" id="invalid-email" v-if="invalidEmail">
+                <img src="alert.png">
+                <p>{{ invalidEmail }}</p>
             </div>
             <div class="form" id="password">
                 <label>Password</label><br />
                 <div class="password-wrap">
                     <input
                         type="password"
-                        class="input"
+                        class="input password"
                         id="password-form"
                         name="password"
                         v-model="password"
                         placeholder=""
                     />
                     <button type="button" id="show-pw" v-on:click="tooglePassword()">
-                        <img src="unshow.png" alt="open eye" v-if="!showPw" />
+                        <img
+                            src="unshow.png"
+                            alt="open eye"
+                            v-if="!showPw"
+                        />
                         <img
                             src="show.png"
                             alt="close eye"
@@ -39,23 +43,53 @@
                         />
                     </button>
                 </div>
-                <div class="alert" id="invalid-password" v-if="invalidPassword">
-                    <img src="alert.png">
-                    <p>{{ invalidPassword }}</p>
+            </div>
+            <div class="form" id="confirm-password">
+                <label>Confirm Password</label><br />
+                <div class="password-confirm-wrap">
+                    <input
+                        type="password"
+                        class="input password"
+                        id="password-confirm"
+                        name="confirm-password"
+                        v-model="confirmPassword"
+                        placeholder=""
+                    />
+                    <button
+                        type="button"
+                        id="show-pw"
+                        v-on:click="tooglePasswordConfirm()"
+                    >
+                        <img
+                            src="unshow.png"
+                            alt="open eye"
+                            v-if="!showPwConfirm"
+                        />
+                        <img
+                            src="show.png"
+                            alt="close eye"
+                            v-if="showPwConfirm"
+                        />
+                    </button>
                 </div>
             </div>
-            <div class="alert" id="login-response" v-if="response">
+            <div class="alert" id="invalid-password" v-if="invalidPassword">
+                <img src="alert.png">
+                <p>{{ invalidPassword }}</p>
+            </div>
+            <div class="alert" id="register-response" v-if="response">
                 <img src="alert.png">
                 <p>{{ response }}</p>
             </div>
-            <div id="forgot-password">
-                <a href="http://localhost:5173/forgot">Forgot password</a> <br>
-            </div> 
-            <button type="button" id="submit-login" v-on:click="login()">Login</button>
+            <div id="register-button">
+                <button type="button" id="submit-register" v-on:click="register()">
+                    Sign Up
+                </button>
+            </div>
         </div>
-        <div id="register-container">
+        <div class="login-container">
             <hr>
-            <p>Don't have an account? <a href="http://localhost:5173/register">Sign Up</a></p>
+            <p>Already have an account? <a href="http://localhost:5173/login">Login</a></p>
         </div>
     </div>
 </template>
@@ -64,24 +98,33 @@
 import axios from "axios";
 
 export default {
-    name: "Login",
+    name: "Register",
     data() {
         return {
             email: "",
             password: "",
+            confirmPassword: "",
             invalidEmail: "",
             invalidPassword: "",
             response: "",
-            showPw: false
-        }
+            showPw: false,
+            showPwConfirm: false
+        };
     },
     methods: {
-        login() {
+        register() {
             let reEmail =
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!this.email.toLowerCase().match(reEmail) || this.password === "") {
+            if (
+                !this.email.toLowerCase().match(reEmail) ||
+                this.password !== this.confirmPassword ||
+                this.password === ""
+            ) {
                 if (!this.email.toLowerCase().match(reEmail)) {
                     this.invalidEmail = "Invalid e-mail!";
+                }
+                if (this.password !== this.confirmPassword) {
+                    this.invalidPassword = "Password does not match!";
                 }
                 if (this.password === "") {
                     this.invalidPassword = "Please fill in your password!";
@@ -90,7 +133,7 @@ export default {
                 this.invalidEmail = "";
                 this.invalidPassword = "";
                 axios
-                    .post(import.meta.env.VITE_API_URI + "/Account/login", {
+                    .post(import.meta.env.VITE_API_URI + "/Account/register", {
                         email: this.email,
                         password: this.password
                     })
@@ -111,11 +154,19 @@ export default {
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
                 this.showPw = true;
-                // showButton.innerHTML = '<img src="../assets/eye-off-outline.svg" alt="closed eye" />';
             } else {
                 passwordInput.type = "password";
                 this.showPw = false;
-                // showButton.innerHTML = '<img src="../assets/eye-outline.svg" alt="open eye" />';
+            }
+        },
+        tooglePasswordConfirm() {
+            const passwordInput = document.getElementById("password-confirm");
+            if (passwordInput.type == "password") {
+                passwordInput.type = "text";
+                this.showPwConfirm = true;
+            } else {
+                passwordInput.type = "password";
+                this.showPwConfirm = false;
             }
         }
     }
@@ -124,7 +175,7 @@ export default {
 
 <style scoped>
 
-.form-container {
+.register-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -132,12 +183,13 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
 .title {
     font-size: 20px;
     font-family: 'Bebas Neue';
 }
 
-.login {
+.register {
     font-size: 18px;
     font-family: 'Darker Grotesque';
 }
@@ -146,7 +198,7 @@ export default {
     margin-bottom: 10px;
 }
 
-.login label {
+.register label {
     margin-left: 40px;
 }
 
@@ -158,6 +210,10 @@ export default {
     border-radius: 100px;
     padding: 10px 25px;
     margin: 5px 0px 5px 0px;
+}
+
+.password {
+    padding: 10px 65px 10px 25px;
 }
 
 #show-pw {
@@ -172,16 +228,7 @@ export default {
     height: auto;
 }
 
-#forgot-password {
-    text-align: center;
-}
-
-#forgot-password a {
-    text-decoration: none;
-    font-weight: 700;
-}
-
-#submit-login {
+#submit-register {
     font-family: "Bebas Neue";
     color: white;
     font-size: 24px;
@@ -190,26 +237,26 @@ export default {
     border-radius: 100px;
     border-color: transparent;
     background: #353642;
-    margin:10px 0px 25px 0px;
+    margin:25px 0px 25px 0px;
 }
 
-#submit-login:hover {
+#submit-register:hover {
     background: #000000;
     transition: 0.3s;
 }
 
-#register-container {
+.login-container {
     font-family: "Darker Grotesque";
     font-size: 18px;
     width: 350px;
     text-align: center;
 }
 
-#register-container hr {
+.login-container hr {
     border: 1px solid;
 }
 
-#register-container a {
+.login-container a {
     text-decoration: none;
     font-weight: 700;
 }
