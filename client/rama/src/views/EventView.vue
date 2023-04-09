@@ -11,7 +11,7 @@
                 
                 <!-- POP UP FORM FOR CREATING NEW EVENT -->
                 <form v-if="showForm">
-                   <!-- <div class="container-image">
+                   <div class="container-image">
                        <input
                            type="file"
                            id="image"
@@ -19,7 +19,7 @@
                            @change="changePhoto"
                        />
                        <img :src="previewImageUrl" />
-                   </div> -->
+                   </div>
                    <div class="form-grid">
                        <!-- Left column -->
                        <div class="grid-item">
@@ -27,7 +27,7 @@
                            <input type="text" id="name" v-model="name">
                            
                            <label for="city">City</label>
-                           <input type="text" id="city" v-model="city" placeholder="TBI">
+                           <input type="text" id="city" v-model="city">
                            
                            <label for="start-date">Start Date</label>
                            <input type="datetime-local" id="start-date" v-model="startDate">
@@ -163,7 +163,8 @@ export default {
             previewImageUrl: "",
             description: "",
             startRegis: "",
-            endRegis: ""
+            endRegis: "",
+            profilePhoto:Object
         };
     },
     components: {
@@ -194,6 +195,7 @@ export default {
         // This method is for creating a new event which is used 
         // in the "Save" button on the form
         saveEvent() {
+            this.uploadphoto();
             const token = localStorage.getItem("token");
 
             // Configuration for API
@@ -238,15 +240,8 @@ export default {
             axios
             .post(import.meta.env.VITE_API_URI + "/Race", formData, config)
             .then((response) => {
-                if(response.status !== 200){
-                    console.log(response);
-                }else{
-                    // Refresh the event list.
-                    alert("succeszzz");
-                    // this.getEvent();
-                    // Close the form.
-                    this.showForm = false;
-                }
+                alert("Success");
+                this.showForm = false;
             })
             .catch((err) => {
                 console.log(err);
@@ -265,7 +260,33 @@ export default {
                 this.showForm = false;
             }
         },
+        changePhoto(event) {
+        const image = event.target.files[0];
+        this.previewImage = image;
+        this.previewImageUrl = URL.createObjectURL(image);
     },
+    uploadphoto() {
+        const token = localStorage.getItem("token");
+        // Configuration for post api
+        const configPhoto = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            };
+
+        // Create FormData file for post api
+        var formData = new FormData();
+        formData.append("file", this.previewImage);
+
+        // Axios Post
+        axios
+            .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
+            .then((response) => (console.log(this.profilePhoto = response.data)))
+            .catch((err) => console.log(err));
+    },
+    },
+    
     mounted() {
         this.getEvent();
     }
@@ -405,6 +426,14 @@ input {
   flex-grow: 1;
 }
 
+.container-image {
+    width: 100%;
+    text-align: center;
+}
+
+img {
+    width: 400px;
+}
 
 /********************** Base (Table and else) ****************/
 .sidebar {
