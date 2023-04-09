@@ -104,13 +104,11 @@
                     </div>
                 </div>
             </div>
-            <div class="participant-button-container">
+            <!-- <div class="participant-button-container">
                 <button class="participant-button">
-                    <router-link :to="{params: {id : this.id}, name: 'raceParticipant'}">
                         Participant
-                    </router-link>
                 </button>
-            </div>
+            </div> -->
             <div class="image-container">
                 <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
             </div>
