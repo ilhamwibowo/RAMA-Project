@@ -195,7 +195,7 @@ export default {
         // This method is for creating a new event which is used 
         // in the "Save" button on the form
         saveEvent() {
-            this.uploadphoto();
+            // this.uploadphoto();
             const token = localStorage.getItem("token");
 
             // Configuration for API
@@ -234,6 +234,7 @@ export default {
             formData.append('isPublished', this.isPublish);
             formData.append('StartDateRegistration', startRegistration);
             formData.append('EndDateRegistration', endRegistration);
+            formData.append('file', this.profilePhoto)
             // formData.append('isOpened', this.isOpen);
             
             console.log([...formData]);
@@ -242,6 +243,25 @@ export default {
             .then((response) => {
                 alert("Success");
                 this.showForm = false;
+
+                // Clear input valeus.
+                this.name = "", 
+                this.city = "", 
+                this.startDate = "",
+                this.startLocation = "",
+                this.latitude = "",
+                this.longitude = "",
+                this.courseMap = "",
+                this.isOpen = false,
+                this.isPublish = false,
+                this.category = "",
+                this.distance = "",
+                this.price = "",
+                this.previewImageUrl = "",
+                this.description = "",
+                this.startRegis = "",
+                this.endRegis = "",
+                console.log(response.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -262,7 +282,7 @@ export default {
         },
         changePhoto(event) {
         const image = event.target.files[0];
-        this.previewImage = image;
+        this.profilePhoto = image;
         this.previewImageUrl = URL.createObjectURL(image);
     },
     uploadphoto() {
@@ -432,7 +452,8 @@ input {
 }
 
 img {
-    width: 400px;
+    max-width: 400px;
+    max-height:200px;
 }
 
 /********************** Base (Table and else) ****************/

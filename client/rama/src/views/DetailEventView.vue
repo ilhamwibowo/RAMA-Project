@@ -4,14 +4,17 @@
         <div class="layout">
             <form v-if="showForm">
                    <div class="container-image">
-                       <input
-                           type="file"
-                           id="image"
-                           accept="image/*"
-                           @change="changePhoto"
-                       />
-                       <img :src="previewImageUrl" />
+                    <label for="image">
+                        <img :src="previewImageUrl" />
+                    </label>
+                    <input
+                            type="file"
+                            id="image"
+                            accept="image/*"
+                            @change="changePhoto"
+                        />
                    </div>
+
                    <div class="form-grid">
                        <!-- Left column -->
                        <div class="grid-item">
@@ -120,7 +123,7 @@
                     @change="changePhoto"
                     style="display: none"
                 />
-                <img :src="previewImageUrl" />
+                <img :src="basePreviewImageUrl" />
                 <div class="edit-image" @click="uploadPhoto">
                     <div class="circle"></div>
                 </div>
@@ -202,16 +205,23 @@ export default {
             isOpen: false,
             isPublish:false,
             previewImageUrl: "",
+            basePreviewImageUrl:"", 
             showDeleteForm : false,
             description: "",
             startRegis: "",
             endRegis: "",
             albumId: "",
-            price: ""
+            price: "",
+            photo:Object
         };
     },
 
     methods: {
+        changePhoto(event) {
+            const image = event.target.files[0];
+            this.photo = image;
+            this.previewImageUrl = URL.createObjectURL(image);
+        },
         async getData(){
             const token = localStorage.getItem("token");
 
@@ -236,7 +246,8 @@ export default {
                     this.isPublish = this.event.isPublished;
                     this.distance = this.event.distance;
                     this.price = this.event.registrationFee;
-
+                    this.previewImageUrl = this.event.raceThumbnail.url;
+                    this.basePreviewImageUrl = this.event.raceThumbnail.url;
                     // for debug
                     // console.log(this.event);
                     // console.log(this.events[0].raceName);
@@ -322,6 +333,7 @@ export default {
             }
             formData.append('StartDateRegistration', startRegistration);
             formData.append('EndDateRegistration', endRegistration);
+            formData.append('file', this.photo);
             // formData.append('isOpened', this.isOpen);
             console.log(this.albumId);
             
@@ -329,15 +341,10 @@ export default {
             axios
             .put(import.meta.env.VITE_API_URI + "/Race/" + this.id, formData, config)
             .then((response) => {
-                if(response.status !== 200){
-                    console.log(response);
-                }else{
-                    // Refresh the event list.
-                    // alert("succeszzz");
-                    // this.getEvent();
-                    // Close the form.
-                    this.showForm = false;
-                }
+
+                // Reload page when success.
+                this.showForm = false;
+                location.reload()
             })
             .catch((err) => {
                 console.log(err);
@@ -387,6 +394,8 @@ export default {
 }
 .sidebar {
     grid-area: sidebar;
+    position: fixed;
+    height: 100%;
 } 
 .layout {
     grid-area: main;
@@ -716,6 +725,18 @@ input {
   justify-content: center;
 }
 
+#image {
+    border: 2px solid #5f5f5f;
+    padding: 5px 10px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 2px solid grey;
+    color: rgb(63, 62, 62);
+    font-size: 20px;
+}
+
 .delete-form {
   width: 300px;
   height: 150px;
@@ -762,19 +783,31 @@ input {
 .container-image {
     display: flex;
     margin: 0 auto;
-    width: 150px;
-    height: 150px;
-    position: relative;
+    max-width: 400px;
     align-items: center;
     overflow: hidden;
-    border-radius: 50%;
+    text-align: center;
+    justify-content: center;
+}
+
+#image {
+  position: absolute;
+  opacity: 0;
+  max-width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.container-image img {
+    max-height: 250px;
+    max-width: 100%;
 }
 
 img {
     display: inline;
     margin: 0 auto;
     height: 100%;
-    width: auto;
+    max-width: auto;
 }
 
 .edit-image {
