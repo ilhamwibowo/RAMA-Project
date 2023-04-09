@@ -12,9 +12,10 @@
           class="event-card"
           @click="goToEvent(event.raceId)"
         >
-          <img :src="event.raceThumbnail" alt="Event Image" />
+          <!-- Only render the image tag if racethumbnail is not null -->
+          <img v-if="event.raceThumbnail" :src="event.raceThumbnail.url" alt="Event Image" />
           <h3>{{ event.raceName }}</h3>
-          <p>{{ event.startLocation }}</p>
+          <p v-if="event.startLocation">{{ event.startLocation.name }}</p>
             <p>{{ formatDate2(event.startTime) }}</p>
             <p>{{ event.distance }}</p>
             <div class = "registration-fee">
@@ -38,46 +39,32 @@
           {
             raceId: 1,
             raceName: 'JAWA TIMUR MARATHON SPECIAL',
-            startLocation: 'Bandung, Jawa Barat', 
+            startLocation: {name: 'Bandung, Jawa Barat'}, 
             startTime: '2001-01-01T00:00:00',
             distance: '42KM',
-            raceThumbnail: '3.jpg',
+            raceThumbnail: {url:'3.jpg'},
           },          {
             raceId: 2,
             raceName: 'Jawa Timur Marathon Festival',
-            startLocation: 'Bandung, Jawa Barat', 
+            startLocation: {name: 'Bandung, Jawa Barat'}, 
             startTime: new Date(),
             distance: '42KM',
-            raceThumbnail: '2.jpg',
+            raceThumbnail: {url:'2.jpg'},
           },
           {
             raceId: 3,
             raceName: 'Jawa Timur Marathon Festival',
-            startLocation: 'Bandung, Jawa Barat', 
+            startLocation: {name: 'Bandung, Jawa Barat'}, 
             startTime: new Date(),
             distance: '42KM',
-            raceThumbnail: '1.jpg',
+            raceThumbnail: {url:'1.jpg'},
           },          {
             raceId: 4,
             raceName: 'Jawa Timur Marathon Festival',
-            startLocation: 'Bandung, Jawa Barat', 
+            startLocation: {name: 'Bandung, Jawa Barat'}, 
             startTime: new Date(),
             distance: '42KM',
-            raceThumbnail: '4.jpg',
-          },          {
-            raceId: 3,
-            raceName: 'Jawa Timur Marathon Festival',
-            startLocation: 'Bandung, Jawa Barat', 
-            startTime: new Date(),
-            distance: '42KM',
-            raceThumbnail: '5.jpg',
-          },          {
-            raceId: 4,
-            raceName: 'Jawa Timur Marathon Festival',
-            startLocation: 'Bandung, Jawa Barat', 
-            startTime: new Date(),
-            distance: '42KM',
-            raceThumbnail: '6.jpg',
+            raceThumbnail: {url:'4.jpg'},
           },
         ],
       };

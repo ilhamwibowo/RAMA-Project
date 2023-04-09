@@ -11,9 +11,10 @@
       <div class="left-side">
         <h1>{{ eventData.raceName }}</h1>
         <hr>
-        <img class="event-image" :src="eventData.image" alt="Event Image" />
+        <img class="event-image" v-if="eventData.raceThumbnail" :src="eventData.raceThumbnail.url" alt="Event Image" />
+        <!-- <img class="event-image" :src="eventData.image" alt="Event Image" /> -->
         <h2>About</h2>
-        <p>{{ eventData.about }}</p>
+        <p>{{ eventData.raceDesc }}</p>
         <h2>Route Map</h2>
         <div class="route-map">
           <!-- Insert map component or implementation here -->
@@ -24,7 +25,7 @@
           <div class="sticky-card">
             <h2>{{ eventData.raceName }}</h2>
             <div class="details">
-              <p>{{eventData.startLocation}}</p>
+              <p v-if="eventData.startLocation">{{ eventData.startLocation.name }}</p>
               <p>{{formatDate(eventData.startTime)}}</p>
               <p>{{ eventData.distance }}</p>
               <p>{{ eventData.registrationFee }}</p>
@@ -50,9 +51,9 @@
         showModal: false,
         eventId: this.$route.params.id,
         eventData: {
-          image: "../1.jpg",
+          raceThumbnail: {url : "../1.jpg"},
           raceName: "Jawa Timur Marathon Festival",
-          about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec eros tincidunt, sodales dui quis, congue enim. Morbi tristique ex a lectus tempus, ut iaculis velit lobortis. Nullam sagittis nunc in metus mollis consequat. Praesent bibendum accumsan dolor, vel iaculis mi tincidunt ut. Praesent nec dolor non risus viverra dignissim. Nunc dui sem, lobortis sit amet risus non, euismod euismod purus. Etiam augue metus, lobortis ut ultrices quis, laoreet eu leo.",
+          raceDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec eros tincidunt, sodales dui quis, congue enim. Morbi tristique ex a lectus tempus, ut iaculis velit lobortis. Nullam sagittis nunc in metus mollis consequat. Praesent bibendum accumsan dolor, vel iaculis mi tincidunt ut. Praesent nec dolor non risus viverra dignissim. Nunc dui sem, lobortis sit amet risus non, euismod euismod purus. Etiam augue metus, lobortis ut ultrices quis, laoreet eu leo.",
           distance: "23km",
           registrationFee: "10000",
           startTime:new Date(),
@@ -74,6 +75,7 @@
         axios.get(import.meta.env.VITE_API_URI + "/Race/"+ this.eventId, config)
           .then(response => {
             this.eventData = response.data;
+            console.log(response.data);
           })
           .catch(error => {
             console.log(error);
