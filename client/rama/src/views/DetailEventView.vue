@@ -104,6 +104,13 @@
                     </div>
                 </div>
             </div>
+            <div class="participant-button-container">
+                <button class="participant-button">
+                    <router-link :to="{params: {id : this.id}, name: 'raceParticipant'}">
+                        Participant
+                    </router-link>
+                </button>
+            </div>
             <div class="image-container">
                 <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
             </div>
@@ -358,7 +365,7 @@ export default {
     right: 2%;
     margin-top: 2%;
     height: 2rem;
-    width: 4.5rem;
+    width: 5rem;
     background: #000;
     border: 1px solid grey;
     border-radius: 15px;
@@ -376,8 +383,26 @@ export default {
 
 .delete-button{
     height: 2rem;
-    width: 4.5rem;
+    width: 5rem;
     background: rgb(234, 54, 54);
+    border: 1px solid grey;
+    border-radius: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold;
+    /* letter-spacing: 2px; */
+    color: #fff;
+}
+
+.participant-button-container{
+    position: absolute;
+    right: 2%;
+    margin-top: 8%;
+}
+
+.participant-button{
+    height: 2rem;
+    width: 5rem;
+    background: rgb(95, 81, 81);
     border: 1px solid grey;
     border-radius: 15px;
     font-family: "Montserrat", sans-serif;
