@@ -12,7 +12,7 @@
           class="event-card"
           @click="goToEvent(event.raceId)"
         >
-          <img :src="event.raceThumbnail" :alt="event.raceName" />
+          <img :src="event.raceThumbnail" alt="Event Image" />
           <h3>{{ event.raceName }}</h3>
           <p>{{ event.startLocation }}</p>
             <p>{{ formatDate2(event.startTime) }}</p>

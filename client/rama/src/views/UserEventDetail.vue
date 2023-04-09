@@ -80,7 +80,21 @@
           });
       },
       registerForEvent() {
-        console.log("Resgister");
+        const token = localStorage.getItem("token");
+
+        // Configuration for API
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        axios.post(import.meta.env.VITE_API_URI + "/Registration/"+ this.eventId, null,  config)
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error);
+            console.log("p");
+          });
       },
       viewAlbum() {
         // TODO : Add parameters to album
