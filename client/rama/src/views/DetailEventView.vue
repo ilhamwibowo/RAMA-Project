@@ -4,11 +4,7 @@
             <button class="edit-button">EDIT</button>
         </div>
         <div class="image-container">
-<<<<<<< HEAD
-            <img src="/contohGambar.png" alt="GambarEvent" />
-=======
             <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
->>>>>>> 9bbb661d6c65fbd5b0241f3f04ab5723a8b7f0ea
         </div>
         <div class="information-container">
             <div class="row-one">

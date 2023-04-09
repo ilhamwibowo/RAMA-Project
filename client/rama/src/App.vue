@@ -17,7 +17,7 @@ export default {
     name: "App",
     data() {
         return{
-         isUser: true,
+         isUser: false,
         }
     },
     components: {
@@ -39,7 +39,8 @@ export default {
                     console.log(response);
                 } else {
                     // if user show navbar
-                    this.isUser = response.data.role == "User" | !response.data.role;
+                    // this.isUser = response.data.role == "User" | !response.data.role;
+                    this.isUser = false;
                     console.log(this.isUser);
                 }
             })
