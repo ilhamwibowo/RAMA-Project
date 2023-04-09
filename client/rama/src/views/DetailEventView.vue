@@ -5,92 +5,85 @@
             <div class="edit-button-container">
                 <button class="edit-button" @click="toggleForm()" >EDIT</button>
                 <form v-if="showForm">
-                    <!-- <div class="container-image">
-                        <input
-                            type="file"
-                            id="image"
-                            accept="image/*"
-                            @change="changePhoto"
-                        />
-                        <img :src="previewImageUrl" />
-                    </div> -->
-                    <div class="form-grid">
-                        <!-- Left column -->
-                        <div class="grid-item">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" v-model="name" :placeholder="this.event.raceName">
-                            
-                            <label for="city">City</label>
-                            <input type="text" id="city" v-model="city" placeholder="TBI">
-                            
-                            <label for="start-date">Start Date</label>
-                            <input type="datetime-local" id="start-date" v-model="startDate" :placeholder="this.event.startTime">
-                            
-                        </div>
-                        
-                        <!-- Right column -->
-                        <div class="grid-item">
-                            <label for="startlocation">Start Location</label>
-                            <input type="text" id="startlocation" v-model="startLocation">
-        
-                            <label for="latitude">Latitude</label>
-                            <input type="text" id="latitude" v-model="latitude">
-        
-                            <label for="longitude">Longitude</label>
-                            <input type="text" id="longitude" v-model="longitude">
-        
-                        </div>
-                        
-                        <!-- Bottom row -->
-                        <div class="grid-item">
-                            <div class="row">
-                                <div class="row-item">
-                                    <label for="course-map">Course Map</label>
-                                    <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
-                                </div>
-                            </div>           
-                        </div>
-        
-                        <div class="grid-item">
-                            <div class="row">
-                                <label for="isPublish">Published</label>
-                                <input id="isPublish" type="checkbox" v-model="isPublish">
-                                <label for="isAttending">Open Registration</label>
-                                <input id="isOpen" type="checkbox" v-model="isOpen">
-                            </div>
-                        </div>
-        
-                        <!-- <div class="grid-item">
-                            <div class="row-item">
-                                <label for="category">Category</label>
-                                <input type="text" id="category" v-model="category">
-                            </div>
-        
-                        </div>
-        
-                        <div class="grid-item">
-                            <div class="row">
-                                <div class="row-item"> 
-                                    <label for="distance"> Distance</label>
-                                    <input type="number" id="distance" v-model="distance">
-                                </div>
-        
-                                <div class="row-item"> 
-                                    <label for="price">Price</label>
-                                    <input type="number" id="price" v-model="price">
-                                </div>
-                            </div>
-                        </div> -->
-        
-                        <div class="grid-item"></div>
-                        <div class="grid-item">
-                            <div class="button-container"> 
-                                <button class="btn-cancel" @click="toggleForm">CANCEL</button>
-                                <button class="btn-save" @click="saveEvent">SAVE</button>
-                            </div> 
-                        </div>                      
-                        </div>
-                </form>
+                   <!-- <div class="container-image">
+                       <input
+                           type="file"
+                           id="image"
+                           accept="image/*"
+                           @change="changePhoto"
+                       />
+                       <img :src="previewImageUrl" />
+                   </div> -->
+                   <div class="form-grid">
+                       <!-- Left column -->
+                       <div class="grid-item">
+                           <label for="name">Name</label>
+                           <input type="text" id="name" v-model="name">
+                           
+                           <label for="city">City</label>
+                           <input type="text" id="city" v-model="city" placeholder="TBI">
+                           
+                           <label for="start-date">Start Date</label>
+                           <input type="datetime-local" id="start-date" v-model="startDate">
+                           
+                       </div>
+                       
+                       <!-- Right column -->
+                       <div class="grid-item">
+                           <label for="startlocation">Description</label>
+                           <input type="text" id="startlocation" v-model="description">
+
+                           <label for="latitude">Start Registration</label>
+                           <input type="datetime-local" id="latitude" v-model="startRegis">
+
+                           <label for="longitude">End Registration</label>
+                           <input type="datetime-local" id="longitude" v-model="endRegis">
+
+                       </div>
+                       
+                       <!-- Bottom row -->
+                       <div class="grid-item">
+                           <div class="row">
+                               <div class="row-item">
+                                   <label for="course-map">Course Map</label>
+                                   <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
+                               </div>
+
+                           </div>           
+                           
+
+                       </div>
+
+                       <div class="grid-item">
+                           <div class="row">
+                               <label for="isPublish">Published</label>
+                               <input id="isPublish" type="checkbox" v-model="isPublish">
+                           </div>
+                       </div>
+
+                       <div class="grid-item">
+                           <div class="row">
+                               <div class="row-item"> 
+                                   <label for="distance"> Distance</label>
+                                   <input type="number" id="distance" v-model="distance">
+                               </div>
+
+                               <div class="row-item"> 
+                                   <label for="price">Price</label>
+                                   <input type="number" id="price" v-model="price">
+                               </div>
+                           </div>
+                       </div>
+
+                       <!-- <div class="grid-item"></div> -->
+                       <div class="grid-item">
+                           <div class="button-container"> 
+                               <button class="btn-cancel" @click="toggleForm">CANCEL</button>
+                               <button class="btn-save" @click.prevent="saveEvent">SAVE</button>
+                           </div> 
+                       </div>                      
+                       </div>
+               </form>
                 <div class="overlay" v-if="showForm"></div>
             </div>
                    <!-- END OF POP UP FORM -->
@@ -120,7 +113,7 @@
                     <div class="race-date">
                         <label class="label-race-date">Date</label>
                         <div class="race-date-container">
-                            <p v-text="this.event.startTime"></p>
+                            <p v-text="this.event.startTime?.slice(0,10)"></p>
                         </div>
                     </div>
                 </div>
@@ -128,13 +121,13 @@
                     <div class="race-province">
                         <label class="label-race-province">Province</label>
                         <div class="race-province-container">
-                            <p v-text="this.event.startLocation"></p>
+                            <p v-text="this.event.startLocation?.name"></p>
                         </div>
                     </div>
                     <div class="race-city">
                         <label class="label-race-city">City</label>
                         <div class="race-city-container">
-                            <p></p>
+                            <p v-text="this.event.startLocation?.name"></p>
                         </div>
                     </div>
                 </div>
@@ -142,35 +135,17 @@
                     <div class="race-start-regis">
                         <label class="label-race-start-regis">Start Date Registration</label>
                         <div class="race-start-regis-container">
-                            <p></p>
+                            <p v-text="this.event?.StartDateRegistration"></p>
                         </div>
                     </div>
                     <div class="race-end-regis">
                         <label class="label-race-end-regis">End Date Registration</label>
                         <div class="race-end-regis-container">
-                            <p></p>
+                            <p v-text="this.event?.EndDateRegistration"></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- <div class="category-container">
-                <table class="category-table">
-                    <thead class="table-head">
-                        <tr class="table-row-header">
-                            <th class="table-header">Category</th>
-                            <th class="table-header">Distance</th>
-                            <th class="table-header">Price</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-body">
-                        <tr class="table-row-body">
-                            <th class="table-item">Ultramaraton</th>
-                            <th class="table-item">50</th>
-                            <th class="table-item">150000</th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> -->
             <h2>Course Map</h2>
             <div class="maps">
                 <img src="/maps.png" alt="maps maraton" id="maps-image" />
@@ -506,11 +481,11 @@ input {
     padding: 5px;
     border-radius: 5px;
     border: 1px solid #ccc;
-}
+  }
 
-.form-grid input[type=text], 
-.form-grid input[type=number],
-.form-grid input[type=datetime-local] {
+  .form-grid input[type=text], 
+  .form-grid input[type=number],
+  .form-grid input[type=datetime-local] {
     border: 2px solid #5f5f5f;
     padding: 5px 10px;
     width: 100%;
@@ -518,12 +493,12 @@ input {
     border: 2px solid grey;
     color: rgb(63, 62, 62);
     font-size: 20px;
-}
+  }
 
-.form-grid label {
-    margin-left:10px;   
-}
-
+  .form-grid label {
+    margin-left:10px;
+  }
+  
 .form-grid button {
     width: 100px;
     height: 40px;
@@ -535,6 +510,43 @@ input {
     transition: background-color 0.2s;
     margin: 5px;
 }
+
+.btn-save {
+    background-color: #1f2220;
+    color: #fff;
+}
+.btn-cancel {
+    background-color: transparent;
+    color: #000000;
+    border:2px solid grey;
+}
+.btn-save:hover  {
+  background-color: #171817;
+}
+.btn-cancel:hover {
+    background-color: #b5b9b5
+}
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap:10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: right;
+    flex-wrap: nowrap;
+    gap:10px;
+}
+.row label {
+  margin-right: 10px;
+}
+.row input {
+  flex-grow: 1;
+}
+
 
 .delete-form-overlay {
   position: fixed;

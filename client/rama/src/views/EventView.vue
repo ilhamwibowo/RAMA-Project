@@ -36,14 +36,14 @@
                        
                        <!-- Right column -->
                        <div class="grid-item">
-                           <label for="startlocation">Start Location</label>
-                           <input type="text" id="startlocation" v-model="startLocation">
+                           <label for="startlocation">Description</label>
+                           <input type="text" id="startlocation" v-model="description">
 
-                           <label for="latitude">Latitude</label>
-                           <input type="text" id="latitude" v-model="latitude">
+                           <label for="latitude">Start Registration</label>
+                           <input type="datetime-local" id="latitude" v-model="startRegis">
 
-                           <label for="longitude">Longitude</label>
-                           <input type="text" id="longitude" v-model="longitude">
+                           <label for="longitude">End Registration</label>
+                           <input type="datetime-local" id="longitude" v-model="endRegis">
 
                        </div>
                        
@@ -64,17 +64,7 @@
                            <div class="row">
                                <label for="isPublish">Published</label>
                                <input id="isPublish" type="checkbox" v-model="isPublish">
-                               <label for="isAttending">Open Registration</label>
-                               <input id="isOpen" type="checkbox" v-model="isOpen">
                            </div>
-                       </div>
-
-                       <div class="grid-item">
-                           <div class="row-item">
-                               <label for="category">Description</label>
-                               <input type="text" id="category" v-model="description">
-                           </div>
-
                        </div>
 
                        <div class="grid-item">
@@ -91,11 +81,11 @@
                            </div>
                        </div>
 
-                       <div class="grid-item"></div>
+                       <!-- <div class="grid-item"></div> -->
                        <div class="grid-item">
                            <div class="button-container"> 
                                <button class="btn-cancel" @click="toggleForm">CANCEL</button>
-                               <button class="btn-save" @click="saveEvent">SAVE</button>
+                               <button class="btn-save" @click.prevent="saveEvent">SAVE</button>
                            </div> 
                        </div>                      
                        </div>
@@ -121,7 +111,7 @@
                     <tbody class="table-body">
                         <tr class="table-row-body" v-for="(event, index) in events" :key="event.raceId" >
                             <td class="table-data" v-text="event.raceName"></td>
-                            <td class="table-data" v-text="event.startLocation"></td>
+                            <td class="table-data" v-text="event.startLocation?.name"></td>
                             <td class="table-data" v-text="event.startTime.slice(0,10)"></td>
                             <!-- <td class="table-data">h</td> -->
                             <td class="table-data">
@@ -171,7 +161,9 @@ export default {
             distance: "",
             price: "",
             previewImageUrl: "",
-            description: ""
+            description: "",
+            startRegis: "",
+            endRegis: ""
         };
     },
     components: {
@@ -201,7 +193,7 @@ export default {
         },
         // This method is for creating a new event which is used 
         // in the "Save" button on the form
-        async saveEvent() {
+        saveEvent() {
             const token = localStorage.getItem("token");
 
             // Configuration for API
@@ -211,17 +203,23 @@ export default {
 
             // Convert local time to UTC time
             const startTime = new Date(this.startDate).toISOString();
+            // const startRegistration = new Date(this.startRegis).toISOString();
+            // const endRegistration = new Date(this.endRegis).toISOString();
             console.log("masuk sini1")
             //ini baru bagian yang wajib diisi
             let formData = new FormData();
             formData.append('RaceName', this.name);
             formData.append('RaceDesc', this.description);
+            formData.append('StartLocation[name]', this.city);
             formData.append('StartTime', startTime);
             formData.append('Distance', this.distance);
             formData.append('RegistrationFee', this.price);
-            formData.append('isPublished', this.isPublished);
-            formData.append('isOpened', this.isOpen);
+            formData.append('isPublished', this.isPublish);
+            // formData.append('StartDateRegistration', startRegistration);
+            // formData.append('EndtDateRegistration', endRegistration);
+            // formData.append('isOpened', this.isOpen);
             
+            console.log([...formData]);
             axios
             .post(import.meta.env.VITE_API_URI + "/Race", formData, config)
             .then((response) => {
@@ -242,10 +240,10 @@ export default {
             this.showForm = !this.showForm;
             if (this.showForm) {
                 // add event listener to close form on escape key press
-                document.addEventListener("keydown", this.handleEscapeKey);
+                // document.addEventListener("keydown", this.handleEscapeKey);
             } else {
                 // remove event listener when form is closed
-                document.removeEventListener("keydown", this.handleEscapeKey);
+                // document.removeEventListener("keydown", this.handleEscapeKey);
             }
         },handleEscapeKey(event) {
             if (event.keyCode === 27) {
