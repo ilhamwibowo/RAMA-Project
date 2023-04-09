@@ -52,7 +52,8 @@ namespace API.Controllers
                 new UserDto
                     {
                         Email = user.Email,
-                        Token = _tokenService.CreateToken(user)
+                        Token = _tokenService.CreateToken(user),
+                        Role = user.Role
                     }
             );
         }
@@ -80,7 +81,9 @@ namespace API.Controllers
                     return BadRequest("Password does not match");
             return Ok(new UserDto {
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                Role = user.Role
+                
             });
         } 
         

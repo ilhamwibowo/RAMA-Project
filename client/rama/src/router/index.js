@@ -73,6 +73,21 @@ const router = createRouter({
             path: "/listPhoto/:id",
             name: "listPhoto",
             component: () => import("../views/AlbumPhotoView.vue")
+        },
+        {
+            path: "/events",
+            name: "userEvent",
+            component: () => import("../views/UserEventView.vue")
+        },
+        {
+            path: "/events/:id",
+            name: "userEventDetail",
+            component: () => import("../views/UserEventDetail.vue")
+        },
+        { 
+            path: "/registrant/:id",
+            name: "EventRegistrant",
+            component: () => import("../views/EventRegistransView.vue")
         }
     ]
 });

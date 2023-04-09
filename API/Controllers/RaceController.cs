@@ -27,21 +27,47 @@ namespace API.Controllers
             _mapper = mapper;
         } 
         [HttpPost]
-        public async Task<ActionResult> CreateRace(RaceDto raceDto)
+        public async Task<ActionResult> CreateRace([FromForm] RaceEditDto raceDto)
         {   
+            _logger.LogInformation("asdsd");
             Account requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
             // if (requester.Role != "Admin") Unauthorized("No Permission!");
-            Race race = _mapper.Map<Race>(raceDto);
+            Race race = new Race 
+            {
+                RaceName = raceDto.RaceName,
+                RaceDesc = raceDto.RaceDesc,
+                RaceAlbum = new Album { AlbumName = raceDto.RaceName},
+                StartTime = raceDto.StartTime,
+                StartLocation = raceDto.StartLocation,
+                Distance = raceDto.Distance,
+                RegistrationFee = raceDto.RegistrationFee,
+                Points = raceDto.Points,
+                IsPublished = raceDto.IsPublished,
+                StartDateRegistration = raceDto.StartDateRegistration,
+                EndDateRegistration = raceDto.EndDateRegistration,
+            };
+            if (raceDto.photoFile != null)
+            {
+                if (!IPhotoService.isImage(raceDto.photoFile.FileName)) return BadRequest("File must be an Image");
+                var photoUpload = await _photoService.AddPhotoAsync(raceDto.photoFile);
+                if (photoUpload.Error != null) return BadRequest(photoUpload.Error.Message);
+
+                race.RaceThumbnail = new Photo
+                {
+                    Url = photoUpload.SecureUrl.AbsoluteUri,
+                    PublicId = photoUpload.PublicId
+                };
+            }
 
             await _context.Races.AddAsync(race);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetRace), new { Id = race.RaceId}, raceDto);
+            return CreatedAtAction(nameof(GetRace), new { Id = race.RaceId}, _mapper.Map<RaceDto>(race));
         }
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<RaceDto>> GetAllRace()
         {
-            List<Race> races = await _context.Races.Include(x => x.StartLocation).ToListAsync();
+            List<Race> races = await _context.Races.Include(x => x.StartLocation).Include(p => p.RaceThumbnail).ToListAsync();
 
             if (races == null) return NotFound();
 
@@ -58,29 +84,48 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<RaceDto>> GetRace(Guid id)
         {
-            Race race = await _context.Races.Include(r => r.StartLocation ).Include(r => r.RaceAlbum).FirstOrDefaultAsync(x => x.RaceId.Equals(id));
+            Race race = await _context.Races.Include(r => r.StartLocation ).Include(r => r.RaceAlbum).Include(p => p.RaceThumbnail).Include(p => p.Points).FirstOrDefaultAsync(x => x.RaceId.Equals(id));
             if (race == null) return NotFound();
 
             return Ok(_mapper.Map<RaceDto>(race));
         }
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRace(Guid id, RaceDto raceDto)
+        public async Task<ActionResult> UpdateRace(Guid id, [FromForm] RaceEditDto raceDto)
         {
-            var requester = await _context.Accounts.Select(x => new { x.AccId }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
-            // if (requester.Role != "Admin") Unauthorized("No Permission!");
+            var requester = await _context.Accounts.Select(x => new { x.AccId, x.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
+            if (requester.Role != "Admin") Unauthorized("No Permission!");
 
             Race race = _context.Races.FirstOrDefault(x => x.RaceId.Equals(id));
+            Album newalbum = await _context.Albums.FirstOrDefaultAsync(x => x.AlbumId.Equals(raceDto.AlbumId));
             if (race == null) return NotFound();
 
             race.RaceName = raceDto.RaceName;
+            race.RaceDesc = raceDto.RaceDesc;
             race.StartTime = raceDto.StartTime;
             race.StartLocation = raceDto.StartLocation;
             race.Distance = raceDto.Distance;
             race.RegistrationFee = raceDto.RegistrationFee;
+            race.StartDateRegistration = raceDto.StartDateRegistration;
+            race.EndDateRegistration = raceDto.EndDateRegistration;
+            race.IsPublished = raceDto.IsPublished;
+            race.Points = raceDto.Points;
 
+            if (newalbum != null) race.RaceAlbum = newalbum;
+            if (raceDto.photoFile != null)
+            {
+                if (!IPhotoService.isImage(raceDto.photoFile.FileName)) return BadRequest("File must be an Image");
+                var photoUpload = await _photoService.AddPhotoAsync(raceDto.photoFile);
+                if (photoUpload.Error != null) return BadRequest(photoUpload.Error.Message);
+
+                race.RaceThumbnail = new Photo
+                {
+                    Url = photoUpload.SecureUrl.AbsoluteUri,
+                    PublicId = photoUpload.PublicId
+                };
+            }
             _context.Races.Update(race);
             await _context.SaveChangesAsync();
-            return Ok();
+            return Ok(_mapper.Map<RaceDto>(race));
         }
 
         [HttpDelete("{id}")]

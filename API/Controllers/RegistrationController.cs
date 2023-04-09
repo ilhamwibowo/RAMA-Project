@@ -84,14 +84,44 @@ namespace API.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<RaceHistoryDto>> GetHistoryAll()
+        public async Task<ActionResult<RaceHistoryDto>> GetHistoryAll(string query = null)
         {
+            if (query == null) query = string.Empty;
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
+            if (requester == null || requester.Role != "Admin") return Unauthorized();
+
+            List<RaceRegistration> AllRaceHistory = _context.RaceRegistrations.OrderBy(r => r.RegistedAt).ToList();
+            if (query != string.Empty) 
+            {
+                var accounts = _context.Accounts.Where(a => a.Name.ToLower().Contains(query.ToLower())).ToList().Select(a => new {a.AccId, a.Name});
+                AllRaceHistory = AllRaceHistory.FindAll( r => accounts.Any((a) => r.AccId.Equals(a.AccId))).ToList();
+            }
+            RaceHistoryDto rh = new RaceHistoryDto 
+                {
+                    AccId = requester.AccId,
+                    Histories = _mapper.Map<IEnumerable<RaceRegistDto>>(AllRaceHistory).ToList(),
+                    Length = AllRaceHistory.Count
+                };
+
+            return Ok(rh);
+        }
+
+        [HttpGet("all/{RaceId}")]
+        public async Task<ActionResult<RaceHistoryDto>> GetHistoryAllonRace(Guid RaceId, string query = null)
+        {
+            if (query == null) query = string.Empty;
+
             var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
             if (requester == null || requester.Role != "Admin") return Unauthorized();
 
-            List<RaceRegistration> AllRaceHistory = _context.RaceRegistrations.OrderBy(r => r.RegistedAt).ToList();
+            List<RaceRegistration> AllRaceHistory = _context.RaceRegistrations.Where(r => r.RaceId.Equals(RaceId)).OrderBy(r => r.RegistedAt).ToList();
 
+            if (query != string.Empty) 
+            {
+                var accounts = _context.Accounts.Where(a => a.Name.ToLower().Contains(query.ToLower())).ToList().Select(a => new {a.AccId, a.Name});
+                AllRaceHistory = AllRaceHistory.FindAll( r => accounts.Any((a) => r.AccId.Equals(a.AccId))).ToList();
+            }
             RaceHistoryDto rh = new RaceHistoryDto 
                 {
                     AccId = requester.AccId,
@@ -131,9 +161,9 @@ namespace API.Controllers
             if (rr == null) return NotFound();
 
             rr.Status = rrDto.Status;
+            if (rr.Status.Equals(RaceRegistration.PaymentStatus.Paid)) rr.PaidAt = DateTime.UtcNow;
+            if (rr.Status.Equals(RaceRegistration.PaymentStatus.TakenKit)) rr.TakenKitAt = DateTime.UtcNow;
             rr.RegistrationFee = rrDto.RegistrationFee;
-            rr.PaidAt = rrDto.PaidAt;
-            rr.TakenKitAt = rrDto.TakenKitAt;
             
             _context.RaceRegistrations.Update(rr);
             await _context.SaveChangesAsync();
