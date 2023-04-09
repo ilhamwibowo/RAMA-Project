@@ -45,6 +45,7 @@
                 </div>
             </div>
             <div class="alert" id="login-response" v-if="response">
+                <img src="alert.png">
                 <p>{{ response }}</p>
             </div>
             <div id="forgot-password">
