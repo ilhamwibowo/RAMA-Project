@@ -18,10 +18,10 @@
                        <!-- Left column -->
                        <div class="grid-item">
                            <label for="name">Name</label>
-                           <input type="text" id="name" v-model="name">
+                           <input type="text" id="name" v-model="name" :placeholder="this.event.raceName">
                            
                            <label for="city">City</label>
-                           <input type="text" id="city" v-model="city" placeholder="TBI">
+                           <input type="text" id="city" v-model="city" :placeholder="this.event.startLocation?.name">
                            
                            <label for="start-date">Start Date</label>
                            <input type="datetime-local" id="start-date" v-model="startDate">
@@ -31,7 +31,7 @@
                        <!-- Right column -->
                        <div class="grid-item">
                            <label for="startlocation">Description</label>
-                           <input type="text" id="startlocation" v-model="description">
+                           <input type="text" id="startlocation" v-model="description" :placeholder="this.event?.raceDesc">
 
                            <label for="latitude">Start Registration</label>
                            <input type="datetime-local" id="latitude" v-model="startRegis">
@@ -45,8 +45,13 @@
                        <div class="grid-item">
                            <div class="row">
                                <div class="row-item">
-                                   <label for="course-map">Course Map</label>
-                                   <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
+                                   <label for="course-map">Album</label>
+                                   <!-- <input type="text" id="course-map" v-model="albumid" placeholder="TBI"> -->
+                                   <select id="albumid" v-model="albumId">
+                                        <option value="">Pilih Album</option>
+                                        <option v-for="namaAlbum in this.album" :value="namaAlbum.albumId">{{ namaAlbum.albumName }}</option>
+                                    </select>
+                                    <!-- <p>{{ this.albumid }}</p> -->
                                </div>
 
                            </div>           
@@ -57,7 +62,7 @@
                        <div class="grid-item">
                            <div class="row">
                                <label for="isPublish">Published</label>
-                               <input id="isPublish" type="checkbox" v-model="isPublish">
+                               <input id="isPublish" type="checkbox" v-model="isPublish" :placeholder="this.event?.isPublished">
                            </div>
                        </div>
 
@@ -65,12 +70,12 @@
                            <div class="row">
                                <div class="row-item"> 
                                    <label for="distance"> Distance</label>
-                                   <input type="number" id="distance" v-model="distance">
+                                   <input type="number" id="distance" v-model="distance" :placeholder="this.event?.distance">
                                </div>
 
                                <div class="row-item"> 
                                    <label for="price">Price</label>
-                                   <input type="number" id="price" v-model="price">
+                                   <input type="number" id="price" v-model="price" :placeholder="this.event?.registrationFee">
                                </div>
                            </div>
                        </div>
@@ -166,6 +171,7 @@ export default {
     data(){
         return {
             event: [],
+            album: [],
             id :this.$route.params.id,
             isRegistered: false,
             isPublished: true,
@@ -180,7 +186,11 @@ export default {
             isOpen: false,
             isPublish:false,
             previewImageUrl: "",
-            showDeleteForm : false
+            showDeleteForm : false,
+            description: "",
+            startRegis: "",
+            endRegis: "",
+            albumId: ""
         };
     },
 
@@ -244,10 +254,78 @@ export default {
             .catch((err) => {
                 console.log(err);
             });
+        }, saveEvent() {
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+            };
+
+            // Convert local time to UTC time
+            const startTime = new Date(this.startDate).toISOString();
+            // const startRegistration = new Date(this.startRegis).toISOString();
+            // const endRegistration = new Date(this.endRegis).toISOString();
+            //ini baru bagian yang wajib diisi
+            let formData = new FormData();
+            formData.append('RaceName', this.name);
+            formData.append('RaceDesc', this.description);
+            formData.append('StartLocation[name]', this.city);
+            formData.append('StartTime', startTime);
+            formData.append('Distance', this.distance);
+            formData.append('RegistrationFee', this.price);
+            formData.append('isPublished', this.isPublish);
+            formData.append('raceAlbum[albumId]', this.albumId);
+            // formData.append('StartDateRegistration', startRegistration);
+            // formData.append('EndtDateRegistration', endRegistration);
+            // formData.append('isOpened', this.isOpen);
+            
+            console.log([...formData]);
+            axios
+            .put(import.meta.env.VITE_API_URI + "/Race/" + this.id, formData, config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    // Refresh the event list.
+                    // alert("succeszzz");
+                    // this.getEvent();
+                    // Close the form.
+                    this.showForm = false;
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }, async getAlbum(){
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            axios
+            .get(import.meta.env.VITE_API_URI + "/Album", config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    this.album = response.data.albums;
+                    // console.log(this.album);
+                    // for debug
+                    // console.log(this.event);
+                    // console.log(this.events[0].raceName);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
         }
     },
     mounted(){
         this.getData();
+        this.getAlbum();
     }
 }
 </script>
