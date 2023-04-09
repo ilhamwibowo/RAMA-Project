@@ -5,7 +5,7 @@
             <div class="edit-button-container">
                 <button class="edit-button" @click="toggleForm()" >EDIT</button>
                 <form v-if="showForm">
-                   <!-- <div class="container-image">
+                   <div class="container-image">
                        <input
                            type="file"
                            id="image"
@@ -13,7 +13,7 @@
                            @change="changePhoto"
                        />
                        <img :src="previewImageUrl" />
-                   </div> -->
+                   </div>
                    <div class="form-grid">
                        <!-- Left column -->
                        <div class="grid-item">
@@ -34,10 +34,10 @@
                            <input type="text" id="startlocation" v-model="description">
 
                            <label for="latitude">Start Registration</label>
-                           <input type="datetime-local" id="latitude" v-model="startRegis">
+                           <input type="date" id="latitude" v-model="startRegis">
 
                            <label for="longitude">End Registration</label>
-                           <input type="datetime-local" id="longitude" v-model="endRegis">
+                           <input type="date" id="longitude" v-model="endRegis">
 
                        </div>
                        
@@ -110,7 +110,17 @@
                 </button>
             </div> -->
             <div class="image-container">
-                <img src="../../public/contohGambar.png" alt="GambarEvent" id="race-photo">
+                <input
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                    @change="changePhoto"
+                    style="display: none"
+                />
+                <img :src="previewImageUrl" />
+                <div class="edit-image" @click="uploadPhoto">
+                    <div class="circle"></div>
+                </div>
             </div>
             <div class="information-container">
                 <div class="row-one">
@@ -145,13 +155,13 @@
                     <div class="race-start-regis">
                         <label class="label-race-start-regis">Start Date Registration</label>
                         <div class="race-start-regis-container">
-                            <p v-text="this.event?.StartDateRegistration"></p>
+                            <p v-text="this.event.startDateRegistration"></p>
                         </div>
                     </div>
                     <div class="race-end-regis">
                         <label class="label-race-end-regis">End Date Registration</label>
                         <div class="race-end-regis-container">
-                            <p v-text="this.event?.EndDateRegistration"></p>
+                            <p v-text="this.event.endDateRegistration"></p>
                         </div>
                     </div>
                 </div>
@@ -279,6 +289,20 @@ export default {
 
             // Convert local time to UTC time
             const startTime = new Date(this.startDate).toISOString();
+
+            //convert start registration date to object format
+            const regisDate = new Date(this.startRegis);
+            var yearRegis = regisDate.getFullYear();
+            var monthRegis = regisDate.getMonth() + 1;
+            var dayRegis = regisDate.getDate();
+            const startRegistration = yearRegis+"-"+monthRegis+"-"+dayRegis;
+
+            //convert end registration date to object format
+            const EndDate = new Date(this.endRegis);
+            var yearEnd = EndDate.getFullYear();
+            var monthEnd = EndDate.getMonth() + 1;
+            var dayEnd = EndDate.getDate();
+            const endRegistration = yearEnd+"-"+monthEnd+"-"+dayEnd;
             // const startRegistration = new Date(this.startRegis).toISOString();
             // const endRegistration = new Date(this.endRegis).toISOString();
             //ini baru bagian yang wajib diisi
@@ -290,9 +314,11 @@ export default {
             formData.append('Distance', this.distance);
             formData.append('RegistrationFee', this.price);
             formData.append('isPublished', this.isPublish);
-            formData.append('raceAlbum[albumId]', this.albumId);
-            // formData.append('StartDateRegistration', startRegistration);
-            // formData.append('EndtDateRegistration', endRegistration);
+            if(this.albumId != ""){
+                formData.append('AlbumId', this.albumId);
+            }
+            formData.append('StartDateRegistration', startRegistration);
+            formData.append('EndDateRegistration', endRegistration);
             // formData.append('isOpened', this.isOpen);
             console.log(this.albumId);
             
@@ -714,6 +740,41 @@ input {
 .delete-form-button.confirm {
   background-color: red;
   color: white;
+}
+
+.container-image {
+    display: flex;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    position: relative;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+img {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+}
+
+.edit-image {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+}
+.circle {
+    background-color: #d3c5c5;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.circle:hover {
+    opacity: 0.3;
 }
 
 </style>
