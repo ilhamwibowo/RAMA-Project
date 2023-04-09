@@ -30,15 +30,12 @@
   </template>
   
 <script>
+  import axios from 'axios';
+
   export default {
-    props: {
-      eventId: {
-        type: String,
-        required: true,
-      },
-    },
     data() {
       return {
+        eventId: this.$route.params.id,
         eventData: {
           image: "../1.jpg",
           raceName: "Jawa Timur Marathon Festival",
@@ -54,18 +51,29 @@
     },
     methods: {
       async fetchEventData() {
-        // Fetch event data from your API or data source using this.eventId
-        // For example:
-        // const response = await axios.get(`/api/events/${this.eventId}`);
-        // this.eventData = response.data;
-  
-        // Use the fetched data to populate eventData
+        const token = localStorage.getItem("token");
+
+        // Configuration for API
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        axios.get(import.meta.env.VITE_API_URI + "/Race/"+ this.eventId, config)
+          .then(response => {
+            console.log(response.data);
+            // this.events.push(...response.data.races);
+            this.eventData = response.data;
+          })
+          .catch(error => {
+            console.log(error);
+          });
       },
       registerForEvent() {
         // Implement registration logic here
       },
       viewAlbum() {
-        // Implement navigation to the album page here
+        // TODO : Add parameters to album
+        this.$router.push({ name: 'album'});
       },formatDate(dateString) {
         const months = [
           "January", "February", "March", "April", "May", "June", 
