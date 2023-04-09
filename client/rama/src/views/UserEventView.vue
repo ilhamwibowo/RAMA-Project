@@ -26,6 +26,9 @@
   </template>
   
   <script>
+
+  import axios from 'axios';
+
   export default {
     data() {
       return {
@@ -78,6 +81,24 @@
           },
         ],
       };
+    },  
+    created() {
+      const token = localStorage.getItem("token");
+
+      // Configuration for API
+      const config = {
+          headers: { Authorization: `Bearer ${token}` }
+      };
+
+      axios.get(import.meta.env.VITE_API_URI + "/Race", config)
+        .then(response => {
+          console.log(response.data);
+          this.events.push(...response.data.races);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
     },
     methods: {
       formatDate(date) {
@@ -101,7 +122,7 @@
   
   .header {
   position: relative;
-  width: 75%;
+  width: 1100px;
   height: 300px;
   overflow: hidden;
   border-radius: 20px;
