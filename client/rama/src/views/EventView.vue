@@ -27,7 +27,7 @@
                            <input type="text" id="name" v-model="name">
                            
                            <label for="city">City</label>
-                           <input type="number" id="city" v-model="city" placeholder="TBI">
+                           <input type="text" id="city" v-model="city" placeholder="TBI">
                            
                            <label for="start-date">Start Date</label>
                            <input type="datetime-local" id="start-date" v-model="startDate">
@@ -206,32 +206,14 @@ export default {
 
             // Configuration for API
             const config = {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
             };
 
             // Convert local time to UTC time
             const startTime = new Date(this.startDate).toISOString();
-            
-            // const data = {
-            //     raceName: this.name,
-            //     city: this.city,
-            //     startTime: startTime,
-            //     startLocation: {
-            //         name : this.startLocation,
-            //         latitude: this.latitude,
-            //         longitude: this.longitude,
-            //         category: this.category
-            //     },
-            //     distance: this.distance,
-            //     registrationFee: this.price,
-                
-            //     // This is still unused for now, but will be used.
-            //     // Since it does not matter, I put it in anyway.
-            //     courseMap: this.courseMap,
-            //     isOpen: this.isOpen,
-            //     isPublished: this.isPublished
-            // };
-            const formData = new FormData();
+            console.log("masuk sini1")
+            //ini baru bagian yang wajib diisi
+            let formData = new FormData();
             formData.append('RaceName', this.name);
             formData.append('RaceDesc', this.description);
             formData.append('StartTime', startTime);
