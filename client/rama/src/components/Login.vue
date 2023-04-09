@@ -160,7 +160,7 @@ export default {
     margin: 5px 0px 5px 0px;
 }
 
-input[type="text"] {
+input[type="text"], input[type="password"] {
     font-family: "Darker Grotesque";
     font-size: 125%;
 }
