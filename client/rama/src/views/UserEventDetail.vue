@@ -1,5 +1,13 @@
 <template>
     <div class="event-detail">
+      <confirm-modal
+        :show="showModal"
+        @close="showModal = false"
+        title="Confirmation"
+        message="Are you sure you want to register for this event?"
+        @confirm="registerForEvent"
+      ></confirm-modal>
+
       <div class="left-side">
         <h1>{{ eventData.raceName }}</h1>
         <hr>
@@ -21,7 +29,7 @@
               <p>{{ eventData.distance }}</p>
               <p>{{ eventData.registrationFee }}</p>
             </div>
-            <button class="register-button" @click="registerForEvent">Register</button>
+            <button class="register-button" @click="showModal = true">Register</button>
           </div>
           <button class="view-album-button" @click="viewAlbum">View Album</button>
         </div>
@@ -31,10 +39,15 @@
   
 <script>
   import axios from 'axios';
+  import ConfirmModal from "../components/ConfirmModal.vue";
 
   export default {
+    components: {
+      ConfirmModal,
+    },
     data() {
       return {
+        showModal: false,
         eventId: this.$route.params.id,
         eventData: {
           image: "../1.jpg",
@@ -60,8 +73,6 @@
 
         axios.get(import.meta.env.VITE_API_URI + "/Race/"+ this.eventId, config)
           .then(response => {
-            console.log(response.data);
-            // this.events.push(...response.data.races);
             this.eventData = response.data;
           })
           .catch(error => {
@@ -69,7 +80,7 @@
           });
       },
       registerForEvent() {
-        // Implement registration logic here
+        console.log("Resgister");
       },
       viewAlbum() {
         // TODO : Add parameters to album
@@ -93,7 +104,7 @@
   <style scoped>
   .event-detail {
     display: flex;
-    margin:0 50px 0 50px;
+    margin:20px 50px 0 50px;
 
   }
   
