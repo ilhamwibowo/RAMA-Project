@@ -1,16 +1,22 @@
 <template>
-    <div class="view">
+    <div class="layout">
+        <NavigationBar class="header" />
         <Profile class="body" />
-        <div class="footer"></div>
+        <Footer class="footer" />
     </div>
 </template>
 
 <script>
+import NavigationBar from "../components/NavigationBar.vue";
 import Profile from "../components/Profile.vue";
+import Footer from "../components/Footer.vue";
+
 export default {
     name: "ProfileView",
     components: {
-        Profile
+        Profile,
+        NavigationBar,
+        Footer
     }
 };
 </script>
@@ -24,13 +30,14 @@ export default {
     }
 }
 
-.view {
+.layout {
     display: grid;
-    grid-template-rows: 50px auto 100px;
+    grid-template-rows: auto auto 240px;
     grid-template-areas:
         "header"
         "body"
         "footer";
+    min-height: 100vh;
 }
 
 .header {

@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <p class="title">Album Page</p>
-        <br />
+    <div class="album">
         <div id="box">
             <AlbumSearch @searchInput="search" id="search" />
             <div id="button">
@@ -21,6 +19,7 @@
         <AlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
         <br /><br /><br /><br />
         <Pagination
+            class="pagination"
             :totalPage="totalPage"
             :pager="pager"
             :page="page"
@@ -53,7 +52,7 @@ export default {
             photoShow: [],
             albumPaginationKey: 0,
             timer: 0,
-            albumId: 1
+            albumId: "",
         };
     },
     components: {
@@ -200,11 +199,23 @@ export default {
             headers: { Authorization: `Bearer ${token}` }
         };
 
-        // Axios Get
+
+        // Axios get Album Id
+        await axios
+            .get(import.meta.env.VITE_API_URI + "/Album", config)
+            .then((response) => {
+                console.log(response.data.albums[0].albumId);
+                this.albumId = response.data.albums[0].albumId
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        // Axios get Photo
         await axios
             .get(import.meta.env.VITE_API_URI + "/Album/" + this.albumId, config)
             .then((response) => {
-                this.listPhotos = response.data.photos;
+                this.listPhotos = response.data.albumPhotos;
             })
             .catch((err) => {
                 console.log(err);
@@ -218,19 +229,25 @@ export default {
 </script>
 
 <style scoped>
+.album {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
 #box {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 220px minmax(auto, 800px) 220px;
     grid-template-areas: "none search button";
+    margin: 0 auto;
 }
 #search {
     grid-area: search;
     justify-content: center;
 }
 #button {
-    display: flex;
     grid-area: button;
-    justify-content: end;
+    display: flex;
+    justify-content: center;
 }
 .btn {
     font-family: "Bebas Neue";
@@ -258,5 +275,9 @@ export default {
 }
 .download:hover {
     background-color: #deddd8;
+}
+
+.pagination {
+    margin-bottom:100px;
 }
 </style>

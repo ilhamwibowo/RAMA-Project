@@ -1,19 +1,19 @@
 <template>
     <header>
-        <div class="app-title subtitle">
-            <a :href="home">Rama</a>
+        <div class="navpage">
+            <NavigationPage />
         </div>
-        <nav class="subtitle navbar">
-            <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/album">Album</RouterLink>
-        </nav>
-        <nav class="subtitle user-manager" v-if="checkLogin">
-            <RouterLink to="/login">Login</RouterLink>
-            <RouterLink to="/register">Register</RouterLink>
-        </nav>
-        <nav class="subtitle profile" v-if="!checkLogin">
-            <RouterLink to="/profile">Hello, {{ this.username }}!</RouterLink>
-        </nav>
+        <div class="title">
+            <RouterLink class="text" to="/">Rama</RouterLink>
+        </div>
+        <div class="profile">
+            <div v-if="isLogin">
+                <RouterLink to="/profile"><img src="/navbar-profile.png" ></RouterLink>
+            </div>
+            <div v-else>
+                <RouterLink to="/login">Login</RouterLink>
+            </div>
+        </div>
     </header>
 </template>
 
@@ -22,13 +22,20 @@ import { mapState } from "pinia";
 
 import { useProfileStore } from "@/stores/profile";
 
+import NavigationPage from "./NavigationPage.vue";
+
 export default {
     name: "NavigationBar",
 
     data() {
         return {
-            home: import.meta.env.VITE_APP_URI
+            home: import.meta.env.VITE_APP_URI,
+            isLogin: false
         };
+    },
+
+    components: {
+        NavigationPage
     },
 
     computed: {
@@ -39,66 +46,53 @@ export default {
 
     methods: {
         checkLogin() {
-            return localStorage.getItem("token") === null;
+            this.isLogin = localStorage.getItem("token") !== null;
+            console.log(this.isLogin);
         }
+    },
+    created() {
+        this.checkLogin()
     }
 };
 </script>
 
 <style scoped>
 header {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    padding: 20px 10px;
-    justify-content: space-between;
-}
-
-.app-title {
-    display: flex;
-    flex: 1;
-    justify-content: flex-start;
-}
-
-.app-title a {
-    color: var(--color-text);
-    text-decoration: none;
-}
-
-.navbar {
-    display: flex;
-    flex: 1;
+    width: 100%;
+    height: 100px;
+    display: grid;
+    margin: 100px 0;
+    grid-template-columns: 200px minmax(auto, 900px) 200px;
+    grid-template-rows: 100px;
+    grid-template-areas: 
+    "navpage title profile";
     justify-content: center;
 }
 
-.navbar a {
-    color: var(--color-text);
-    padding: 0 1rem;
-    border-left: 1px solid var(--color-border);
-    text-decoration: none;
+.navpage {
+    grid-area: navpage;
 }
-
-.user-manager {
+.title {
+    grid-area: title;
     display: flex;
-    flex: 1;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
 }
-
-.user-manager a {
-    color: var(--color-text);
-    padding: 0 1rem;
-    border-left: 1px solid var(--color-border);
+.title .text {
     text-decoration: none;
+    color: black;
+    font-family: "Bebas Neue";
+    font-size: 48;
 }
 
-.navbar a:first-of-type,
-.user-manager a:first-of-type {
-    padding-left: 0;
-    border: 0;
+.profile {
+    grid-area: profile;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.navbar a:last-of-type,
-.user-manager a:last-of-type {
-    padding-right: 0;
+.profile img {
+    width: 80px;
 }
 </style>

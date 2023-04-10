@@ -4,14 +4,12 @@ import { RouterView } from "vue-router";
 
 <template>
     <div class="app">
-        <NavigationBar v-if="isUser" class="navbar"/>
         <RouterView class="content"/>
     </div>
 </template>
 
 <script>
 import axios from "axios";
-import NavigationBar from "./components/NavigationBar.vue";
 
 export default {
     name: "App",
@@ -19,9 +17,6 @@ export default {
         return{
          isUser: false,
         }
-    },
-    components: {
-        NavigationBar
     },
     async created() {
         const token = localStorage.getItem("token");
@@ -40,8 +35,8 @@ export default {
                     console.log(response);
                 } else {
                     // if user show navbar
-                    // this.isUser = response.data.role == "User" | !response.data.role;
-                    console.log(this.isUser);
+                    this.isUser = response.data.role == "User" | !response.data.role;
+
                 }
             })
             .catch((err) => {
@@ -53,23 +48,5 @@ export default {
 </script>
 
 <style scoped>
-
-.app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-    grid-template-rows: 75px auto;
-    grid-template-areas:
-        "nav"
-        "content";
-}
-.navbar {
-    grid-area: nav;
-}
-
-.content {
-    grid-area: content;
-}
 
 </style>

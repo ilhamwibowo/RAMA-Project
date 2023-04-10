@@ -1,9 +1,10 @@
 ﻿<template>
-    <div class="email-recovery">
-        <div class="left-column">
+    <div class="layout">
+        <NavigationBar class="navbar"/>
+        <div class="recovery-image">
             <img src="forgotPasswordImage.png" alt="loginImage" />
         </div>
-        <div class="right-column">
+        <div class="form-container">
             <div class="title">
                 <h2>FORGOT PASSWORD</h2>
             </div>
@@ -13,30 +14,34 @@
                     to
                 </p>
             </div>
-            <div id="recovery-email">
-                <label class="ml-2">Email</label>
-                <input type="text" name="email" v-model="email" />
+            <div class="recovery">
+                <div class="form" id="recovery-email">
+                    <label>Email</label>
+                    <input class="input" type="text" name="email" v-model="email" />
+                </div>
+                <div class="alert" id="invalid-email" v-if="invalidEmail">
+                    <img src="alert.png">
+                    <p>{{ invalidEmail }}</p>
+                </div>
+                <div class="alert" id="request-response" v-if="response">
+                    <img src="alert.png">
+                    <p>{{ response }}</p>
+                </div>
+                <div id="recover-button">
+                    <button type="button" id="btn-recover" v-on:click="request()">SEND</button>
+                </div>
             </div>
-            <div id="invalid-email" v-if="invalidEmail">
-                <p>{{ invalidEmail }}</p>
-            </div>
-            <div id="request-response" v-if="response">
-                <p>{{ response }}</p>
-            </div>
-            <div id="recover-button">
-                <button type="button" id="btn-recover" v-on:click="request()">SEND</button>
-            </div>
-            <hr />
             <div id="back-link">
+                <hr />
                 <p>Back to <RouterLink to="/login">Sign In</RouterLink></p>
             </div>
-            <br />
         </div>
     </div>
 </template>
 
 <script>
 import axios from "axios";
+import NavigationBar from "./NavigationBar.vue";
 
 export default {
     name: "AccountRecovery",
@@ -49,6 +54,10 @@ export default {
             invalidEmail: "",
             response: ""
         };
+    },
+
+    components: {
+        NavigationBar
     },
 
     methods: {
@@ -81,33 +90,37 @@ export default {
 </script>
 
 <style scoped>
-.email-recovery {
-    display: flex;
-    flex-direction: row;
+
+.layout {
+    height: 100%;
     width: 100%;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-rows: 220px auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+    "navbar navbar"
+    "image form";
+    align-items: center;
+    justify-content: center;
 }
 
-a {
-    color: black;
-}
-.ml-2 {
-    margin-left: 20px;
+.navbar {
+    grid-area: navbar;
 }
 
-.left-column {
-    flex: 1;
-    min-width: 300px;
+.recovery-image {
+    grid-area: image;
+    text-align: center;
 }
 
-.left-column img {
-    max-width: 100%;
-    height: auto;
+.recovery-image > img {
+    max-width: 65%;
+    margin: 20px 30px 20px 30px;
 }
 
-.right-column {
-    flex: 1;
-    min-width: 300px;
+.form-container {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -115,51 +128,59 @@ a {
 }
 
 .title {
-    font-weight: 300;
-    font-size: 30px;
-    width: 100%;
-    color: var(--color-heading);
+    font-size: 20px;
+    font-family: 'Bebas Neue';
 }
 
 .subtext {
     width: 250px;
-    color: var(--color-heading);
-    font-size: 1rem;
+    font-family: "Darker Grotesque";
+    font-size: 18px;
+    text-align: center;
     margin-bottom: 50px;
 }
 
-hr {
-    background-color: black;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    height: 2px;
-    border: none;
-    width: 300px;
+.form {
+    margin-bottom: 10px;
+}
+
+.form label {
+    font-family: "Darker Grotesque";
+    font-size: 18px;
+    margin-left: 40px;
+}
+
+
+.input {
+    width: 350px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid #353642;
+    border-radius: 100px;
+    padding: 10px 25px;
+    margin: 5px 0px 5px 0px;
 }
 
 input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 20px;
-    border: 2px solid grey;
+    font-family: "Darker Grotesque";
+    font-size: 125%;
 }
 
 #btn-recover {
-    width: 300px;
-    padding: 10px;
-    background-color: #1f2220;
-    color: #fff;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    transition: background-color 0.2s;
+    font-family: "Bebas Neue";
+    color: white;
+    font-size: 24px;
+    width: 350px;
+    height: 50px;
+    border-radius: 100px;
+    border-color: transparent;
+    background: #353642;
+    margin:10px 0px 25px 0px;
 }
 
 #btn-recover:hover {
-    background-color: #1b1d1b;
+    background: #000000;
+    transition: 0.3s;
 }
 
 #recovery-email {
@@ -167,24 +188,33 @@ input[type="text"] {
     width: 300px;
 }
 
-#recover-button {
-    width: 300px;
-    align-items: center;
-    justify-content: center;
+#back-link {
+    font-family: "Darker Grotesque";
+    font-size: 18px;
+    width: 350px;
+    text-align: center;
 }
 
-#invalid-email,
-#request-response {
+#back-link hr {
+    border: 1px solid;
+}
+
+#back-link a {
+    text-decoration: none;
+    font-weight: 700;
+}
+
+
+.alert {
+    color: #F24E1E;
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 0.5rem;
+    column-gap: 10px;
+}
+.alert img {
+    width: 24px;
+    height: 24px;
+    margin-left: 10px
 }
 
-#invalid-email,
-#request-response {
-    color: red;
-}
 </style>

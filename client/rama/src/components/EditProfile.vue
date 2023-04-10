@@ -1,54 +1,57 @@
 <template>
     <div class="profile">
-        <div class="flex-container">
-            <!-- Container Image -->
-            <div class="container-image">
-                <input
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    @change="changePhoto"
-                    style="display: none"
-                />
-                <img :src="previewImageUrl" />
-                <div class="edit" @click="uploadPhoto">
-                    <div class="circle"></div>
-                </div>
+        <!-- Container Image -->
+        <div class="container-image">
+            <input
+                type="file"
+                id="image"
+                accept="image/*"
+                @change="changePhoto"
+                style="display: none"
+            />
+            <img :src="previewImageUrl" />
+            <div class="edit" @click="uploadPhoto">
+                <div class="circle"></div>
             </div>
+        </div>
 
-            <!-- Container Detail Profile -->
-            <div class="input-container">
-                <div class="container-detail">
-                    <h3 class="title">Name</h3>
-                    <input class="input" v-model="user.name" />
-                </div>
-                <div class="container-detail">
-                    <h3 class="title">Email</h3>
-                    <input class="input" v-model="user.email" />
-                </div>
-                <div class="container-detail">
-                    <h3 class="title">Identity Card</h3>
-                    <input class="input" v-model="user.ktp" />
-                </div>
-                <div class="container-detail">
-                    <h3 class="title">Phone Number</h3>
-                    <input class="input" v-model="user.no_HP" />
-                </div>
-                <div class="container-detail">
-                    <h3 class="title">Birthday</h3>
-                    <input class="input" v-model="user.birthday" />
-                </div>
+        <!-- Container Detail Profile -->
+        <div class="input-container">
+            <div class="container-detail">
+                <h3 class="label">Name</h3>
+                <input class="input" v-model="user.name" />
             </div>
+            <div class="container-detail">
+                <h3 class="label">Email</h3>
+                <input class="input" v-model="user.email" />
+            </div>
+            <div class="container-detail">
+                <h3 class="label">Identity Card</h3>
+                <input class="input" v-model="user.ktp" />
+            </div>
+            <div class="container-detail">
+                <h3 class="label">Phone Number</h3>
+                <input class="input" v-model="user.no_HP" />
+            </div>
+            <div class="container-detail">
+                <h3 class="label">Birthday</h3>
+                <input class="input" v-model="user.birthday" />
+            </div>
+        </div>
 
-            <!-- Container Button -->
-            <div class="container-btn">
-                <!-- <router-link :to="{path: '/profile'}"> -->
-                <button class="btn-save" @click="updateUser">Save</button>
-                <!-- </router-link> -->
-                <router-link :to="{ path: `/profile` }">
-                    <button class="btn-cancel">Cancel</button>
-                </router-link>
-            </div>
+        <!-- Container Button -->
+        <div class="container-btn">
+            <!-- <router-link :to="{path: '/profile'}"> -->
+            <button class="btn-save" @click="updateUser">Save</button>
+            <!-- </router-link> -->
+            <router-link :to="{ path: `/profile` }">
+                <button class="btn-cancel">Cancel</button>
+            </router-link>
+        </div>
+
+        <!-- Container Image -->
+        <div class="container-bg">
+            <img src="/profile-background.png">
         </div>
     </div>
 </template>
@@ -104,7 +107,10 @@ export default {
             } else {
                 console.log("B");
                 console.log(this.user);
-                profilePhoto = this.user.profilePhoto;
+                let defaultProfilePhoto = {
+                    url: "/profile.png"
+                }
+                profilePhoto = this.user.profilePhoto ? this.user.profilePhoto : defaultProfilePhoto;
             }
 
             console.log(profilePhoto);
@@ -126,7 +132,7 @@ export default {
                 ktp: this.user.ktp,
                 no_HP: this.user.no_HP,
                 birthday: this.user.birthday,
-                photoUrl: profilePhoto.url,
+                photoUrl: profilePhoto.url ? profilePhoto.url : "",
                 profilePhoto: {
                     id: profilePhoto.id,
                     url: profilePhoto.url
@@ -187,40 +193,35 @@ export default {
             });
 
         // Handle if there is no photo
-        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "";
+        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "/profile.png";
     }
 };
 </script>
 
 <style scoped>
-.title {
-    color: rgb(10, 10, 10);
-    font-size: 1.5rem;
-    margin-left: 20px;
+.profile {
+    display: grid;
+    grid-template-columns: 220px 500px 220px;
+    grid-template-rows: auto 150px;
+    grid-gap: 50px;
+    grid-template-areas: 
+    "photo detail button"
+    "bg bg bg";
+    justify-content: center;
 }
-.input {
-    border: 2px solid #5f5f5f;
-    padding: 5px 10px;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 20px;
-    border: 2px solid grey;
-    color: rgb(63, 62, 62);
-    font-size: 20px;
-}
-.edit-detail-profile {
-    margin: 10px 0px;
-}
+
+
 .container-image {
     display: flex;
     margin: 0 auto;
-    width: 150px;
-    height: 150px;
+    width: 220px;
+    height: 220px;
     position: relative;
     align-items: center;
     overflow: hidden;
     border-radius: 50%;
+    grid-area: photo;
+    justify-self: center;
 }
 
 img {
@@ -230,10 +231,96 @@ img {
     width: auto;
 }
 
+
+.input-container {
+    grid-area: detail;
+    margin-top: 105px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 100;
+}
+
+.container-btn {
+    grid-area: button;
+    display: flex;
+    column-gap: 8px;
+    justify-self: center;
+    margin-top: 15px;
+}
+
+.container-bg {
+    grid-area: bg;
+    justify-self: center;
+    position: absolute;
+    bottom: 70px;
+    left: -25px;
+    z-index: 5;
+}
+
+
+.btn-save {
+    width: 112px;
+    height: 50px;
+    padding: 10px;
+    background-color: #353642;
+    color: #FFFFFF;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    font-family: "Bebas Neue";
+    font-size: 24px;
+    transition: background-color 0.3s;
+}
+
+.btn-cancel {
+    width: 112px;
+    height: 50px;
+    padding: 10px;
+    background-color: #DEDDD8;
+    color: #000000;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    font-family: "Bebas Neue";
+    font-size: 24px;
+    border: 1px solid #353642;
+    transition: background-color 0.3s;
+}
+
+.btn-save:hover {
+    background-color: #171817;
+}
+.btn-cancel:hover {
+    background-color: #b5b9b5;
+}
+
+.container-detail {
+    text-align: left;
+    margin-top: 5px;
+}
+
+.label {
+    margin-left: 40px;
+    font-family: 'Darker Grotesque';
+    font-size: 18px;
+}
+
+.input {
+    font-family: 'Darker Grotesque';
+    font-size: 18px;
+    width: 350px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid #353642;
+    border-radius: 100px;
+    padding: 10px 25px;
+    margin: 5px 0px 5px 0px;
+}
+
 .edit {
     position: absolute;
-    width: 150px;
-    height: 150px;
+    width: 220px;
+    height: 220px;
 }
 .circle {
     background-color: #d3c5c5;
@@ -247,61 +334,7 @@ img {
     opacity: 0.3;
 }
 
-.container-detail {
-    text-align: left;
-}
-.flex-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: auto;
-    grid-gap: 20px;
-    margin-left: 125px;
-    margin-right: 125px;
-}
 
-.input-container {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-}
-
-.container-btn {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
-    justify-self: center;
-}
-
-.btn-save,
-.btn-cancel {
-    width: 100px;
-    height: 40px;
-    padding: 10px;
-
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    transition: background-color 0.2s;
-    margin: 5px;
-}
-
-.btn-save {
-    background-color: #1f2220;
-    color: #fff;
-}
-
-.btn-cancel {
-    background-color: transparent;
-    color: #000000;
-    border: 2px solid grey;
-}
-
-.btn-save:hover {
-    background-color: #171817;
-}
-.btn-cancel:hover {
-    background-color: #b5b9b5;
-}
 /** Make the website responsive */
 @media screen and (max-width: 768px) {
     .flex-container {
