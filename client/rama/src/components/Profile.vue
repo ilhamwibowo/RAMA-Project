@@ -1,26 +1,28 @@
 <template>
     <div class="profile">
-        <div class="flex-container">
-            <!-- Container Image -->
-            <div class="container-image">
-                <img :src="previewImageUrl" />
-            </div>
+        <!-- Container Image -->
+        <div class="container-image">
+            <img :src="previewImageUrl" />
+        </div>
 
-            <!-- Container Detail -->
-            <div class="container-detail">
-                <DetailProfile title="Name" :text="user.name" />
-                <DetailProfile title="Email" :text="user.email" />
-                <DetailProfile title="KTP" :text="user.ktp" />
-                <DetailProfile title="Phone Number" :text="user.no_HP" />
-                <DetailProfile title="Birthday" :text="user.birthday" />
-            </div>
+        <!-- Container Detail -->
+        <div class="container-detail">
+            <DetailProfile title="Name" :text="user.name" />
+            <DetailProfile title="Email" :text="user.email" />
+            <DetailProfile title="KTP" :text="user.ktp" />
+            <DetailProfile title="Phone Number" :text="user.no_HP" />
+            <DetailProfile title="Birthday" :text="user.birthday" />
+        </div>
 
-            <!-- Container Button -->
-            <div class="container-btn">
-                <router-link :to="{ path: '/profile/edit/' }">
-                    <button class="btn-edit">Edit</button>
-                </router-link>
-            </div>
+        <!-- Container Button -->
+        <div class="container-btn">
+            <router-link :to="{ path: '/profile/edit/' }">
+                <button class="btn-edit">Edit</button>
+            </router-link>
+        </div>
+
+        <div class="container-bg">
+            <img src="profile-background.png">
         </div>
     </div>
 </template>
@@ -67,9 +69,10 @@ export default {
                 if (response.status !== 200) {
                     console.log(response);
                 } else {
+                    console.log(response.data);
                     this.user = response.data;
                     this.username = response.data.name;
-                    // this.role = response.data.role;
+                    this.role = response.data.role;
                 }
             })
             .catch((err) => {
@@ -77,23 +80,38 @@ export default {
             });
 
         // handle if there is no image
-        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "";
+        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "profile.png";
     }
 };
 </script>
 
 <style scoped>
+.profile {
+    display: grid;
+    grid-template-columns: 220px 500px 220px;
+    grid-template-rows: auto 150px;
+    grid-gap: 50px;
+    grid-template-areas: 
+    "photo detail button"
+    "bg bg bg";
+    justify-content: center;
+    /* display: grid;
+    grid-template-columns: 220px 500px 220px;
+    grid-template-rows: auto;
+    grid-gap: 50px;
+    justify-content: center; */
+}
+
 .container-image {
     display: flex;
     margin: 0 auto;
-    width: 150px;
-    height: 150px;
+    width: 220px;
+    height: 220px;
     position: relative;
     align-items: center;
     overflow: hidden;
     border-radius: 50%;
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
+    grid-area: photo;
     justify-self: center;
 }
 
@@ -104,47 +122,48 @@ img {
     width: auto;
 }
 
-.flex-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: auto;
-    grid-gap: 20px;
-    margin-left: 125px;
-    margin-right: 125px;
-}
 
 .container-detail {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
+    grid-area: detail;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .container-btn {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
+    grid-area: button;
     justify-self: center;
+    margin-top: 15px;
 }
 
 .btn-edit {
-    width: 100px;
-    height: 40px;
+    width: 112px;
+    height: 50px;
     padding: 10px;
     background-color: #1f2220;
     color: #fff;
-    border-radius: 30px;
+    border-radius: 100px;
     border: none;
     cursor: pointer;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    transition: background-color 0.2s;
+    font-family: "Bebas Neue";
+    font-size: 24px;
+    transition: background-color 0.3s;
 }
 
 .btn-edit:hover {
-    background-color: #171817;
+    background-color: #000000;
+}
+
+.container-bg {
+    grid-area: bg;
+    justify-self: center;
+    position: absolute;
+    bottom: 70px
 }
 
 /** Make the website responsive */
 @media screen and (max-width: 768px) {
-    .flex-container {
+    .profile {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto;
         margin-left: 20px;
@@ -166,6 +185,11 @@ img {
         grid-column: 1 / 2;
         grid-row: 3 / 4;
         justify-self: center;
+        margin-bottom: 100px;
+    }
+
+    .container-bg {
+        display: none;
     }
 }
 </style>

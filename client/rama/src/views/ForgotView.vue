@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="forgot">
-        <!-- <AccountRecovery
+        <AccountRecovery
             v-if="!isRequested && !isRecovered"
             @email="(value) => (this.email = value)"
             @isRequested="(value) => (this.isRequested = value)"
@@ -10,8 +10,7 @@
             @isRecovered="(value) => (this.isRecovered = value)"
             :email="email"
         />
-        <SuccessfulRecovery v-else-if="isRequested && isRecovered" /> -->
-        <SuccessfulRecovery />
+        <SuccessfulRecovery v-else-if="isRequested && isRecovered" />
     </div>
 </template>
 

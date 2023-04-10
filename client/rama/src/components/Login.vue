@@ -170,10 +170,11 @@ input[type="text"], input[type="password"] {
     right: 10px;
     top: 25px;
     border:none;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 #show-pw img {
-    width: 32px;
+    width: 30px;
     height: auto;
 }
 

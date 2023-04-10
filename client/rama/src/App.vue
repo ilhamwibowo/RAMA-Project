@@ -47,22 +47,4 @@ export default {
 
 <style scoped>
 
-.app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-    grid-template-rows: 75px auto;
-    grid-template-areas:
-        "nav"
-        "content";
-}
-.navbar {
-    grid-area: nav;
-}
-
-.content {
-    grid-area: content;
-}
-
 </style>
