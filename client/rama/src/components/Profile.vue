@@ -123,6 +123,7 @@ img {
     margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
+    z-index: 100;
 }
 
 .container-btn {
@@ -137,6 +138,7 @@ img {
     position: absolute;
     bottom: 70px;
     left: -25px;
+    z-index: 5;
 }
 
 .btn-edit {

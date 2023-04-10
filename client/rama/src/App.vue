@@ -35,7 +35,6 @@ export default {
                 } else {
                     // if user show navbar
                     this.isUser = response.data.role == "User" | !response.data.role;
-                    console.log(this.isUser);
                 }
             })
             .catch((err) => {

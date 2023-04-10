@@ -30,12 +30,13 @@ export default {
 .text {
     font-family: 'Darker Grotesque';
     font-size: 18px;
+    vertical-align: middle;
     width: 350px;
     height: 60px;
     background: rgba(255, 255, 255, 0);
     border: 1px solid #353642;
     border-radius: 100px;
-    padding: 10px 25px;
+    padding: 16px 25px;
     margin: 5px 0px 5px 0px;
 }
 </style>

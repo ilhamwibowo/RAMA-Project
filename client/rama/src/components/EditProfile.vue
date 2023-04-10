@@ -107,7 +107,10 @@ export default {
             } else {
                 console.log("B");
                 console.log(this.user);
-                profilePhoto = this.user.profilePhoto;
+                let defaultProfilePhoto = {
+                    url: "/profile.png"
+                }
+                profilePhoto = this.user.profilePhoto ? this.user.profilePhoto : defaultProfilePhoto;
             }
 
             console.log(profilePhoto);
@@ -129,7 +132,7 @@ export default {
                 ktp: this.user.ktp,
                 no_HP: this.user.no_HP,
                 birthday: this.user.birthday,
-                photoUrl: profilePhoto.url,
+                photoUrl: profilePhoto.url ? profilePhoto.url : "",
                 profilePhoto: {
                     id: profilePhoto.id,
                     url: profilePhoto.url
@@ -234,6 +237,7 @@ img {
     margin-top: 105px;
     margin-left: auto;
     margin-right: auto;
+    z-index: 100;
 }
 
 .container-btn {
@@ -250,6 +254,7 @@ img {
     position: absolute;
     bottom: 70px;
     left: -25px;
+    z-index: 5;
 }
 
 
