@@ -3,8 +3,8 @@
         <button class="button" @click="onClick"><img src="/navbar-button.png"></button>
         <div v-if="isOpen" class="popup">
             <RouterLink class="text" to="/">Home</RouterLink>
-            <!-- <RouterLink to="/">Leaderboard</p> -->
             <RouterLink class="text" to="/album">Album</RouterLink>
+            <RouterLink class="text" to="/events">Event</RouterLink>
         </div>
     </div>    
 </template>
@@ -26,6 +26,7 @@ export default {
             this.isOpen = false;
         }
     }
+    
 }
 </script>
 

@@ -1,10 +1,12 @@
 <template>
-    <div class="layout">
+  <div class="layout">
+    <NavigationBar class="navbar" />
+    <div class="body">
       <div class="header">
         <img src="eventHeader.png" alt="Header Image" />
         <h1 class="header-title">Where does running take you next?</h1>
       </div>
-
+  
       <div class="event-list">
         <div
           v-for="event in events"
@@ -24,100 +26,129 @@
         </div>
       </div>
     </div>
-  </template>
+    <Footer class="footer" />
+  </div>
+</template>
   
-  <script>
+<script>
 
-  import axios from 'axios';
+import axios from 'axios';
+import NavigationBar from '../components/NavigationBar.vue';
+import Footer from '../components/Footer.vue';
 
-  export default {
-    data() {
-      return {
-        events: [
-          // Populate this array with your events
-          // Example:
-          {
-            raceId: 1,
-            raceName: 'JAWA TIMUR MARATHON SPECIAL',
-            startLocation: {name: 'Bandung, Jawa Barat'}, 
-            startTime: '2001-01-01T00:00:00',
-            distance: '42KM',
-            raceThumbnail: {url:'3.jpg'},
-          },          {
-            raceId: 2,
-            raceName: 'Jawa Timur Marathon Festival',
-            startLocation: {name: 'Bandung, Jawa Barat'}, 
-            startTime: new Date(),
-            distance: '42KM',
-            raceThumbnail: {url:'2.jpg'},
-          },
-          {
-            raceId: 3,
-            raceName: 'Jawa Timur Marathon Festival',
-            startLocation: {name: 'Bandung, Jawa Barat'}, 
-            startTime: new Date(),
-            distance: '42KM',
-            raceThumbnail: {url:'1.jpg'},
-          },          {
-            raceId: 4,
-            raceName: 'Jawa Timur Marathon Festival',
-            startLocation: {name: 'Bandung, Jawa Barat'}, 
-            startTime: new Date(),
-            distance: '42KM',
-            raceThumbnail: {url:'4.jpg'},
-          },
-        ],
-      };
-    },  
-    created() {
-      const token = localStorage.getItem("token");
+export default {
+  name: "UserEventView",
+  components: {
+    NavigationBar,
+    Footer
+  },
+  data() {
+    return {
+      events: [
+        // Populate this array with your events
+        // Example:
+        {
+          raceId: 1,
+          raceName: 'JAWA TIMUR MARATHON SPECIAL',
+          startLocation: {name: 'Bandung, Jawa Barat'}, 
+          startTime: '2001-01-01T00:00:00',
+          distance: '42KM',
+          raceThumbnail: {url:'3.jpg'},
+        },          {
+          raceId: 2,
+          raceName: 'Jawa Timur Marathon Festival',
+          startLocation: {name: 'Bandung, Jawa Barat'}, 
+          startTime: new Date(),
+          distance: '42KM',
+          raceThumbnail: {url:'2.jpg'},
+        },
+        {
+          raceId: 3,
+          raceName: 'Jawa Timur Marathon Festival',
+          startLocation: {name: 'Bandung, Jawa Barat'}, 
+          startTime: new Date(),
+          distance: '42KM',
+          raceThumbnail: {url:'1.jpg'},
+        },          {
+          raceId: 4,
+          raceName: 'Jawa Timur Marathon Festival',
+          startLocation: {name: 'Bandung, Jawa Barat'}, 
+          startTime: new Date(),
+          distance: '42KM',
+          raceThumbnail: {url:'4.jpg'},
+        },
+      ],
+    };
+  },  
+  created() {
+    const token = localStorage.getItem("token");
 
-      // Configuration for API
-      const config = {
-          headers: { Authorization: `Bearer ${token}` }
-      };
+    // Configuration for API
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
 
-      axios.get(import.meta.env.VITE_API_URI + "/Race", config)
-        .then(response => {
-          console.log(response.data);
-          this.events.push(...response.data.races);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    axios.get(import.meta.env.VITE_API_URI + "/Race", config)
+      .then(response => {
+        console.log(response.data);
+        this.events.push(...response.data.races);
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
+  },
+  methods: {
+    formatDate(date) {
+      return new Intl.DateTimeFormat('en-US').format(date);
     },
-    methods: {
-      formatDate(date) {
-        return new Intl.DateTimeFormat('en-US').format(date);
-      },
-      formatDate2(dateString) {
-        const months = [
-          "January", "February", "March", "April", "May", "June", 
-          "July", "August", "September", "October", "November", "December"
-        ];
-        const date = new Date(dateString);
-        const day = date.getDate();
-        const monthIndex = date.getMonth();
-        const year = date.getFullYear();
+    formatDate2(dateString) {
+      const months = [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"
+      ];
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const monthIndex = date.getMonth();
+      const year = date.getFullYear();
 
-        return `${day} ${months[monthIndex]} ${year}`;
-      },
-      goToEvent(eventId) {
-        // Replace 'event-details' with the name of the route to the event details page
-        this.$router.push({ name: 'userEventDetail', params: { id: eventId } });
-      },
+      return `${day} ${months[monthIndex]} ${year}`;
     },
-  };
-  </script>
+    goToEvent(eventId) {
+      // Replace 'event-details' with the name of the route to the event details page
+      this.$router.push({ name: 'userEventDetail', params: { id: eventId } });
+    },
+  },
+};
+</script>
   
   <style scoped>
   .layout {
+    display: grid;
+    grid-template-rows: auto auto 240px;
+    grid-template-areas:
+        "header"
+        "body"
+        "footer";
+    min-height: 100vh;
+}
+
+.header {
+    grid-area: header;
+}
+
+.body {
+    grid-area: body;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0 100px;
-  }
+    margin-bottom: 100px;
+}
+
+.footer {
+    grid-area: footer;
+}
   
   .header {
     position: relative;

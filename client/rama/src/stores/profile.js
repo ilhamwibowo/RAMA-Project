@@ -19,6 +19,12 @@ export const useProfileStore = defineStore("profile", {
     },
 
     actions: {
-        //
+        setName(name) {
+            state.name = name;
+        },
+
+        setRole(role) {
+            state.role = role;
+        }
     }
 });

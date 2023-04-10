@@ -1,64 +1,87 @@
-﻿<template>
-    <h2>Leaderboard</h2>
-    <table>
-        <tr>
-            <th class="narrower">Position</th>
-            <th class="narrower">Bib Number</th>
-            <th>Name</th>
-            <th class="narrower">Time</th>
-        </tr>
-        <tr v-for="attendee in attendees" :key="attendee.position">
-            <td>{{ attendee.position }}</td>
-            <td>{{ attendee.bibNumber }}</td>
-            <td>{{ attendee.name }}</td>
-            <td>{{ attendee.duration }}</td>
-        </tr>
-    </table>
+<template>
+    <div class="leaderboard">
+        <LeaderboardTable :attendees="raceData" />
+            <LeaderboardPagination
+                :totalPage="this.pageCount"
+                :perPage="this.perPage"
+                :currentPage="currentPage"
+                @pageChanged="onPageChange"
+            />
+    </div>
 </template>
 
 <script>
+import axios from 'axios';
+
+import LeaderboardPagination from './LeaderboardPagination.vue'
+import LeaderboardTable from './LeaderboardTable.vue';
 export default {
     name: "Leaderboard",
+    components: {
+        LeaderboardTable,
+        LeaderboardPagination
+    },
+    data() {
+        return {
+            raceId: "",
+            raceData: [],
+            currentPage: 1,
+            pageCount: 1,
+            perPage: 20
+        };
+    },
 
-    props: {
-        attendees: {
-            type: Array,
-            required: true
+    methods: {
+        onPageChange(page) {
+            this.currentPage = page;
+            axios
+                .get(
+                    import.meta.env.VITE_API_URI +
+                        "/Race/" +
+                        this.raceId +
+                        "/attendees?page=" +
+                        this.currentPage +
+                        "&pageSize=" +
+                        this.perPage
+                )
+                .then((response) => {
+                    this.raceData = response.data.raceAttendee;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
+    },
+
+    async beforeMount() {
+        this.pageCount = await axios
+            .get(import.meta.env.VITE_API_URI + "/Race/" + this.raceId + "/attendance")
+            .then((response) => {
+                return Math.ceil(response.data.raceAttendee.length / this.perPage);
+            })
+            .catch(() => {
+                return 10;
+            });
+        await axios
+            .get(
+                import.meta.env.VITE_API_URI +
+                    "/Race/" +
+                    this.raceId +
+                    "/attendees?page=" +
+                    this.currentPage +
+                    "&pageSize=" +
+                    this.perPage
+            )
+            .then((response) => {
+                this.raceData = response.data.raceAttendee;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
-};
+}
 </script>
 
 <style scoped>
-table,
-th,
-td {
-    border: 1px solid black;
-}
 
-table {
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-}
-
-th {
-    font-weight: bold;
-}
-
-tr:nth-child(1):hover {
-    background-color: unset !important;
-}
-
-tr:hover {
-    background-color: lightgreen;
-}
-
-td {
-    text-align: center;
-}
-
-.narrower {
-    width: 20%;
-}
 </style>
