@@ -16,7 +16,7 @@
         <h2>About</h2>
         <p>{{ eventData.raceDesc }}</p>
         <h2>Route Map</h2>
-        <div class="route-map">
+        <div id="route-map">
           <!-- Insert map component or implementation here -->
         </div>
       </div>
@@ -40,12 +40,15 @@
   
 <script>
   import axios from 'axios';
+  import { Loader } from "@googlemaps/js-api-loader"
+  
   import ConfirmModal from "../components/ConfirmModal.vue";
 
   export default {
     components: {
       ConfirmModal,
     },
+    
     data() {
       return {
         showModal: false,
@@ -60,9 +63,29 @@
         },
       };
     },
+    
     created() {
       this.fetchEventData();
     },
+    
+    mounted() {
+      let map;
+      
+      const loader = new Loader({
+        apiKey: import.meta.env.VITE_MAPS_API_KEY,
+        version: "weekly",
+      });
+
+      loader.load().then(async () => {
+        const { Map } = await google.maps.importLibrary("maps");
+
+        map = new Map(document.getElementById("route-map"), {
+          center: { lat: -34.397, lng: 150.644 },
+          zoom: 8,
+        });
+      });
+    },
+
     methods: {
       async fetchEventData() {
         const token = localStorage.getItem("token");
@@ -81,6 +104,7 @@
             console.log(error);
           });
       },
+      
       registerForEvent() {
         const token = localStorage.getItem("token");
 
@@ -98,6 +122,7 @@
             console.log("p");
           });
       },
+      
       viewAlbum() {
         // TODO : Add parameters to album
         this.$router.push({ name: 'album'});
@@ -117,99 +142,103 @@
   };
   </script>
   
-  <style scoped>
+<style scoped>
+.event-detail {
+  display: flex;
+  margin:20px 50px 0 50px;
+}
+
+.left-side {
+  flex: 3;
+  padding-right: 40px;
+  text-align: left;
+}
+
+.right-side {
+  flex: 1;
+}
+
+.sticky-container {
+  position: sticky;
+  top: 20px;
+}
+.sticky-card {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.details {
+  text-align: left;
+}
+.event-image {
+  max-width: 100%; /* This will ensure the image does not exceed the container's width */
+  height: auto; /* This will maintain the aspect ratio of the image */
+}
+h1 {
+  font-weight: bold;
+}
+hr {
+  border : 2px solid #000000;
+  margin-bottom:20px;
+  margin-top:10px;
+}
+
+.register-button {
+  width: 100px;
+  height: 30px;
+  background-color: #FFA801;
+  color:white;
+  border:none;
+  border-radius: 5px;
+  cursor:pointer;
+  transition: 0.3s;
+}
+
+.register-button:hover {
+  background-color: #df9205;
+}
+
+.view-album-button {
+  width: 200px;
+  height: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);;
+  border:none;
+  margin-top: 20px;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 5px;
+  transition:0.3s;
+}
+
+.view-album-button:hover {
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);;
+}
+
+#route-map {
+    height: 100%;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
   .event-detail {
-    display: flex;
-    margin:20px 50px 0 50px;
+    flex-direction: column;
   }
-  
+
   .left-side {
-    flex: 3;
-    padding-right: 40px;
-    text-align: left;
+    padding-right: 0;
   }
-  
+
   .right-side {
-    flex: 1;
+    order: 1;
   }
-  
+
   .sticky-container {
-    position: sticky;
-    top: 20px;
-  }
-  .sticky-card {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-  }
-  
-  .details {
-    text-align: left;
-  }
-  .event-image {
-    max-width: 100%; /* This will ensure the image does not exceed the container's width */
-    height: auto; /* This will maintain the aspect ratio of the image */
-  }
-  h1 {
-    font-weight: bold;
-  }
-  hr {
-    border : 2px solid #000000;
-    margin-bottom:20px;
-    margin-top:10px;
-  }
-  
-  .register-button {
-    width: 100px;
-    height: 30px;
-    background-color: #FFA801;
-    color:white;
-    border:none;
-    border-radius: 5px;
-    cursor:pointer;
-    transition: 0.3s;
-  }
-  
-  .register-button:hover {
-    background-color: #df9205;
-  }
-  
-  .view-album-button {
-    width: 200px;
-    height: 40px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);;
-    border:none;
     margin-top: 20px;
-    cursor: pointer;
-    background-color: white;
-    border-radius: 5px;
-    transition:0.3s;
+    position: static;
   }
-  
-  .view-album-button:hover {
-    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);;
-  }
-  
-  /* Media query for smaller screens */
-  @media (max-width: 768px) {
-    .event-detail {
-      flex-direction: column;
-    }
-  
-    .left-side {
-      padding-right: 0;
-    }
-  
-    .right-side {
-      order: 1;
-    }
-  
-    .sticky-container {
-      margin-top: 20px;
-      position: static;
-    }
-  }
-  </style>
+}
+</style>
