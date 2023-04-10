@@ -27,5 +27,6 @@ export default {
 .photo-container {
     column-count: 3;
     column-gap: 25px;
+    margin: 0 200px;
 }
 </style>

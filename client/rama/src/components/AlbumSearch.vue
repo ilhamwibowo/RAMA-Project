@@ -52,7 +52,7 @@ export default {
     padding: 20px 20px 20px 60px;
     height: 60px;
     width: 50vw;
-    max-width: 700px;
+    max-width: 650px;
     border-radius: 100px;
     font-size: 22px;
     font-family: "darker grotesque";
