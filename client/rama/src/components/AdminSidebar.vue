@@ -4,10 +4,10 @@
             <h1>RAMA</h1>
         </div>
         <div class="list">
-            <AdminSidebarList iconSrc="dashboard-icon.png" text="Dashboard" />
-            <AdminSidebarList iconSrc="accounts-icon.png" text="Accounts" />
-            <AdminSidebarList iconSrc="events-page-icon.png" text="Events" isPage="true"/>
-            <AdminSidebarList iconSrc="album-icon.png" text="Album" />
+            <AdminSidebarList iconSrc="/dashboard-icon.png" text="Dashboard" />
+            <AdminSidebarList iconSrc="/accounts-icon.png" text="Accounts" />
+            <AdminSidebarList iconSrc="/events-page-icon.png" text="Events" isPage="true"/>
+            <AdminSidebarList iconSrc="/album-icon.png" text="Album" />
         </div>
     </div>
 </template>
