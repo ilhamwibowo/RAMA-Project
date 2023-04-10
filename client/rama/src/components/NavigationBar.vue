@@ -1,6 +1,6 @@
 <template>
     <header>
-        <div class="app-title subtitle">
+        <!-- <div class="app-title subtitle">
             <a :href="home">Rama</a>
         </div>
         <nav class="subtitle navbar">
@@ -13,7 +13,16 @@
         </nav>
         <nav class="subtitle profile" v-if="!checkLogin">
             <RouterLink to="/profile">Hello, {{ this.username }}!</RouterLink>
-        </nav>
+        </nav> -->
+        <div class="navpage">
+            <NavigationPage />
+        </div>
+        <div class="title">
+            <h>Rama</h>
+        </div>
+        <div class="profile">
+
+        </div>
     </header>
 </template>
 
@@ -22,6 +31,8 @@ import { mapState } from "pinia";
 
 import { useProfileStore } from "@/stores/profile";
 
+import NavigationPage from "./NavigationPage.vue";
+
 export default {
     name: "NavigationBar",
 
@@ -29,6 +40,10 @@ export default {
         return {
             home: import.meta.env.VITE_APP_URI
         };
+    },
+
+    components: {
+        NavigationPage
     },
 
     computed: {
@@ -47,58 +62,31 @@ export default {
 
 <style scoped>
 header {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    padding: 20px 10px;
-    justify-content: space-between;
-}
-
-.app-title {
-    display: flex;
-    flex: 1;
-    justify-content: flex-start;
-}
-
-.app-title a {
-    color: var(--color-text);
-    text-decoration: none;
-}
-
-.navbar {
-    display: flex;
-    flex: 1;
+    width: 100%;
+    height: 100px;
+    display: grid;
+    margin: 100px 0;
+    grid-template-columns: 200px minmax(auto, 900px) 200px;
+    grid-template-rows: 100px;
+    grid-template-areas: 
+    "navpage title profile";
     justify-content: center;
 }
 
-.navbar a {
-    color: var(--color-text);
-    padding: 0 1rem;
-    border-left: 1px solid var(--color-border);
-    text-decoration: none;
+.navpage {
+    grid-area: navpage;
 }
-
-.user-manager {
+.title {
+    grid-area: title;
+    background-color:yellow;
     display: flex;
-    flex: 1;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
+    font-family: "Bebas Neue";
+    font-size: 48;
 }
-
-.user-manager a {
-    color: var(--color-text);
-    padding: 0 1rem;
-    border-left: 1px solid var(--color-border);
-    text-decoration: none;
-}
-
-.navbar a:first-of-type,
-.user-manager a:first-of-type {
-    padding-left: 0;
-    border: 0;
-}
-
-.navbar a:last-of-type,
-.user-manager a:last-of-type {
-    padding-right: 0;
+.profile {
+    grid-area: profile;
+    background-color:wheat;
 }
 </style>

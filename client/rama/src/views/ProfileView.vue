@@ -32,7 +32,7 @@ export default {
 
 .layout {
     display: grid;
-    grid-template-rows: 50px auto 240px;
+    grid-template-rows: auto auto 240px;
     grid-template-areas:
         "header"
         "body"
