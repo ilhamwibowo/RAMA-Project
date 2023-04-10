@@ -1,6 +1,6 @@
 <template>
     <div class="layout">
-        <NavigationBar class="navbar" />
+        <NavigationBar class="header" />
         <Profile class="body" />
         <Footer class="footer" />
     </div>

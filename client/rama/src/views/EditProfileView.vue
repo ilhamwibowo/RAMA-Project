@@ -1,16 +1,21 @@
 <template>
-    <div class="view">
+    <div class="layout">
+        <NavigationBar class="header" />
         <EditProfile class="body" />
-        <div class="footer"></div>
+        <Footer class="footer" />
     </div>
 </template>
 
 <script>
 import EditProfile from "../components/EditProfile.vue";
+import Footer from '../components/Footer.vue';
+import NavigationBar from '../components/NavigationBar.vue';
 export default {
     name: "EditProfileView",
     components: {
-        EditProfile
+        EditProfile,
+        NavigationBar,
+        Footer
     }
 };
 </script>
@@ -26,7 +31,7 @@ export default {
 
 .view {
     display: grid;
-    grid-template-rows: 50px auto 100px;
+    grid-template-rows: 50px auto 240px;
     grid-template-areas:
         "header"
         "body"

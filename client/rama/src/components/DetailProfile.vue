@@ -19,6 +19,7 @@ export default {
 <style scoped>
 .detail-profile {
     text-align: left;
+    margin-top: 10px;
 }
 .label {
     margin-left: 40px;

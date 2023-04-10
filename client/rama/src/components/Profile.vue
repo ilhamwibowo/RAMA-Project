@@ -9,7 +9,7 @@
         <div class="container-detail">
             <DetailProfile title="Name" :text="user.name" />
             <DetailProfile title="Email" :text="user.email" />
-            <DetailProfile title="KTP" :text="user.ktp" />
+            <DetailProfile title="Identity Card" :text="user.ktp" />
             <DetailProfile title="Phone Number" :text="user.no_HP" />
             <DetailProfile title="Birthday" :text="user.birthday" />
         </div>
@@ -95,11 +95,6 @@ export default {
     "photo detail button"
     "bg bg bg";
     justify-content: center;
-    /* display: grid;
-    grid-template-columns: 220px 500px 220px;
-    grid-template-rows: auto;
-    grid-gap: 50px;
-    justify-content: center; */
 }
 
 .container-image {
@@ -136,11 +131,19 @@ img {
     margin-top: 15px;
 }
 
+.container-bg {
+    grid-area: bg;
+    justify-self: center;
+    position: absolute;
+    bottom: 70px;
+    left: -25px;
+}
+
 .btn-edit {
     width: 112px;
     height: 50px;
     padding: 10px;
-    background-color: #1f2220;
+    background-color: #353642;
     color: #fff;
     border-radius: 100px;
     border: none;
@@ -154,12 +157,7 @@ img {
     background-color: #000000;
 }
 
-.container-bg {
-    grid-area: bg;
-    justify-self: center;
-    position: absolute;
-    bottom: 70px
-}
+
 
 /** Make the website responsive */
 @media screen and (max-width: 768px) {
