@@ -35,16 +35,17 @@ export default {
         await axios
             .get(import.meta.env.VITE_API_URI + "/User", config)
             .then((response) => {
+                this.isUser = response.data.role === "User";
                 if (response.status !== 200) {
                     console.log(response);
                 } else {
                     // if user show navbar
                     // this.isUser = response.data.role == "User" | !response.data.role;
-                    this.isUser = false;
                     console.log(this.isUser);
                 }
             })
             .catch((err) => {
+                this.isUser = true;
                 console.log(err);
             });
     }
