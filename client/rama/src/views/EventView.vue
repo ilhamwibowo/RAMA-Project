@@ -11,7 +11,7 @@
                 
                 <!-- POP UP FORM FOR CREATING NEW EVENT -->
                 <form v-if="showForm">
-                   <!-- <div class="container-image">
+                   <div class="container-image">
                        <input
                            type="file"
                            id="image"
@@ -19,7 +19,7 @@
                            @change="changePhoto"
                        />
                        <img :src="previewImageUrl" />
-                   </div> -->
+                   </div>
                    <div class="form-grid">
                        <!-- Left column -->
                        <div class="grid-item">
@@ -27,7 +27,7 @@
                            <input type="text" id="name" v-model="name">
                            
                            <label for="city">City</label>
-                           <input type="number" id="city" v-model="city" placeholder="TBI">
+                           <input type="text" id="city" v-model="city">
                            
                            <label for="start-date">Start Date</label>
                            <input type="datetime-local" id="start-date" v-model="startDate">
@@ -36,14 +36,14 @@
                        
                        <!-- Right column -->
                        <div class="grid-item">
-                           <label for="startlocation">Start Location</label>
-                           <input type="text" id="startlocation" v-model="startLocation">
+                           <label for="startlocation">Description</label>
+                           <input type="text" id="startlocation" v-model="description">
 
-                           <label for="latitude">Latitude</label>
-                           <input type="text" id="latitude" v-model="latitude">
+                           <label for="latitude">Start Registration</label>
+                           <input type="datetime-local" id="latitude" v-model="startRegis">
 
-                           <label for="longitude">Longitude</label>
-                           <input type="text" id="longitude" v-model="longitude">
+                           <label for="longitude">End Registration</label>
+                           <input type="datetime-local" id="longitude" v-model="endRegis">
 
                        </div>
                        
@@ -64,17 +64,7 @@
                            <div class="row">
                                <label for="isPublish">Published</label>
                                <input id="isPublish" type="checkbox" v-model="isPublish">
-                               <label for="isAttending">Open Registration</label>
-                               <input id="isOpen" type="checkbox" v-model="isOpen">
                            </div>
-                       </div>
-
-                       <div class="grid-item">
-                           <div class="row-item">
-                               <label for="category">Category</label>
-                               <input type="text" id="category" v-model="category">
-                           </div>
-
                        </div>
 
                        <div class="grid-item">
@@ -91,11 +81,11 @@
                            </div>
                        </div>
 
-                       <div class="grid-item"></div>
+                       <!-- <div class="grid-item"></div> -->
                        <div class="grid-item">
                            <div class="button-container"> 
                                <button class="btn-cancel" @click="toggleForm">CANCEL</button>
-                               <button class="btn-save" @click="saveEvent">SAVE</button>
+                               <button class="btn-save" @click.prevent="saveEvent">SAVE</button>
                            </div> 
                        </div>                      
                        </div>
@@ -112,29 +102,29 @@
                             <th class="table-header" scope="col">Title</th>
                             <th class="table-header" scope="col">Location</th>
                             <th class="table-header" scope="col">Date</th>
-                            <th class="table-header" scope="col">Category</th>
+                            <!-- <th class="table-header" scope="col">Category</th> -->
                             <th class="table-header" scope="col">Registration</th>
                             <th class="table-header" scope="col">Status</th>
                             <th class="table-header" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody class="table-body">
-                        <tr class="table-row-body" v-for="(event, index) in events" :key="index" >
+                        <tr class="table-row-body" v-for="(event, index) in events" :key="event.raceId" >
                             <td class="table-data" v-text="event.raceName"></td>
-                            <td class="table-data" v-text="event.startLocation"></td>
-                            <td class="table-data" v-text="event.startTime"></td>
-                            <td class="table-data">h</td>
+                            <td class="table-data" v-text="event.startLocation?.name"></td>
+                            <td class="table-data" v-text="event.startTime.slice(0,10)"></td>
+                            <!-- <td class="table-data">h</td> -->
                             <td class="table-data">
-                                <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
-                                <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
+                                <p class="open-regis" id="open-regis" v-if="event.isOpened">Opened</p>
+                                <p class="close-regis" id="close-regis" v-if="!event.isOpened">Closed</p>
                             </td>
                             <td class="table-data">
-                                <p class="status-publish" id="published" v-if="isPublished">Published</p>
-                                <p class="status-publish-not" id="notPublished" v-if="!isPublished">Unpublished</p>
+                                <p class="status-publish" id="published" v-if="event.isPublished">Published</p>
+                                <p class="status-publish-not" id="notPublished" v-if="!event.isPublished">Unpublished</p>
                             </td>
                             <td class="table-data">
                                 <button class="detail-button">
-                                    <router-link :to="{params: {id : index+1}, name: 'detailEvent'}">
+                                    <router-link :to="{params: {id : event.raceId}, name: 'detailEvent'}">
                                         Detail
                                     </router-link>
                                 </button>
@@ -143,50 +133,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="table-container">
-            <table class="event-table">
-                <thead class="table-head">
-                    <tr class="table-row-header">
-                        <th class="table-header" scope="col">Title</th>
-                        <th class="table-header" scope="col">Location</th>
-                        <th class="table-header" scope="col">Date</th>
-                        <th class="table-header" scope="col">Category</th>
-                        <th class="table-header" scope="col">Registration</th>
-                        <th class="table-header" scope="col">Status</th>
-                        <th class="table-header" scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="table-body">
-                    <tr class="table-row-body" v-for="(event, index) in events" :key="index">
-                        <td class="table-data" v-text="event.raceName"></td>
-                        <td class="table-data" v-text="event.startLocation"></td>
-                        <td class="table-data" v-text="event.startTime"></td>
-                        <td class="table-data">h</td>
-                        <td class="table-data">
-                            <p class="open-regis" id="open-regis" v-if="isRegistered">Opened</p>
-                            <p class="close-regis" id="close-regis" v-if="!isRegistered">Closed</p>
-                        </td>
-                        <td class="table-data">
-                            <p class="status-publish" id="published" v-if="isPublished">
-                                Published
-                            </p>
-                            <p class="status-publish-not" id="notPublished" v-if="!isPublished">
-                                Unpublished
-                            </p>
-                        </td>
-                        <td class="table-data">
-                            <button class="detail-button">
-                                <router-link
-                                    :to="{ params: { id: index + 1 }, name: 'detailEvent' }"
-                                >
-                                    Detail
-                                </router-link>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </template>
@@ -200,7 +146,7 @@ export default {
         return {
             events: [],
             isRegistered: false,
-            isPublished: true,
+            isPublished: false,
             showForm: false,
             name: "", 
             city: "", 
@@ -214,7 +160,11 @@ export default {
             category: "",
             distance: "",
             price: "",
-            previewImageUrl: ""
+            previewImageUrl: "",
+            description: "",
+            startRegis: "",
+            endRegis: "",
+            profilePhoto:Object
         };
     },
     components: {
@@ -236,9 +186,6 @@ export default {
                     console.log(response);
                 }else{
                     this.events = response.data.races;
-                    // for debug
-                    // console.log(this.events);
-                    // console.log(this.events[0].raceName);
                 }
             })
             .catch((err) => {
@@ -247,49 +194,74 @@ export default {
         },
         // This method is for creating a new event which is used 
         // in the "Save" button on the form
-        async saveEvent() {
+        saveEvent() {
+            // this.uploadphoto();
             const token = localStorage.getItem("token");
 
             // Configuration for API
             const config = {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
             };
 
             // Convert local time to UTC time
             const startTime = new Date(this.startDate).toISOString();
-            
-            const data = {
-                raceName: this.name,
-                city: this.city,
-                startTime: startTime,
-                startLocation: {
-                    name : this.startLocation,
-                    latitude: this.latitude,
-                    longitude: this.longitude,
-                    category: this.category
-                },
-                distance: this.distance,
-                registrationFee: this.price,
-                
-                // This is still unused for now, but will be used.
-                // Since it does not matter, I put it in anyway.
-                courseMap: this.courseMap,
-                isOpen: this.isOpen,
-                isPublished: this.isPublished
-            };
 
+            //convert start registration date to object format
+            const regisDate = new Date(this.startRegis);
+            var yearRegis = regisDate.getFullYear();
+            var monthRegis = regisDate.getMonth() + 1;
+            var dayRegis = regisDate.getDate();
+            const startRegistration = yearRegis+"-"+monthRegis+"-"+dayRegis;
+            console.log
+
+            //convert end registration date to object format
+            const EndDate = new Date(this.endRegis);
+            var yearEnd = EndDate.getFullYear();
+            var monthEnd = EndDate.getMonth() + 1;
+            var dayEnd = EndDate.getDate();
+            const endRegistration = yearEnd+"-"+monthEnd+"-"+dayEnd;
+
+
+            // console.log(myDate)
+            //ini baru bagian yang wajib diisi
+            let formData = new FormData();
+            formData.append('RaceName', this.name);
+            formData.append('RaceDesc', this.description);
+            formData.append('StartLocation[name]', this.city);
+            formData.append('StartTime', startTime);
+            formData.append('Distance', this.distance);
+            formData.append('RegistrationFee', this.price);
+            formData.append('isPublished', this.isPublish);
+            formData.append('StartDateRegistration', startRegistration);
+            formData.append('EndDateRegistration', endRegistration);
+            formData.append('file', this.profilePhoto)
+            // formData.append('isOpened', this.isOpen);
+            
+            console.log([...formData]);
             axios
-            .post(import.meta.env.VITE_API_URI + "/Race", data, config)
+            .post(import.meta.env.VITE_API_URI + "/Race", formData, config)
             .then((response) => {
-                if(response.status !== 200){
-                    console.log(response);
-                }else{
-                    // Refresh the event list.
-                    alert("succeszzz");
-                    this.getEvent();
-                    // Close the form.
-                    this.showForm = false;
-                }
+                alert("Success");
+                this.showForm = false;
+
+                // Clear input valeus.
+                this.name = "", 
+                this.city = "", 
+                this.startDate = "",
+                this.startLocation = "",
+                this.latitude = "",
+                this.longitude = "",
+                this.courseMap = "",
+                this.isOpen = false,
+                this.isPublish = false,
+                this.category = "",
+                this.distance = "",
+                this.price = "",
+                this.previewImageUrl = "",
+                this.description = "",
+                this.startRegis = "",
+                this.endRegis = "",
+                console.log(response.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -298,17 +270,43 @@ export default {
             this.showForm = !this.showForm;
             if (this.showForm) {
                 // add event listener to close form on escape key press
-                document.addEventListener("keydown", this.handleEscapeKey);
+                // document.addEventListener("keydown", this.handleEscapeKey);
             } else {
                 // remove event listener when form is closed
-                document.removeEventListener("keydown", this.handleEscapeKey);
+                // document.removeEventListener("keydown", this.handleEscapeKey);
             }
         },handleEscapeKey(event) {
             if (event.keyCode === 27) {
                 this.showForm = false;
             }
         },
+        changePhoto(event) {
+        const image = event.target.files[0];
+        this.profilePhoto = image;
+        this.previewImageUrl = URL.createObjectURL(image);
     },
+    uploadphoto() {
+        const token = localStorage.getItem("token");
+        // Configuration for post api
+        const configPhoto = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            };
+
+        // Create FormData file for post api
+        var formData = new FormData();
+        formData.append("file", this.previewImage);
+
+        // Axios Post
+        axios
+            .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
+            .then((response) => (console.log(this.profilePhoto = response.data)))
+            .catch((err) => console.log(err));
+    },
+    },
+    
     mounted() {
         this.getEvent();
     }
@@ -319,9 +317,18 @@ export default {
 .layout {
     height: 100%;
     width: 100%;
+    display: grid;
     grid-template-columns: 333px auto;
     grid-template-areas: 
     "sidebar main";
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.main {
+    grid-area: main;
 }
 
 /********************** FORMS ****************/
@@ -360,7 +367,7 @@ form {
     display: grid;
     grid-template-columns: 1fr;
     grid-row-gap: 10px;
-  }
+}
   
 
   /* Optional styling for labels and inputs */
@@ -439,6 +446,15 @@ input {
   flex-grow: 1;
 }
 
+.container-image {
+    width: 100%;
+    text-align: center;
+}
+
+img {
+    max-width: 400px;
+    max-height:200px;
+}
 
 /********************** Base (Table and else) ****************/
 .sidebar {
