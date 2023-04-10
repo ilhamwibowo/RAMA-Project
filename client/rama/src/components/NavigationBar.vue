@@ -1,27 +1,18 @@
 <template>
     <header>
-        <!-- <div class="app-title subtitle">
-            <a :href="home">Rama</a>
-        </div>
-        <nav class="subtitle navbar">
-            <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/album">Album</RouterLink>
-        </nav>
-        <nav class="subtitle user-manager" v-if="checkLogin">
-            <RouterLink to="/login">Login</RouterLink>
-            <RouterLink to="/register">Register</RouterLink>
-        </nav>
-        <nav class="subtitle profile" v-if="!checkLogin">
-            <RouterLink to="/profile">Hello, {{ this.username }}!</RouterLink>
-        </nav> -->
         <div class="navpage">
             <NavigationPage />
         </div>
         <div class="title">
-            <h>Rama</h>
+            <RouterLink class="text" to="/">Rama</RouterLink>
         </div>
         <div class="profile">
-
+            <div v-if="isLogin">
+                <RouterLink to="/profile"><img src="/navbar-profile.png" ></RouterLink>
+            </div>
+            <div v-else>
+                <RouterLink to="/login">Login</RouterLink>
+            </div>
         </div>
     </header>
 </template>
@@ -38,7 +29,8 @@ export default {
 
     data() {
         return {
-            home: import.meta.env.VITE_APP_URI
+            home: import.meta.env.VITE_APP_URI,
+            isLogin: false
         };
     },
 
@@ -54,8 +46,12 @@ export default {
 
     methods: {
         checkLogin() {
-            return localStorage.getItem("token") === null;
+            this.isLogin = localStorage.getItem("token") !== null;
+            console.log(this.isLogin);
         }
+    },
+    created() {
+        this.checkLogin()
     }
 };
 </script>
@@ -78,15 +74,25 @@ header {
 }
 .title {
     grid-area: title;
-    background-color:yellow;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.title .text {
+    text-decoration: none;
+    color: black;
     font-family: "Bebas Neue";
     font-size: 48;
 }
+
 .profile {
     grid-area: profile;
-    background-color:wheat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile img {
+    width: 80px;
 }
 </style>

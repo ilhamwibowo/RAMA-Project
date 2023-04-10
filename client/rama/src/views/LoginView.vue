@@ -36,7 +36,7 @@ export default {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 100px auto;
+    grid-template-rows: 220px auto;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
     "navbar navbar"

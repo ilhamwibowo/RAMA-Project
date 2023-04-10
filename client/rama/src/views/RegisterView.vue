@@ -26,7 +26,7 @@ export default {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 100px auto;
+    grid-template-rows: 220px auto;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
     "navbar navbar"
@@ -44,7 +44,7 @@ export default {
 }
 
 .register-image > img {
-    max-width: 80%;
+    max-width: 65%;
     margin: 20px 30px 20px 30px;
 }
 

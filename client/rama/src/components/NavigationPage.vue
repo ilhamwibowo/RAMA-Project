@@ -1,30 +1,15 @@
 <template>
     <div class="navpage">
         <button class="button" @click="onClick"><img src="/navbar-button.png"></button>
-        <div v-if="isOpen" v-click-outside="onClickOutside" class="popup">
-            <p>Home</p>
-            <p>Leaderboard</p>
-            <p>Album</p>
+        <div v-if="isOpen" class="popup">
+            <RouterLink class="text" to="/">Home</RouterLink>
+            <!-- <RouterLink to="/">Leaderboard</p> -->
+            <RouterLink class="text" to="/album">Album</RouterLink>
         </div>
     </div>    
 </template>
 
 <script>
-Vue.directive('click-outside', {
-    bind: function (el, binding, vnode) {
-      el.clickOutsideEvent = function (event) {
-        // here I check that click was outside the el and his children
-        if (!(el == event.target || el.contains(event.target))) {
-          // and if it did, call method provided in attribute value
-          vnode.context[binding.expression](event);
-        }
-      };
-      document.body.addEventListener('click', el.clickOutsideEvent)
-    },
-    unbind: function (el) {
-      document.body.removeEventListener('click', el.clickOutsideEvent)
-    },
-});
 
 export default {
     name: "NavigationPage",
@@ -35,7 +20,7 @@ export default {
     },
     methods: {
         onClick() {
-            this.isOpen = true;
+            this.isOpen = !this.isOpen;
         },
         onClickOutside() {
             this.isOpen = false;
@@ -48,7 +33,6 @@ export default {
 .navpage {
     width: 100%;
     height: 100%;
-    background-color: aqua;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,7 +58,9 @@ export default {
     row-gap: 10px;
 }
 
-.popup p {
+.popup .text {
+    text-decoration: none;
+    color: black;
     font-family: "Bebas Neue";
     font-size: 30px;
 }
