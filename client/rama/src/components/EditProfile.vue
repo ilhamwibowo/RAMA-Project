@@ -317,6 +317,24 @@ img {
     margin: 5px 0px 5px 0px;
 }
 
+.edit {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+}
+.circle {
+    background-color: #d3c5c5;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.circle:hover {
+    opacity: 0.3;
+}
+
+
 /** Make the website responsive */
 @media screen and (max-width: 768px) {
     .flex-container {
