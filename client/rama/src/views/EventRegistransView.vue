@@ -1,11 +1,13 @@
 <template>
     <div class="layout">
         <AdminSidebar class="sidebar"/>
+        <div class="body">
             <div class="search">
                 <input type="text" id="input-search"/>
                 <button @click="search($event)">Search</button>
             </div>
-        <EventRegistrantTable :id="this.id" :data="this.registrans" :names="this.names"/>
+            <EventRegistrantTable :id="this.id" :data="this.registrans" :names="this.names"/>
+        </div>
     </div>
 </template>
 
@@ -72,4 +74,25 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.layout {
+    height: 100%;
+    margin-right: 50px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 333px auto;
+    grid-template-areas: 
+    "sidebar main";
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.body {
+    grid-area: main;
+}
+.search {
+    text-align: center;
+}
+</style>

@@ -109,12 +109,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="participant-button-container">
+                    <router-link :to="{params: {id : this.id}, name: 'EventRegistrant'}"><button class="participant-button">Event Registrant</button></router-link>
+                </div>
             </div>
-            <!-- <div class="participant-button-container">
-                <button class="participant-button">
-                        Participant
-                </button>
-            </div> -->
             <div class="image-container">
                 <input
                     type="file"
