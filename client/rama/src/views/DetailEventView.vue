@@ -220,8 +220,7 @@ export default {
             var monthEnd = EndDate.getMonth() + 1;
             var dayEnd = EndDate.getDate();
             const endRegistration = yearEnd+"-"+monthEnd+"-"+dayEnd;
-            // const startRegistration = new Date(this.startRegis).toISOString();
-            // const endRegistration = new Date(this.endRegis).toISOString();
+
             //ini baru bagian yang wajib diisi
             let formData = new FormData();
             formData.append('RaceName', this.name);
@@ -237,7 +236,7 @@ export default {
             formData.append('StartDateRegistration', startRegistration);
             formData.append('EndDateRegistration', endRegistration);
             formData.append('file', this.photo);
-            // formData.append('isOpened', this.isOpen);
+
             console.log(this.albumId);
             
             console.log([...formData]);
@@ -267,10 +266,6 @@ export default {
                     console.log(response);
                 }else{
                     this.album = response.data.albums;
-                    // console.log(this.album);
-                    // for debug
-                    // console.log(this.event);
-                    // console.log(this.events[0].raceName);
                 }
             })
             .catch((err) => {
