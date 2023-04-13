@@ -181,7 +181,7 @@
 
 <script>
 import axios from 'axios';
-import AdminSidebar from '../components/AdminSidebar.vue';
+import AdminSidebar from '@/components/AdminSidebar.vue';
 export default {
     name: "detailEvent",
     components: {
@@ -246,10 +246,6 @@ export default {
                     this.price = this.event.registrationFee;
                     this.previewImageUrl = this.event.raceThumbnail.url;
                     this.basePreviewImageUrl = this.event.raceThumbnail.url;
-                    // for debug
-                    // console.log(this.event);
-                    // console.log(this.events[0].raceName);
-                    // console.log(this.event);
                 }
             })
             .catch((err) => {
@@ -283,9 +279,6 @@ export default {
                     console.log(response);
                 }else{
                     this.$router.push("/event");
-                    // for debug
-                    // console.log(this.event);
-                    // console.log(this.events[0].raceName);
                 }
             })
             .catch((err) => {
@@ -362,10 +355,6 @@ export default {
                     console.log(response);
                 }else{
                     this.album = response.data.albums;
-                    // console.log(this.album);
-                    // for debug
-                    // console.log(this.event);
-                    // console.log(this.events[0].raceName);
                 }
             })
             .catch((err) => {

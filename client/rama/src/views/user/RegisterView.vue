@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import NavigationBar from "../components/NavigationBar.vue";
-import Register from '../components/Register.vue';
+import NavigationBar from "@/components/NavigationBar.vue";
+import Register from '@/components/Register.vue';
 
 export default {
     name: "RegisterView",

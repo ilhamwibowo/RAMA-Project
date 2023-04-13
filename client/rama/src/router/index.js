@@ -6,22 +6,22 @@ const router = createRouter({
         {
             path: "/",
             name: "home",
-            component: () => import("../views/HomeView.vue")
+            component: () => import("../views/user/HomeView.vue")
         },
         {
             path: "/login",
             name: "login",
-            component: () => import("../views/LoginView.vue")
+            component: () => import("../views/user/LoginView.vue")
         },
         {
             path: "/register",
             name: "register",
-            component: () => import("../views/RegisterView.vue")
+            component: () => import("../views/user/RegisterView.vue")
         },
         {
             path: "/logout",
             name: "logout",
-            component: () => import("../views/LogoutView.vue"),
+            component: () => import("../views/user/LogoutView.vue"),
             beforeEnter: () => {
                 if (localStorage.getItem("token") === null) {
                     return false;
@@ -32,62 +32,62 @@ const router = createRouter({
         {
             path: "/profile",
             name: "profile",
-            component: () => import("../views/ProfileView.vue")
+            component: () => import("../views/user/ProfileView.vue")
         },
         {
             path: "/profile/edit",
             name: "edit-profile",
-            component: () => import("../views/EditProfileView.vue")
+            component: () => import("../views/user/EditProfileView.vue")
         },
         {
             path: "/forgot",
             name: "forgot",
-            component: () => import("../views/ForgotView.vue")
+            component: () => import("../views/user/ForgotView.vue")
         },
         {
             path: "/album",
             name: "album",
-            component: () => import("../views/AlbumView.vue")
+            component: () => import("../views/user/AlbumView.vue")
         },
         {
             path: "/event",
             name: "event",
-            component: () => import("../views/EventView.vue")
+            component: () => import("../views/admin/AdminEventView.vue")
         },
         {
             path: "/event/:id",
             name: "detailEvent",
-            component: () => import("../views/DetailEventView.vue")
+            component: () => import("../views/admin/AdminEventDetailView.vue")
         },
         {
             path: "/albumAdmin",
             name: "albumAdmin",
-            component: () => import("../views/albumAdminView.vue")
+            component: () => import("../views/admin/AdminAlbumView.vue")
         },
         {
             path: "/albumDetail/:id",
             name: "albumDetail",
-            component: () => import("../views/AlbumDetailView.vue")
+            component: () => import("../views/admin/AdminAlbumDetailView.vue")
         },
         {
             path: "/listPhoto/:id",
             name: "listPhoto",
-            component: () => import("../views/AlbumPhotoView.vue")
+            component: () => import("../views/admin/AdminAlbumPhotoView.vue")
         },
         {
             path: "/events",
             name: "userEvent",
-            component: () => import("../views/UserEventView.vue")
+            component: () => import("../views/user/UserEventView.vue")
         },
         {
             path: "/events/:id",
             name: "userEventDetail",
-            component: () => import("../views/UserEventDetail.vue")
+            component: () => import("../views/user/UserEventDetail.vue")
         },
         { 
             path: "/registrant/:id",
             name: "EventRegistrant",
-            component: () => import("../views/EventRegistransView.vue")
+            component: () => import("../views/admin/AdminEventRegistransView.vue")
         }
     ]
 });

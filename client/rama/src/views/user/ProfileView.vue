@@ -1,19 +1,20 @@
 <template>
     <div class="layout">
         <NavigationBar class="header" />
-        <EditProfile class="body" />
+        <Profile class="body" />
         <Footer class="footer" />
     </div>
 </template>
 
 <script>
-import EditProfile from "../components/EditProfile.vue";
-import Footer from '../components/Footer.vue';
-import NavigationBar from '../components/NavigationBar.vue';
+import NavigationBar from "@/components/NavigationBar.vue";
+import Profile from "@/components/Profile.vue";
+import Footer from "@/components/Footer.vue";
+
 export default {
-    name: "EditProfileView",
+    name: "ProfileView",
     components: {
-        EditProfile,
+        Profile,
         NavigationBar,
         Footer
     }
@@ -29,13 +30,14 @@ export default {
     }
 }
 
-.view {
+.layout {
     display: grid;
-    grid-template-rows: 50px auto 240px;
+    grid-template-rows: auto auto 240px;
     grid-template-areas:
         "header"
         "body"
         "footer";
+    min-height: 100vh;
 }
 
 .header {

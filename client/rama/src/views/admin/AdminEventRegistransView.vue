@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import AdminSidebar from '../components/AdminSidebar.vue';
-import EventRegistrantTable from '../components/EventRegistrantTable.vue';
+import AdminSidebar from '@/components/AdminSidebar.vue';
+import EventRegistrantTable from '@/components/EventRegistrantTable.vue';
 import axios from 'axios';
 
 

@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import NavigationBar from "../components/NavigationBar.vue";
-import Login from "../components/Login.vue";
+import NavigationBar from "@/components/NavigationBar.vue";
+import Login from "@/components/Login.vue";
 
 export default {
     name: "LoginView",

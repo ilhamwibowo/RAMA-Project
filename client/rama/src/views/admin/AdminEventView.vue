@@ -109,7 +109,7 @@
                         </tr>
                     </thead>
                     <tbody class="table-body">
-                        <tr class="table-row-body" v-for="(event, index) in events" :key="event.raceId" >
+                        <tr class="table-row-body" v-for="(event) in events" :key="event.raceId" >
                             <td class="table-data" v-text="event.raceName"></td>
                             <td class="table-data" v-text="event.startLocation?.name"></td>
                             <td class="table-data" v-text="event.startTime.slice(0,10)"></td>
@@ -139,7 +139,7 @@
 
 <script>
 import axios from 'axios';
-import AdminSidebar from '../components/AdminSidebar.vue';
+import AdminSidebar from '@/components/AdminSidebar.vue';
 export default {
     name: "EventView",
     data() {
