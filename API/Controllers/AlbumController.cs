@@ -72,11 +72,11 @@ namespace API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> GetAlbums(Guid id, string query = null)
         {
-            if (query == null) query = string.Empty;
 
+            if (query == null) query = string.Empty;
             List<String> queryList = query.ToLower().Split(new char[] { ',', ' ', '\n', ';' }).ToList();
             var album = await _context.Albums.Include(x => x.AlbumPhotos).FirstOrDefaultAsync(a => a.AlbumId.Equals(id));
-            album.AlbumPhotos = album.AlbumPhotos.FindAll(photo => queryList.Any(q => photo.BibTags.Contains(q)));
+            if (query != string.Empty) album.AlbumPhotos = album.AlbumPhotos.FindAll(photo => queryList.Any(q => photo.BibTags.Contains(q)));
             return Ok(_mapper.Map<AlbumDto>(album));
 
         }
