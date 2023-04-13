@@ -4,6 +4,9 @@
         <AdminEventDetailEdit v-if="showForm" @cancel="toogleForm" />
         <div class="layout">
             <div class="tabs">
+                <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'event'}">Detail Event</RouterLink> 
+                <RouterLink class="tab" :to="{params: {id: this.id}, name: 'EventRegistrant'}">Registrant</RouterLink> 
+                <RouterLink class="back" to="/event" ><img src="/left-arrow.png"></RouterLink>
             </div>
             <div class="body">
                 <div class="buttons-container">
@@ -232,7 +235,6 @@ export default {
 
 .detail-event{
     height: 100%;
-    margin-right: 50px;
     position: relative;
     display: grid;
     grid-template-columns: 333px auto;
@@ -248,7 +250,9 @@ export default {
 .layout {
     grid-area: main;
     display: grid;
+    margin:40px 50px 40px 40px;
     grid-template-rows: 70px auto;
+    row-gap: 20px;
     grid-template-areas: 
     "tabs"
     "body"
@@ -256,20 +260,40 @@ export default {
 .tabs {
     grid-area: tabs;
     display: flex;
+    column-gap: 100px;
     align-items: center;
     background: #fff;
+    padding: 5px 20px 10px 80px;
     width: 100%;
-    margin: 30px 20px 30px 20px;
-    position: absolute;
-    justify-content: center;
+    height: 100%;
     border-radius: 15px;
+    font-family: 'Darker Grotesque';
+    font-size: 30px;
 }
+
+.tabs .tab {
+    text-decoration: none;
+    color: black;
+}
+
+.page {
+    font-weight: 700;
+}
+
+.back {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    cursor: pointer;
+}
+
 .body {
     grid-area: body;
     background: #fff;
+    padding: 30px 20px 30px 20px;
     width: 100%;
-    margin: 30px 20px 30px 20px;
-    position: absolute;
     justify-content: center;
     border-radius: 15px;
 }
