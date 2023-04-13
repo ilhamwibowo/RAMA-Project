@@ -76,7 +76,7 @@ namespace API.Controllers
 
             List<String> queryList = query.ToLower().Split(new char[] { ',', ' ', '\n', ';' }).ToList();
             var album = await _context.Albums.Include(x => x.AlbumPhotos).FirstOrDefaultAsync(a => a.AlbumId.Equals(id));
-            
+            album.AlbumPhotos = album.AlbumPhotos.FindAll(photo => queryList.Any(q => photo.BibTags.Contains(q)));
             return Ok(_mapper.Map<AlbumDto>(album));
 
         }
