@@ -42,7 +42,7 @@
   import axios from 'axios';
   import { Loader } from "@googlemaps/js-api-loader"
   
-  import ConfirmModal from "../components/ConfirmModal.vue";
+  import ConfirmModal from "@/components/ConfirmModal.vue";
 
   export default {
     components: {

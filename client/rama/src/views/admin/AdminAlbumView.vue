@@ -43,7 +43,7 @@
 
 <script>
 import axios from 'axios';
-import AdminSidebar from '../components/AdminSidebar.vue';
+import AdminSidebar from '@/components/AdminSidebar.vue';
 export default {
     name: "AlbumAdminView",
     data() {

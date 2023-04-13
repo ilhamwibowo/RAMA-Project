@@ -1,29 +1,22 @@
 <template>
-    <main class="layout">
+    <div class="layout">
         <NavigationBar class="navbar" />
-        <div class="body">
-            <Home />
-            <Leaderboard />
-        </div>
+        <Album class="body" />
         <Footer class="footer" />
-    </main>
+    </div>
 </template>
 
 <script>
-import NavigationBar from "../components/NavigationBar.vue";
-import Footer from "../components/Footer.vue";
-import Leaderboard from "@/components/Leaderboard.vue";
-import Home from "../components/Home.vue"
-
+import Album from "@/components/Album.vue";
+import Footer from '@/components/Footer.vue';
+import NavigationBar from "@/components/NavigationBar.vue";
 export default {
-    name: "HomeView",
-
+    name: "AlbumView",
     components: {
-        Leaderboard,
-        NavigationBar,
+        Album,
         Footer,
-        Home
-    },
+        NavigationBar
+    }
 };
 </script>
 

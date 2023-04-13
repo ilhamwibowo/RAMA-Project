@@ -33,8 +33,8 @@
 <script>
 
 import axios from 'axios';
-import NavigationBar from '../components/NavigationBar.vue';
-import Footer from '../components/Footer.vue';
+import NavigationBar from '@/components/NavigationBar.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
   name: "UserEventView",
