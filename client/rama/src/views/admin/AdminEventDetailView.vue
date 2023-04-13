@@ -298,9 +298,10 @@ export default {
     border-radius: 15px;
 }
 .buttons-container {
+    position: absolute;
+    right: 50px;
     display: flex;
-    align-items: center;
-    column-gap: 100px
+    column-gap: 10px
 }
 .edit-button {
     height: 30px;
@@ -340,23 +341,6 @@ export default {
 .delete-button:hover {
     background-color: rgb(216, 50, 50);
 }
-.participant-button-container{
-    position: absolute;
-    right: 2%;
-    margin-top: 8%;
-}
-
-.participant-button{
-    height: 2rem;
-    width: 5rem;
-    background: rgb(95, 81, 81);
-    border: 1px solid grey;
-    border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    /* letter-spacing: 2px; */
-    color: #fff;
-}
 .image-container {
     margin-top: 2%;
     height: 20%;
@@ -367,6 +351,7 @@ export default {
 #race-photo{
     height: auto;
     width: 50%;
+
 }
 .information-container {
     margin-top: 2%;
@@ -445,11 +430,13 @@ label {
 h2 {
     font-size: 1.25rem;
     color: #000;
+    text-align:center
 }
 
 .maps {
     margin-bottom: 10%;
     height: 30%;
+    text-align: center;
 }
 
 #maps-image{
