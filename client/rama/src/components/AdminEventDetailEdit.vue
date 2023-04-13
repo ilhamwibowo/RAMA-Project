@@ -82,7 +82,7 @@
                 <!-- <div class="grid-item"></div> -->
                 <div class="grid-item">
                     <div class="button-container"> 
-                        <button class="btn-cancel" @click="toggleForm">CANCEL</button>
+                        <button class="btn-cancel" >CANCEL</button>
                         <button class="btn-save" @click.prevent="saveEvent">SAVE</button>
                     </div> 
                 </div>                      
@@ -107,7 +107,69 @@ export default {
             courseMap: "",
             isPublish:false,
             price: "",
+            description: "",
+            startRegis: "",
+            endRegis: "",
+            albumId: "",
         }
+    },
+    methods: {
+        saveEvent() {
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+            };
+
+            // Convert local time to UTC time
+            const startTime = new Date(this.startDate).toISOString();
+
+            //convert start registration date to object format
+            const regisDate = new Date(this.startRegis);
+            var yearRegis = regisDate.getFullYear();
+            var monthRegis = regisDate.getMonth() + 1;
+            var dayRegis = regisDate.getDate();
+            const startRegistration = yearRegis+"-"+monthRegis+"-"+dayRegis;
+
+            //convert end registration date to object format
+            const EndDate = new Date(this.endRegis);
+            var yearEnd = EndDate.getFullYear();
+            var monthEnd = EndDate.getMonth() + 1;
+            var dayEnd = EndDate.getDate();
+            const endRegistration = yearEnd+"-"+monthEnd+"-"+dayEnd;
+
+            //ini baru bagian yang wajib diisi
+            let formData = new FormData();
+            formData.append('RaceName', this.name);
+            formData.append('RaceDesc', this.description);
+            formData.append('StartLocation[name]', this.city);
+            formData.append('StartTime', startTime);
+            formData.append('Distance', this.distance);
+            formData.append('RegistrationFee', this.price);
+            formData.append('isPublished', this.isPublish);
+            if(this.albumId != ""){
+                formData.append('AlbumId', this.albumId);
+            }
+            formData.append('StartDateRegistration', startRegistration);
+            formData.append('EndDateRegistration', endRegistration);
+            formData.append('file', this.photo);
+
+            console.log(this.albumId);
+            
+            console.log([...formData]);
+            axios
+            .put(import.meta.env.VITE_API_URI + "/Race/" + this.id, formData, config)
+            .then((response) => {
+
+                // Reload page when success.
+                this.showForm = false;
+                location.reload()
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        },
     }
 }
 </script>

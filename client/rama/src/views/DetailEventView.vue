@@ -1,89 +1,90 @@
 <template>
     <div class="detail-event">
         <AdminSidebar class="sidebar"/>
-        <AdminEventDetailEdit v-if="showForm" />
+        <AdminEventDetailEdit v-if="showForm" @cancel="toogleForm" />
         <div class="layout">
-            <div class="buttons-container">
-                <div class="edit-button-container">
-                    <button class="edit-button" @click="toggleForm()" >EDIT</button> 
-                </div>
-                    <!-- END OF POP UP FORM -->
-                <div class="delete-button-container">
-                    <button class="delete-button" @click="showDeleteForm = true">DELETE</button>
-                    <div class="delete-form-overlay" v-if="showDeleteForm">
-                        <div class="delete-form">
-                            <p>Are you sure you want to delete this event?</p>
-                            <div class="delete-form-buttons">
-                                <button class="delete-form-button cancel" @click="showDeleteForm = false">Cancel</button>
-                                <button class="delete-form-button confirm" @click="deleteRace">Confirm</button>
+            <div class="tabs">
+            </div>
+            <div class="body">
+                <div class="buttons-container">
+                    <div class="edit-button-container">
+                        <button class="edit-button" @click="toggleForm()" >EDIT</button> 
+                    </div>
+                        <!-- END OF POP UP FORM -->
+                    <div class="delete-button-container">
+                        <button class="delete-button" @click="showDeleteForm = true">DELETE</button>
+                        <div class="delete-form-overlay" v-if="showDeleteForm">
+                            <div class="delete-form">
+                                <p>Are you sure you want to delete this event?</p>
+                                <div class="delete-form-buttons">
+                                    <button class="cancel" @click="showDeleteForm = false">Cancel</button>
+                                    <button class="confirm" @click="deleteRace">Confirm</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="participant-button-container">
-                    <router-link :to="{params: {id : this.id}, name: 'EventRegistrant'}"><button class="participant-button">Event Registrant</button></router-link>
-                </div>
-            </div>
-            <div class="image-container">
-                <input
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    @change="changePhoto"
-                    style="display: none"
-                />
-                <img :src="basePreviewImageUrl" />
-                <div class="edit-image" @click="uploadPhoto">
-                    <div class="circle"></div>
-                </div>
-            </div>
-            <div class="information-container">
-                <div class="row-one">
-                    <div class="race-name">
-                        <label class="label-race-name">Name</label>
-                        <div class="race-name-container">
-                            <p v-text="this.event.raceName"></p>
-                        </div>
-                    </div>
-                    <div class="race-date">
-                        <label class="label-race-date">Date</label>
-                        <div class="race-date-container">
-                            <p v-text="this.event.startTime?.slice(0,10)"></p>
-                        </div>
+                <div class="image-container">
+                    <input
+                        type="file"
+                        id="image"
+                        accept="image/*"
+                        @change="changePhoto"
+                        style="display: none"
+                    />
+                    <img :src="basePreviewImageUrl" />
+                    <div class="edit-image" @click="uploadPhoto">
+                        <div class="circle"></div>
                     </div>
                 </div>
-                <div class="row-two">
-                    <div class="race-province">
-                        <label class="label-race-province">Province</label>
-                        <div class="race-province-container">
-                            <p v-text="this.event.startLocation?.name"></p>
+                <div class="information-container">
+                    <div class="row-one">
+                        <div class="race-name">
+                            <label class="label-race-name">Name</label>
+                            <div class="race-name-container">
+                                <p v-text="this.event.raceName"></p>
+                            </div>
+                        </div>
+                        <div class="race-date">
+                            <label class="label-race-date">Date</label>
+                            <div class="race-date-container">
+                                <p v-text="this.event.startTime?.slice(0,10)"></p>
+                            </div>
                         </div>
                     </div>
-                    <div class="race-city">
-                        <label class="label-race-city">City</label>
-                        <div class="race-city-container">
-                            <p v-text="this.event.startLocation?.name"></p>
+                    <div class="row-two">
+                        <div class="race-province">
+                            <label class="label-race-province">Province</label>
+                            <div class="race-province-container">
+                                <p v-text="this.event.startLocation?.name"></p>
+                            </div>
+                        </div>
+                        <div class="race-city">
+                            <label class="label-race-city">City</label>
+                            <div class="race-city-container">
+                                <p v-text="this.event.startLocation?.name"></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row-three">
-                    <div class="race-start-regis">
-                        <label class="label-race-start-regis">Start Date Registration</label>
-                        <div class="race-start-regis-container">
-                            <p v-text="this.event.startDateRegistration"></p>
+                    <div class="row-three">
+                        <div class="race-start-regis">
+                            <label class="label-race-start-regis">Start Date Registration</label>
+                            <div class="race-start-regis-container">
+                                <p v-text="this.event.startDateRegistration"></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="race-end-regis">
-                        <label class="label-race-end-regis">End Date Registration</label>
-                        <div class="race-end-regis-container">
-                            <p v-text="this.event.endDateRegistration"></p>
+                        <div class="race-end-regis">
+                            <label class="label-race-end-regis">End Date Registration</label>
+                            <div class="race-end-regis-container">
+                                <p v-text="this.event.endDateRegistration"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <h2>Course Map</h2>
-            <div class="maps">
-                <img src="/maps.png" alt="maps maraton" id="maps-image" />
+                <h2>Course Map</h2>
+                <div class="maps">
+                    <img src="/maps.png" alt="maps maraton" id="maps-image" />
+                </div>
             </div>
         </div>
     </div>
@@ -111,6 +112,15 @@ export default {
             previewImageUrl: "",
             basePreviewImageUrl:"", 
             showDeleteForm : false,
+            name: "", 
+            city: "", 
+            startDate: "",
+            startLocation: "",
+            latitude: "",
+            longitude: "",
+            courseMap: "",
+            isPublish:false,
+            price: "",
             description: "",
             startRegis: "",
             endRegis: "",
@@ -151,16 +161,13 @@ export default {
                     this.price = this.event.registrationFee;
                     this.previewImageUrl = this.event.raceThumbnail.url;
                     this.basePreviewImageUrl = this.event.raceThumbnail.url;
-                    // for debug
-                    // console.log(this.event);
-                    // console.log(this.events[0].raceName);
-                    // console.log(this.event);
                 }
             })
             .catch((err) => {
                 console.log(err);
             });
         }, toggleForm() {
+            console.log("Tes")
             this.showForm = !this.showForm;
             if (this.showForm) {
                 // add event listener to close form on escape key press
@@ -188,65 +195,7 @@ export default {
                     console.log(response);
                 }else{
                     this.$router.push("/event");
-                    // for debug
-                    // console.log(this.event);
-                    // console.log(this.events[0].raceName);
                 }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        }, saveEvent() {
-            const token = localStorage.getItem("token");
-
-            // Configuration for API
-            const config = {
-                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
-            };
-
-            // Convert local time to UTC time
-            const startTime = new Date(this.startDate).toISOString();
-
-            //convert start registration date to object format
-            const regisDate = new Date(this.startRegis);
-            var yearRegis = regisDate.getFullYear();
-            var monthRegis = regisDate.getMonth() + 1;
-            var dayRegis = regisDate.getDate();
-            const startRegistration = yearRegis+"-"+monthRegis+"-"+dayRegis;
-
-            //convert end registration date to object format
-            const EndDate = new Date(this.endRegis);
-            var yearEnd = EndDate.getFullYear();
-            var monthEnd = EndDate.getMonth() + 1;
-            var dayEnd = EndDate.getDate();
-            const endRegistration = yearEnd+"-"+monthEnd+"-"+dayEnd;
-
-            //ini baru bagian yang wajib diisi
-            let formData = new FormData();
-            formData.append('RaceName', this.name);
-            formData.append('RaceDesc', this.description);
-            formData.append('StartLocation[name]', this.city);
-            formData.append('StartTime', startTime);
-            formData.append('Distance', this.distance);
-            formData.append('RegistrationFee', this.price);
-            formData.append('isPublished', this.isPublish);
-            if(this.albumId != ""){
-                formData.append('AlbumId', this.albumId);
-            }
-            formData.append('StartDateRegistration', startRegistration);
-            formData.append('EndDateRegistration', endRegistration);
-            formData.append('file', this.photo);
-
-            console.log(this.albumId);
-            
-            console.log([...formData]);
-            axios
-            .put(import.meta.env.VITE_API_URI + "/Race/" + this.id, formData, config)
-            .then((response) => {
-
-                // Reload page when success.
-                this.showForm = false;
-                location.reload()
             })
             .catch((err) => {
                 console.log(err);
@@ -289,6 +238,7 @@ export default {
     grid-template-columns: 333px auto;
     grid-template-areas: 
     "sidebar main";
+    min-height: 100vh;
 }
 .sidebar {
     grid-area: sidebar;
@@ -297,6 +247,16 @@ export default {
 } 
 .layout {
     grid-area: main;
+    display: grid;
+    grid-template-rows: 70px auto;
+    grid-template-areas: 
+    "tabs"
+    "body"
+}
+.tabs {
+    grid-area: tabs;
+    display: flex;
+    align-items: center;
     background: #fff;
     width: 100%;
     margin: 30px 20px 30px 20px;
@@ -304,9 +264,21 @@ export default {
     justify-content: center;
     border-radius: 15px;
 }
-
+.body {
+    grid-area: body;
+    background: #fff;
+    width: 100%;
+    margin: 30px 20px 30px 20px;
+    position: absolute;
+    justify-content: center;
+    border-radius: 15px;
+}
+.buttons-container {
+    display: flex;
+    align-items: center;
+    column-gap: 100px
+}
 .edit-button {
-    margin-top: 2%;
     height: 30px;
     width: 100px;
     background: #000;
@@ -319,20 +291,12 @@ export default {
     cursor:pointer;
     transition:0.3s;
 }
-.buttons-container {
-    position: absolute;
-    right:20px;
-    top:20px;
-    text-align: center;
-    z-index: 1;
-}
 .edit-button:hover {
     background-color: #1d1c1c;
 }
 
 .delete-button-container{
     width: 100%;
-    margin-top:10px;
 }
 
 .delete-button{
