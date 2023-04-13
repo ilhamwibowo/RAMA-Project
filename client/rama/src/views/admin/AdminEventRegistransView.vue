@@ -2,11 +2,16 @@
     <div class="layout">
         <AdminSidebar class="sidebar"/>
         <div class="body">
+            <div class="tabs">
+                <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'event'}">Detail Event</RouterLink> 
+                <RouterLink class="tab" :to="{params: {id: this.id}, name: 'EventRegistrant'}">Registrant</RouterLink> 
+                <RouterLink class="back" to="/event" ><img src="/left-arrow.png"></RouterLink>
+            </div>
             <div class="search">
                 <input type="text" id="input-search"/>
                 <button @click="search($event)">Search</button>
             </div>
-            <EventRegistrantTable :id="this.id" :data="this.registrans" :names="this.names"/>
+            <EventRegistrantTable class="content" :id="this.id" :data="this.registrans" :names="this.names"/>
         </div>
     </div>
 </template>
@@ -83,6 +88,7 @@ export default {
     grid-template-columns: 333px auto;
     grid-template-areas: 
     "sidebar main";
+    min-height: 100vh;
 }
 
 .sidebar {
@@ -91,8 +97,51 @@ export default {
 
 .body {
     grid-area: main;
+    display: grid;
+    margin:40px 50px 40px 40px;
+    grid-template-rows: 70px 70px auto;
+    row-gap: 20px;
+    grid-template-areas: 
+    "tabs"
+    "search"
+    "content"
+}
+.tabs {
+    grid-area: tabs;
+    display: flex;
+    column-gap: 100px;
+    align-items: center;
+    background: #fff;
+    padding: 5px 20px 10px 80px;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    font-family: 'Darker Grotesque';
+    font-size: 30px;
+}
+
+.tabs .tab {
+    text-decoration: none;
+    color: black;
+}
+
+.page {
+    font-weight: 700;
+}
+
+.back {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    cursor: pointer;
 }
 .search {
+    grid-area: search;
     text-align: center;
+}
+.content {
+    grid-area: content;
 }
 </style>
