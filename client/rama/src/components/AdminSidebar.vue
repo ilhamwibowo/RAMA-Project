@@ -6,8 +6,8 @@
         <div class="list">
             <AdminSidebarList iconSrc="/dashboard-icon.png" text="Dashboard" />
             <AdminSidebarList iconSrc="/accounts-icon.png" text="Accounts" />
-            <AdminSidebarList iconSrc="/events-page-icon.png" text="Events" isPage="true"/>
-            <AdminSidebarList iconSrc="/album-icon.png" text="Album" />
+            <RouterLink class="link" to="/event"><AdminSidebarList iconSrc="/events-page-icon.png" text="Events" isPage="true"/></RouterLink>
+            <RouterLink class="link" to="/albumAdmin"><AdminSidebarList iconSrc="/album-icon.png" text="Album" /></RouterLink>
         </div>
     </div>
 </template>
@@ -45,5 +45,9 @@ export default {
     display: flex;
     flex-direction: column;
     row-gap: 38px;
+}
+
+.link {
+    text-decoration: none;
 }
 </style>
