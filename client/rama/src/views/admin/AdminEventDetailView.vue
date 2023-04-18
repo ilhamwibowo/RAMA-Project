@@ -4,7 +4,7 @@
         <AdminEventDetailEdit v-if="showForm" @cancel="toogleForm" />
         <div class="layout">
             <div class="tabs">
-                <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'event'}">Detail Event</RouterLink> 
+                <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'detailEvent'}">Detail Event</RouterLink> 
                 <RouterLink class="tab" :to="{params: {id: this.id}, name: 'EventRegistrant'}">Registrant</RouterLink> 
                 <RouterLink class="back" to="/event" ><img src="/left-arrow.png"></RouterLink>
             </div>

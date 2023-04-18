@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
+        // User
         {
             path: "/",
             name: "home",
@@ -50,6 +51,18 @@ const router = createRouter({
             component: () => import("../views/user/AlbumView.vue")
         },
         {
+            path: "/events",
+            name: "userEvent",
+            component: () => import("../views/user/UserEventView.vue")
+        },
+        {
+            path: "/events/:id",
+            name: "userEventDetail",
+            component: () => import("../views/user/UserEventDetail.vue")
+        },
+
+        // Admin
+        {
             path: "/event",
             name: "event",
             component: () => import("../views/admin/AdminEventView.vue")
@@ -73,16 +86,6 @@ const router = createRouter({
             path: "/listPhoto/:id",
             name: "listPhoto",
             component: () => import("../views/admin/AdminAlbumPhotoView.vue")
-        },
-        {
-            path: "/events",
-            name: "userEvent",
-            component: () => import("../views/user/UserEventView.vue")
-        },
-        {
-            path: "/events/:id",
-            name: "userEventDetail",
-            component: () => import("../views/user/UserEventDetail.vue")
         },
         { 
             path: "/registrant/:id",

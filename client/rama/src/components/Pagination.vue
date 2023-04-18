@@ -1,6 +1,6 @@
 <template>
     <div class="pagination">
-        <button @click="onClickPrev" id="btn-prev"><img src="left-arrow.png" /></button>
+        <button @click="onClickPrev" id="btn-prev"><img src="/left-arrow.png" /></button>
         <button
             v-for="n in this.totalPage"
             :key="n"
@@ -10,7 +10,7 @@
         >
             {{ n }}
         </button>
-        <button @click="onClickNext" id="btn-next"><img src="right-arrow.png" /></button>
+        <button @click="onClickNext" id="btn-next"><img src="/right-arrow.png" /></button>
         <select id="pager" @change="onClickPager">
             <option value="10">10</option>
             <option value="20">20</option>

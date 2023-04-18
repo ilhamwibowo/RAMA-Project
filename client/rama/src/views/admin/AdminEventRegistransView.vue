@@ -3,7 +3,7 @@
         <AdminSidebar class="sidebar"/>
         <div class="body">
             <div class="tabs">
-                <RouterLink class="tab" :to="{params: {id: this.id}, name: 'event'}">Detail Event</RouterLink> 
+                <RouterLink class="tab" :to="{params: {id: this.id}, name: 'detailEvent'}">Detail Event</RouterLink> 
                 <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'EventRegistrant'}">Registrant</RouterLink> 
                 <RouterLink class="back" to="/event" ><img src="/left-arrow.png"></RouterLink>
             </div>
@@ -11,16 +11,24 @@
                 <input type="text" id="input-search"/>
                 <button @click="search($event)">Search</button>
             </div>
-            <EventRegistrantTable class="content" :id="this.id" :data="this.registrans" :names="this.names"/>
+            <EventRegistrantTable class="content" :id="this.id" :data="this.registransShow" :names="this.names"/>
+            <Pagination 
+                class="pagination"
+                :totalPage="totalPage"
+                :pager="pager"
+                :page="page"
+                @changePage="updatePage"
+                @changePager="updatePager"
+            />
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import EventRegistrantTable from '@/components/EventRegistrantTable.vue';
-import axios from 'axios';
-
+import Pagination from '../../components/Pagination.vue';
 
 export default {
     name: "EventRegistransView",
@@ -28,8 +36,20 @@ export default {
         return {
             registrans: [],
             names: [],
-            id :this.$route.params.id
+            id :this.$route.params.id,
+            page: 1,
+            pager: 1,
+            totalPage: 10,
+            totalRegistrans: 0,
+            paginationKey: 0,
+            registransShow: [],
         };
+    },
+    
+    components: {
+        AdminSidebar,
+        EventRegistrantTable,
+        Pagination
     },
     methods : {
             async getData(query=""){
@@ -40,17 +60,17 @@ export default {
                     headers: { Authorization: `Bearer ${token}` }
                 };
 
-                axios
+                await axios
                 .get(import.meta.env.VITE_API_URI + `/Registration/all/${this.id}?query=${encodeURI(query.toLowerCase())}`, config)
                 .then((response) => {
-                    this.registrans = response.data.histories
+                    console.log("Response: ", response.data);
+                    this.registrans = response.data.histories;
                 }).
                 then( () =>
                     {
                         this.registrans.forEach((e, i) => {
                             axios.get(import.meta.env.VITE_API_URI + `/user/${e.accId}`, config)
                             .then((response) => {
-                                console.log(response.data)
                                 this.names[i] = response.data.name
                             })
                             .catch((err) => {
@@ -62,20 +82,47 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+
+                /** Pagination */
+                this.totalRegistrans = this.registrans.length;
+                this.updatePage(this.page);
+                this.updatePager(this.pager);
             },
         search(event){
             let query = document.getElementById("input-search").value;
             this.getData(query)
-        }
+        },
+        
+        /** Pagination */
+        updatePage(n) {
+            this.page = n;
 
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            console.log(this.registrans);
+            this.registransShow = this.registrans.slice(start, end);
+
+            console.log("Page", this.page)
+        },
+        updatePager(n) {
+            this.pager = n;
+            this.totalPage = Math.ceil(this.totalRegistrans / this.pager);
+            
+            let page = this.page;
+            let pager = this.pager;
+            
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.registransShow = this.registrans.slice(start, end);
+            console.log("Pager", this.pager)
+        }
     },
-    mounted(){
+    created(){
          this.getData()
     },
-    components: {
-        AdminSidebar,
-        EventRegistrantTable
-    }
 };
 </script>
 
