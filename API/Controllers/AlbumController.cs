@@ -38,7 +38,7 @@ namespace API.Controllers
 
             if (album == null) return NotFound("Album Not Found");
             
-            var result = await _photoService.AddPhototoAlbumAsync(file, album.AlbumName);
+            var result = await _photoService.AddPhotoAlbumAsync(file, album.AlbumName);
 
             if (result.Error != null) return BadRequest(result.Error.Message);
 
