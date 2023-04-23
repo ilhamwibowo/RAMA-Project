@@ -39,7 +39,7 @@ namespace API.Services
 
             return uploadResult;
         }
-        public async Task<ImageUploadResult> AddPhototoAlbumAsync(IFormFile file, string AlbumName)
+        public async Task<ImageUploadResult> AddPhotoAlbumAsync(IFormFile file, string AlbumName)
         {
             var uploadResult = new ImageUploadResult();
 

@@ -49,7 +49,7 @@ namespace API.Controllers
             if (raceDto.photoFile != null)
             {
                 if (!IPhotoService.isImage(raceDto.photoFile.FileName)) return BadRequest("File must be an Image");
-                var photoUpload = await _photoService.AddPhotoAsync(raceDto.photoFile);
+                var photoUpload = await _photoService.AddPhototoAlbumAsync(raceDto.photoFile, "RaceThumbnails");
                 if (photoUpload.Error != null) return BadRequest(photoUpload.Error.Message);
 
                 race.RaceThumbnail = new Photo
