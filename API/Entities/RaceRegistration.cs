@@ -25,6 +25,8 @@ namespace API.Entities
 
         public DateTime PaidAt{get; set;}
         public DateTime TakenKitAt{get; set;}
+
+        public string RFID {get; set;}
         
         public string GetStatusAsText()
         {

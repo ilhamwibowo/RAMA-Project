@@ -3,7 +3,7 @@
     <NavigationBar class="navbar" />
     <div class="body">
       <div class="header">
-        <img src="eventHeader.png" alt="Header Image" />
+        <img src="/eventHeader.png" alt="Header Image" />
         <h1 class="header-title">Where does running take you next?</h1>
       </div>
   

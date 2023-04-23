@@ -15,7 +15,7 @@
                     placeholder=""
                 />
                 <div class="alert" id="invalid-email" v-if="invalidEmail">
-                    <img src="alert.png">
+                    <img src="/alert.png">
                     <p>{{ invalidEmail }}</p>
                 </div>
             </div>
@@ -31,21 +31,21 @@
                         placeholder=""
                     />
                     <button type="button" id="show-pw" v-on:click="tooglePassword()">
-                        <img src="unshow.png" alt="open eye" v-if="!showPw" />
+                        <img src="/unshow.png" alt="open eye" v-if="!showPw" />
                         <img
-                            src="show.png"
+                            src="/show.png"
                             alt="close eye"
                             v-if="showPw"
                         />
                     </button>
                 </div>
                 <div class="alert" id="invalid-password" v-if="invalidPassword">
-                    <img src="alert.png">
+                    <img src="/alert.png">
                     <p>{{ invalidPassword }}</p>
                 </div>
             </div>
             <div class="alert" id="login-response" v-if="response">
-                <img src="alert.png">
+                <img src="/alert.png">
                 <p>{{ response }}</p>
             </div>
             <div id="forgot-password">
