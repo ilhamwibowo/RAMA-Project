@@ -4,10 +4,10 @@
             <h1>RAMA</h1>
         </div>
         <div class="list">
-            <AdminSidebarList iconSrc="/dashboard-icon.png" text="Dashboard" />
-            <AdminSidebarList iconSrc="/accounts-icon.png" text="Accounts" />
-            <RouterLink class="link" to="/event"><AdminSidebarList iconSrc="/events-page-icon.png" text="Events" isPage="true"/></RouterLink>
-            <RouterLink class="link" to="/albumAdmin"><AdminSidebarList iconSrc="/album-icon.png" text="Album" /></RouterLink>
+            <AdminSidebarList iconSrc="/dashboard-icon.png" text="Dashboard" :isPage="dashboard" />
+            <AdminSidebarList iconSrc="/accounts-icon.png" text="Accounts" :isPage="account" />
+            <RouterLink class="link" to="/event"><AdminSidebarList iconSrc="/events-icon.png" text="Events" :isPage="event"/></RouterLink>
+            <RouterLink class="link" to="/albumAdmin"><AdminSidebarList iconSrc="/album-icon.png" text="Album" :isPage="album"/></RouterLink>
         </div>
     </div>
 </template>
@@ -18,6 +18,12 @@ export default {
     name: "AdminSidebar",
     components: {
         AdminSidebarList
+    },
+    props: {
+        dashboard: false,
+        account: false,
+        event: false,
+        album: false
     }
 }
 </script>

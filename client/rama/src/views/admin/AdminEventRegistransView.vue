@@ -1,6 +1,6 @@
 <template>
     <div class="layout">
-        <AdminSidebar class="sidebar"/>
+        <AdminSidebar class="sidebar" event="true"/>
         <div class="body">
             <div class="tabs">
                 <RouterLink class="tab" :to="{params: {id: this.id}, name: 'detailEvent'}">Detail Event</RouterLink> 

@@ -1,6 +1,6 @@
 <template>
     <div class="list-sidebar">
-        <img class="icon" :src="iconSrc">
+        <img class="icon" :src="imageSrc">
         <p v-if="isPage" class="text" style="color: black;">{{ text }}</p>        
         <p v-else class="text" style="color: #A4A4A4;">{{ text }}</p>        
     </div>
@@ -13,6 +13,24 @@ export default {
         iconSrc: String,
         text: String,
         isPage: Boolean
+    },
+    data() {
+        return {
+            imageSrc: "",
+        }
+    },
+    created() {
+        if (this.isPage)
+        {
+            console.log(this.iconSrc);
+            let index = this.iconSrc.indexOf("-");
+            this.imageSrc = this.iconSrc.substring(0, index) + "-page" + this.iconSrc.substring(index);
+            console.log(this.imageSrc);
+        } 
+        else 
+        {
+            this.imageSrc = this.iconSrc;
+        }
     }
 }
 </script>

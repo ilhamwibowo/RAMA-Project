@@ -1,6 +1,6 @@
 <template>
     <div class="layout">
-        <AdminSidebar class="sidebar"/>
+        <AdminSidebar class="sidebar" event="true"/>
         <div class="main">
             <div class="header">
                 <div class="title-page-container">
