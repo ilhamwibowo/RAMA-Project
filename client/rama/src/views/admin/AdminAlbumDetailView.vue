@@ -1,33 +1,32 @@
 <template>
     <div class="detail-album">
         <AdminSidebar class="sidebar"/>
-        <!-- <div class="bar">
-            <div class="detail-album-container">
-                <h2>Detail Album</h2>
-            </div>
-            <div class="list-Photo-container">
-                <h2>Liat Photo</h2>
-            </div>
-        </div> -->
         <div class="layout">
-            <div class="edit-button-container">
-                <button class="edit-button" >EDIT</button>
+            <div class="tabs">
+                <RouterLink class="back" :to="{ name: 'albumAdmin'}" ><img src="/left-arrow.png"></RouterLink>
+                <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'albumDetail'}">Detail Album</RouterLink> 
+                <RouterLink class="tab" :to="{params: {id: this.id}, name: 'listPhoto'}">List Photo</RouterLink> 
             </div>
-            <div class="photos-button-container">
-                <button class="photos-button">PHOTOS</button>
-            </div>
-            <div class="information-container">
-                <div class="row">
-                    <div class="album-name">
-                        <label class="label-album-name">Name</label>
-                        <div class="album-name-container">
-                            <p></p>
+            <div class="body">
+                <div class="edit-button-container">
+                    <button class="edit-button" >EDIT</button>
+                </div>
+                <div class="photos-button-container">
+                    <button class="photos-button">PHOTOS</button>
+                </div>
+                <div class="information-container">
+                    <div class="row">
+                        <div class="album-name">
+                            <label class="label-album-name">Name</label>
+                            <div class="album-name-container">
+                                <p></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="album-status">
-                        <label class="label-album-status">Status</label>
-                        <div class="album-status-container">
-                            <p></p>
+                        <div class="album-status">
+                            <label class="label-album-status">Status</label>
+                            <div class="album-status-container">
+                                <p></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,10 +98,52 @@ export default {
 } 
 .layout {
     grid-area: main;
+    display: grid;
+    margin:40px 50px 40px 40px;
+    grid-template-rows: 70px auto;
+    row-gap: 20px;
+    grid-template-areas: 
+    "tabs"
+    "body"
+}
+
+.tabs {
+    grid-area: tabs;
+    display: flex;
+    column-gap: 100px;
+    align-items: center;
     background: #fff;
+    padding: 5px 20px 10px 125px;
     width: 100%;
-    margin: 30px 20px 30px 20px;
+    height: 100%;
+    border-radius: 15px;
+    font-family: 'Darker Grotesque';
+    font-size: 30px;
+}
+
+.tabs .tab {
+    text-decoration: none;
+    color: black;
+}
+
+.page {
+    font-weight: 700;
+}
+
+.back {
     position: absolute;
+    top: 15px;
+    left: 25px;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    cursor: pointer;
+}
+
+.body {
+    grid-area: body;
+    background: #fff;
+    padding: 30px 20px 30px 20px;
+    width: 100%;
     justify-content: center;
     border-radius: 15px;
 }

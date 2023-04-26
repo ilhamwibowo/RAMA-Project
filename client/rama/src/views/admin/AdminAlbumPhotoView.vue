@@ -2,18 +2,25 @@
     <div class="album-photo">
         <AdminSidebar class="sidebar"/>
         <div class="layout">
-            <div class="upload-button-container">
-                <button class="upload-button">Upload</button>
+            <div class="tabs">
+                <RouterLink class="back" :to="{ name: 'albumAdmin'}" ><img src="/left-arrow.png"></RouterLink>
+                <RouterLink class="tab" :to="{params: {id: this.id}, name: 'albumDetail'}">Detail Album</RouterLink> 
+                <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'listPhoto'}">List Photo</RouterLink> 
             </div>
-            <div class="delete-button-container">
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="header">
-                <input type="checkbox" name="select-all">
-                <label for="select-all">select all</label>
-            </div>
-            <div class="photo-container">
-                <h1>disini foto</h1>
+            <div class="body">
+                <div class="upload-button-container">
+                    <button class="upload-button">Upload</button>
+                </div>
+                <div class="delete-button-container">
+                    <button class="delete-button">Delete</button>
+                </div>
+                <div class="header">
+                    <input type="checkbox" name="select-all">
+                    <label for="select-all">select all</label>
+                </div>
+                <div class="photo-container">
+                    <h1>disini foto</h1>
+                </div>
             </div>
         </div>
     </div>
@@ -58,10 +65,52 @@ export default {
 } 
 .layout {
     grid-area: main;
+    display: grid;
+    margin:40px 50px 40px 40px;
+    grid-template-rows: 70px auto;
+    row-gap: 20px;
+    grid-template-areas: 
+    "tabs"
+    "body"
+}
+
+.tabs {
+    grid-area: tabs;
+    display: flex;
+    column-gap: 100px;
+    align-items: center;
     background: #fff;
+    padding: 5px 20px 10px 125px;
     width: 100%;
-    margin: 30px 20px 30px 20px;
+    height: 100%;
+    border-radius: 15px;
+    font-family: 'Darker Grotesque';
+    font-size: 30px;
+}
+
+.tabs .tab {
+    text-decoration: none;
+    color: black;
+}
+
+.page {
+    font-weight: 700;
+}
+
+.back {
     position: absolute;
+    top: 15px;
+    left: 25px;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    cursor: pointer;
+}
+
+.body {
+    grid-area: body;
+    background: #fff;
+    padding: 30px 20px 30px 20px;
+    width: 100%;
     justify-content: center;
     border-radius: 15px;
 }
