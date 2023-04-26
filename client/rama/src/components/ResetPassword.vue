@@ -2,7 +2,7 @@
     <div class="layout">
         <NavigationBar class="navbar" />
         <div class="reset-image">
-            <img src="forgotPasswordImage.png" alt="loginImage" />
+            <img src="/forgotPasswordImage.png" alt="loginImage" />
         </div>
         <div class="reset-form">
             <div class="title">
@@ -31,7 +31,7 @@
                     />
                 </div>
                 <div class="alert" id="invalid-password" v-if="invalidPassword">
-                    <img src="alert.png">
+                    <img src="/alert.png">
                     <p>{{ invalidPassword }}</p>
                 </div>
     
@@ -41,7 +41,7 @@
                 </div>
     
                 <div class="alert" id="request-response" v-if="response">
-                    <img src="alert.png">
+                    <img src="/alert.png">
                     <p>{{ response }}</p>
                 </div>
                 <div id="reset-button">

@@ -16,7 +16,7 @@
                 />
             </div>
             <div class="alert" id="invalid-email" v-if="invalidEmail">
-                <img src="alert.png">
+                <img src="/alert.png">
                 <p>{{ invalidEmail }}</p>
             </div>
             <div class="form" id="password">
@@ -32,12 +32,12 @@
                     />
                     <button type="button" id="show-pw" v-on:click="tooglePassword()">
                         <img
-                            src="unshow.png"
+                            src="/unshow.png"
                             alt="open eye"
                             v-if="!showPw"
                         />
                         <img
-                            src="show.png"
+                            src="/show.png"
                             alt="close eye"
                             v-if="showPw"
                         />
@@ -61,12 +61,12 @@
                         v-on:click="tooglePasswordConfirm()"
                     >
                         <img
-                            src="unshow.png"
+                            src="/unshow.png"
                             alt="open eye"
                             v-if="!showPwConfirm"
                         />
                         <img
-                            src="show.png"
+                            src="/show.png"
                             alt="close eye"
                             v-if="showPwConfirm"
                         />
@@ -74,11 +74,11 @@
                 </div>
             </div>
             <div class="alert" id="invalid-password" v-if="invalidPassword">
-                <img src="alert.png">
+                <img src="/alert.png">
                 <p>{{ invalidPassword }}</p>
             </div>
             <div class="alert" id="register-response" v-if="response">
-                <img src="alert.png">
+                <img src="/alert.png">
                 <p>{{ response }}</p>
             </div>
             <div id="register-button">

@@ -2,7 +2,7 @@
     <div class="layout">
         <NavigationBar class="navbar"/>
         <div class="recovery-image">
-            <img src="forgotPasswordImage.png" alt="loginImage" />
+            <img src="/forgotPasswordImage.png" alt="loginImage" />
         </div>
         <div class="form-container">
             <div class="title">
@@ -20,11 +20,11 @@
                     <input class="input" type="text" name="email" v-model="email" />
                 </div>
                 <div class="alert" id="invalid-email" v-if="invalidEmail">
-                    <img src="alert.png">
+                    <img src="/alert.png">
                     <p>{{ invalidEmail }}</p>
                 </div>
                 <div class="alert" id="request-response" v-if="response">
-                    <img src="alert.png">
+                    <img src="/alert.png">
                     <p>{{ response }}</p>
                 </div>
                 <div id="recover-button">

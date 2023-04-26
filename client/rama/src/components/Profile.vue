@@ -22,7 +22,7 @@
         </div>
 
         <div class="container-bg">
-            <img src="profile-background.png">
+            <img src="/profile-background.png">
         </div>
     </div>
 </template>
@@ -80,7 +80,7 @@ export default {
             });
 
         // handle if there is no image
-        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "profile.png";
+        this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "/profile.png";
     }
 };
 </script>

@@ -17,5 +17,8 @@ namespace API.Entities
         public TimeSpan Duration {get; set;}
 
         public DateTime FinishTime{get; set;}
+        public string RFID {get; set;}
+
+        public Dictionary<Location, DateTime> CheckPoints = new Dictionary<Location, DateTime>();
     }
 }

@@ -10,9 +10,7 @@ namespace API.Extensions
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<DataContext>(
-                options => options.UseNpgsql(config.GetConnectionString("DefaultConnection"))
-            );
+            
             services.AddScoped<ITokenService, TokenService>();
             services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
             services.AddTransient<IEmailService, EmailService>();

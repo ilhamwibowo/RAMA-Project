@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="successful-recovery">
-        <img src="check.png">
+        <img src="/check.png">
         <div class="title">
             <h1>Your password has been reset!</h1>
         </div>

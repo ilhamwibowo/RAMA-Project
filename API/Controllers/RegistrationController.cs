@@ -151,7 +151,7 @@ namespace API.Controllers
         [HttpPut("{RaceId}/{AccId}")]
         public async Task<ActionResult> UpdateRaceRegistration(Guid RaceId, Guid AccId, RaceRegistDto rrDto)
         {
-            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
+            var requester = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
 
             if (requester == null || requester.Role != "Admin") return Unauthorized();
@@ -163,6 +163,17 @@ namespace API.Controllers
             rr.Status = rrDto.Status;
             if (rr.Status.Equals(RaceRegistration.PaymentStatus.Paid)) rr.PaidAt = DateTime.UtcNow;
             if (rr.Status.Equals(RaceRegistration.PaymentStatus.TakenKit)) rr.TakenKitAt = DateTime.UtcNow;
+            if (rrDto.RFID != null) {
+                rr.RFID = rrDto.RFID;
+                RaceAttendance ra = new RaceAttendance 
+                {
+                    RaceId = RaceId,
+                    Runner = requester,
+                    BibNumber = await GenerateBibNumber("", 5, RaceId),
+                };
+                ra.RFID = rrDto.RFID;
+                _context.RaceAttendances.Update(ra);
+            }
             rr.RegistrationFee = rrDto.RegistrationFee;
             
             _context.RaceRegistrations.Update(rr);
@@ -188,6 +199,21 @@ namespace API.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+        private async Task<string> GenerateBibNumber(string prefix, int len, Guid RaceId)
+        {
+            Random rnd = new Random();
+            string BibNumber;
+            do {
+                int rint = rnd.Next(0, (int) Math.Pow(10, len) - 1);
+                BibNumber = prefix + rint.ToString();
+            } while (await CheckBibTagExist(BibNumber, RaceId));
+            return BibNumber;
+        }
 
+        private async Task<bool> CheckBibTagExist(string bib, Guid RaceId)
+        {
+            var check = await _context.Races.Select(x => new {x.RaceId, x.RaceAttendee}).FirstOrDefaultAsync(x => x.RaceAttendee.Any(ra => ra.BibNumber == bib));
+            return check == null;
+        }
     }
 }

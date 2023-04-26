@@ -1,7 +1,7 @@
 <template>
     <div class="search">
         <input type="text" id="input-search" v-model="keySearch" @input="sendInput" />
-        <img src="search.png" id="img-search" />
+        <img src="/search.png" id="img-search" />
     </div>
 </template>
 

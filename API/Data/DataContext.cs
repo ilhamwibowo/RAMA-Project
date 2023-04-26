@@ -68,5 +68,7 @@ namespace API.Data
         public DbSet<Photo> Photo { get; set; }
 
         public DbSet<Race> Races { get; set; }
+
+        public DbSet<RaceAttendance> RaceAttendances{ get; set; }
     }
 }

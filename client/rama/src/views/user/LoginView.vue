@@ -2,7 +2,7 @@
     <div class="layout">
         <NavigationBar class="navbar"/>
         <div class="login-image">
-            <img src="loginImage.png" alt="loginImage" />
+            <img src="/loginImage.png" alt="loginImage" />
         </div>
         <Login class="login-form"/>
     </div>

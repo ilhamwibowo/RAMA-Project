@@ -2,7 +2,7 @@
     <div class="layout">
         <NavigationBar class="navbar"/>
         <div class="register-image">
-            <img src="registerImage.png" alt="registerImage" />
+            <img src="/registerImage.png" alt="registerImage" />
         </div>
         <Register class="register-form" />
     </div>
