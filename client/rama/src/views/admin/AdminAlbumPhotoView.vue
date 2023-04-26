@@ -51,6 +51,7 @@ export default {
     grid-template-columns: 333px auto;
     grid-template-areas: 
     "sidebar main";
+    min-height: 100vh;
 }
 .sidebar {
     grid-area: sidebar;
