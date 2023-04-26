@@ -8,19 +8,33 @@
                 <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'listPhoto'}">List Photo</RouterLink> 
             </div>
             <div class="body">
-                <div class="upload-button-container">
-                    <button class="upload-button">Upload</button>
-                </div>
-                <div class="delete-button-container">
-                    <button class="delete-button">Delete</button>
+                <div class="btn-container">
+                    <input
+                        type="file"
+                        id="image"
+                        accept="image/*"
+                        multiple="multiple"
+                        @change="uploadPhoto"
+                        style="display: none"
+                    />
+                    <button class="btn light" @click="deleteClicked">Delete</button>
+                    <button class="btn dark" @click="uploadClicked">Upload</button>
                 </div>
                 <div class="header">
                     <input type="checkbox" name="select-all">
                     <label for="select-all">select all</label>
                 </div>
-                <div class="photo-container">
-                    <h1>disini foto</h1>
+                <div class="album">
+                    <AdminAlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
                 </div>
+                <pagination
+                    class="pagination"
+                    :totalPage="totalPage"
+                    :pager="pager"
+                    :page="page"
+                    @changePage="updatePage"
+                    @changePager="updatePager"
+                />
             </div>
         </div>
     </div>
@@ -29,22 +43,118 @@
 <script>
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
+import AdminAlbumPagination from '@/components/AdminAlbumPagination.vue';
+import Pagination from '@/components/Pagination.vue';
 export default {
     name: "AlbumDetailView",
     data() {
         return {
-            album : [],
-            id :this.$route.params.id
+            listPhotos : [],
+            id :this.$route.params.id,
+            totalPhoto: 0,
+            totalPage: 1,
+            page: 1,
+            pager: 10,
+            photoShow: [],
+            albumPaginationKey: 0,
         };
     },
     components: {
-        AdminSidebar
-    },
+        AdminSidebar,
+        AdminAlbumPagination,
+        Pagination
+},
     methods: {
-        
-    },
-    mounted(){
+      deleteClicked() {
 
+      },
+      uploadClicked() {
+        document.getElementById("image").click();
+      },
+      uploadPhoto(event) {
+            // get input photos
+            const inputPhotos = Array.from(event.target.files);
+
+            // Post one by one
+            inputPhotos.forEach((file) => {
+                this.sendPostPhoto(file);
+            });
+            this.albumPaginationKey += 1;
+        },
+        async sendPostPhoto(file) {
+            var status;
+
+            // get token
+            const token = localStorage.getItem("token");
+
+            // create form data
+            var formData = new FormData();
+            formData.append("file", file);
+
+            // configuration for post api
+            const configPhoto = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            };
+
+            await axios
+                .post(
+                    import.meta.env.VITE_API_URI + "/Album/" + this.id,
+                    formData,
+                    configPhoto
+                )
+                .then((response) => console.log(response))
+                .catch((err) => console.log(err));
+        },
+
+        /** Pagination */
+        updatePage(n) {
+            this.page = n;
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.photoShow = this.listPhotos.slice(start,end);
+        },
+        updatePager(n) {
+            this.pager = n;
+            this.totalPage = Math.ceil(this.totalPhoto / this.pager);
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.photoShow = this.listPhotos.slice(start, end);
+        }
+    },
+    async created() {
+        console.log(this.id);
+        // Get data
+        const token = localStorage.getItem("token");
+
+        // Configuration for API
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        // Axios get Photo
+        await axios
+            .get(import.meta.env.VITE_API_URI + "/Album/" + this.id, config)
+            .then((response) => {
+                this.listPhotos = response.data.albumPhotos;
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        
+        this.totalPhoto = this.listPhotos.length;
+        this.updatePage(this.page);
+        this.updatePager(this.pager);
     }
 };
 </script>
@@ -123,37 +233,44 @@ export default {
     margin-left: 2%;
 }
 
-.upload-button {
+.btn-container {
     position: absolute;
-    margin-top: 2%;
-    right: 10%;
-    height: 2rem;
-    width: 5rem;
-    background: #000;
-    border: 1px solid grey;
-    border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: #fff;
+    top: 15px;
+    right: 25px;
+}
+.btn {
+    font-family: "Bebas Neue";
+    font-size: 20px;
+    width: 112px;
+    height: 49px;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 100px;
+    border-width: 1px;
+    cursor: pointer;
 }
 
-.delete-button {
-    position: absolute;
-    margin-top: 2%;
-    right: 2%;
-    height: 2rem;
-    width: 5rem;
-    background: #000;
-    border: 1px solid grey;
-    border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: #fff;
+.dark {
+    background-color: #353642;
+    color: #ffffff;
+    border-color: #000000;
+    /* border-block-width: ; */
 }
-.photo-container{
-    margin-top: 2%;
+.dark:hover {
+    background-color: #0c0c0f;
+}
+.light {
+    border-color: #353642;
+    background-color: #f3f2ee;
+}
+.light:hover {
+    background-color: #deddd8;
+}
+
+.album {
+    max-width: 1100px;
+    width: auto;
+    margin: 0 auto; 
 }
 
 </style>
