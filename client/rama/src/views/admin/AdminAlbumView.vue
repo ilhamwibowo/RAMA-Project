@@ -31,6 +31,14 @@
                         </tr>
                     </tbody>
                 </table>
+                <pagination
+                    class="pagination"
+                    :totalPage="totalPage"
+                    :pager="pager"
+                    :page="page"
+                    @changePage="updatePage"
+                    @changePager="updatePager"
+                />
             </div>
         </div>
     </div>
@@ -39,16 +47,23 @@
 <script>
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
+import Pagination from '@/components/Pagination.vue';
 export default {
     name: "AlbumAdminView",
     data() {
         return {
             albums : [],
-            isPublished: true
+            isPublished: true,
+            totalAlbum: 0,
+            totalPage: 1,
+            page: 1,
+            pager: 10,
+            albumShow: []
         };
     },
     components: {
-        AdminSidebar
+        AdminSidebar,
+        Pagination
     },
     methods: {
         async getAlbum(){
@@ -66,12 +81,36 @@ export default {
                     console.log(response);
                 }else{
                     this.albums = response.data.albums;
+                    this.totalAlbum = this.albums.length;
+                    this.updatePage(this.page);
+                    this.updatePager(this.pager);
                     console.log(this.albums);
                 }
             })
             .catch((err) => {
                 console.log(err);
             });
+        },
+        updatePage(n) {
+            this.page = n;
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.albumShow = this.albums.slice(start,end);
+        },
+        updatePager(n) {
+            this.pager = n;
+            this.totalPage = Math.ceil(this.totalAlbum / this.pager);
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.albumShow = this.albums.slice(start,end);
         }
     },
     mounted(){
@@ -141,6 +180,7 @@ export default {
 }
 .table-row-body{
     text-align: center;
+    border-bottom: 2px solid #272626;
 }
 
 .table-row-header {
