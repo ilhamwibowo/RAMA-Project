@@ -1,5 +1,13 @@
 <template>
     <div class="profile">
+        <!-- Toaster -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toast">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+
         <!-- Container Image -->
         <div class="container-image">
             <input
@@ -58,6 +66,7 @@
 
 <script>
 import axios from "axios";
+import Toast from "./Toast.vue";
 
 const env = import.meta.env;
 
@@ -68,18 +77,19 @@ export default {
             user: Object,
             previewImage: Object,
             previewImageUrl: "",
-            flagPhoto: false
+            flagPhoto: false,
+            showToastError: false,
+            showToastSuccess: false,
+            message: "",
         };
     },
     methods: {
         async updateUser() {
             const token = localStorage.getItem("token");
-
             // UPLOAD PHOTO
             var profilePhoto;
             // console.log(this.previewImageUrl)
             console.log(this.flagPhoto);
-
             // If user upload new photo
             if (this.flagPhoto) {
                 console.log("A");
@@ -90,41 +100,39 @@ export default {
                         "Content-Type": "multipart/form-data"
                     }
                 };
-
                 // Create FormData file for post api
                 var formData = new FormData();
                 formData.append("file", this.previewImage);
-
                 for (const value of formData.values()) {
                     console.log(value);
                 }
-
                 // Axios Post
                 await axios
                     .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
-                    .then((response) => (profilePhoto = response.data))
+                    .then((response) => {
+                        profilePhoto = response.data;
+                        
+                    })
                     .catch((err) => console.log(err));
-            } else {
+            }
+            else {
                 console.log("B");
                 console.log(this.user);
                 let defaultProfilePhoto = {
                     url: "/profile.png"
-                }
+                };
                 profilePhoto = this.user.profilePhoto ? this.user.profilePhoto : defaultProfilePhoto;
             }
-
             console.log(profilePhoto);
-
             // UPDATE USER
             var status;
-
+            var errorMsg;
             // Configuration for put api
             const configUser = {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             };
-
             // Body request for put api
             const body = {
                 name: this.user.name,
@@ -138,24 +146,39 @@ export default {
                     url: profilePhoto.url
                 }
             };
-
             // Axios Put
             await axios
                 .put(import.meta.env.VITE_API_URI + "/User/edit", body, configUser)
                 .then((response) => (status = response.status))
                 .catch((err) => {
                     console.log(err);
-                    status = response.status;
-                });
-
+                    errorMsg = err.response.data;
+                    status = err.response.status;
+            });
             // Status Alert
             if (status === 200) {
-                alert("Update Profile Success");
-            } else {
-                console.log(status);
-                alert("Update Profile Failed");
+                this.message = "Data has been updated!"
+                this.showToastSuccess = true; 
+                setTimeout(() => {
+                    this.showToastSuccess = false
+                }, 3000);
+                setTimeout(() => {
+                    this.$router.push("/profile");
+                }, 3500);
             }
-            this.$router.push("/profile");
+            else if (status === 400) {
+                this.message = errorMsg;
+                this.showToastError = true;
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            } else {
+                this.message = "Sorry, there is an error on the server"
+                this.showToastError = true;
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            }
         },
         // File Upload
         uploadPhoto() {
@@ -168,33 +191,31 @@ export default {
             this.flagPhoto = true;
         }
     },
-
     // Fetch data API
     async created() {
         const token = localStorage.getItem("token");
-
         // Configuration for API
         const config = {
             headers: { Authorization: `Bearer ${token}` }
         };
-
         // Axios Get
         await axios
             .get(import.meta.env.VITE_API_URI + "/User", config)
             .then((response) => {
-                if (response.status !== 200) {
-                    console.log(repsonse);
-                } else {
-                    this.user = response.data;
-                }
-            })
+            if (response.status !== 200) {
+                console.log(repsonse);
+            }
+            else {
+                this.user = response.data;
+            }
+        })
             .catch((err) => {
-                console.log(err);
-            });
-
+            console.log(err);
+        });
         // Handle if there is no photo
         this.previewImageUrl = this.user.profilePhoto ? this.user.profilePhoto.url : "/profile.png";
-    }
+    },
+    components: { Toast }
 };
 </script>
 
@@ -334,6 +355,21 @@ img {
     opacity: 0.3;
 }
 
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
 
 /** Make the website responsive */
 @media screen and (max-width: 768px) {
