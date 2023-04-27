@@ -4,7 +4,7 @@
         <Transition name="toast">
             <Toast v-if="showToastSuccess" type="success" :message="message"/>
         </Transition>
-        <Transition name="toast">
+        <Transition name="toastError">
             <Toast v-if="showToastError" type="error" :message="message"/>
         </Transition> 
 
@@ -369,6 +369,33 @@ img {
 .toast-enter-active,
 .toast-leave-active {
     transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
 }
 
 /** Make the website responsive */
