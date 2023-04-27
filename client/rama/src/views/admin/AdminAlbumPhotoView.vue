@@ -1,6 +1,6 @@
 <template>
     <div class="album-photo">
-        <AdminSidebar class="sidebar"/>
+        <AdminSidebar class="sidebar" album="true"/>
         <div class="layout">
             <div class="tabs">
                 <RouterLink class="back" :to="{ name: 'albumAdmin'}" ><img src="/left-arrow.png"></RouterLink>
@@ -20,14 +20,14 @@
                     <button class="btn light" @click="deleteClicked">Delete</button>
                     <button class="btn dark" @click="uploadClicked">Upload</button>
                 </div>
-                <div class="header">
-                    <input type="checkbox" name="select-all">
+                <div class="check-container">
+                    <input type="checkbox" name="select-all" class="checkbox" @click="selectAllClicked($event)">
                     <label for="select-all">select all</label>
                 </div>
                 <div class="album">
                     <AdminAlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
                 </div>
-                <pagination
+                <Pagination
                     class="pagination"
                     :totalPage="totalPage"
                     :pager="pager"
@@ -45,6 +45,10 @@ import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import AdminAlbumPagination from '@/components/AdminAlbumPagination.vue';
 import Pagination from '@/components/Pagination.vue';
+
+import { useProductStore } from "@/stores/photos";
+import { forEach } from 'jszip';
+const photos = useProductStore();
 export default {
     name: "AlbumDetailView",
     data() {
@@ -56,6 +60,7 @@ export default {
             page: 1,
             pager: 10,
             photoShow: [],
+            timer: 0,
             albumPaginationKey: 0,
         };
     },
@@ -65,6 +70,18 @@ export default {
         Pagination
 },
     methods: {
+      selectAllClicked(event) {
+        if (event.target.checked) {
+            this.listPhotos.forEach(function(photo) {
+                photos.addPhoto(photo);
+            })
+        } else {
+            this.listPhotos.forEach(function(photo) {
+                photos.deletePhoto(photo);
+            })
+        }
+        this.albumPaginationKey += 1;
+      },
       deleteClicked() {
 
       },
@@ -107,6 +124,13 @@ export default {
                 )
                 .then((response) => console.log(response))
                 .catch((err) => console.log(err));
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+            this.timer = setTimeout(() => {
+                this.albumPaginationKey += 1;
+            }, 200)
         },
 
         /** Pagination */
@@ -118,7 +142,9 @@ export default {
 
             let start = pager * (page - 1);
             let end = pager * page;
-            this.photoShow = this.listPhotos.slice(start,end);
+            this.photoShow = this.listPhotos.slice(start, end);
+            this.albumPaginationKey += 1;
+            console.log(this.photoShow);
         },
         updatePager(n) {
             this.pager = n;
@@ -130,6 +156,7 @@ export default {
             let start = pager * (page - 1);
             let end = pager * page;
             this.photoShow = this.listPhotos.slice(start, end);
+            this.albumPaginationKey += 1;
         }
     },
     async created() {
@@ -225,14 +252,6 @@ export default {
     border-radius: 15px;
 }
 
-.header {
-    width: 100%;
-    height: auto;
-    margin-top: 2%;
-    text-align: left;
-    margin-left: 2%;
-}
-
 .btn-container {
     position: absolute;
     top: 15px;
@@ -271,6 +290,22 @@ export default {
     max-width: 1100px;
     width: auto;
     margin: 0 auto; 
+}
+
+.check-container {
+    font-family: "Darker Grotesque";
+    font-size: 24px;
+    display: grid;
+    grid-template-columns: 27px auto;
+    grid-template-rows: 30px;
+    column-gap: 36px;
+    align-items: center;
+    margin-left: 78px
+}
+
+.checkbox {
+    width: 27px;
+    height: 27px;
 }
 
 </style>
