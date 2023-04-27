@@ -485,6 +485,9 @@ img {
 .title-page {
     left: 20%;
     height: 100%;
+    font-family: 'Darker Grotesque';
+    font-weight: bold;
+    font-size: 48px;
 }
 .button-add-container {
     width: 50%;
@@ -492,16 +495,17 @@ img {
     text-align: right;
 }
 .add-button {
-    width: 10%;
-    height: 80%;
-    right: 20%;
-    top: 10%;
+    right: 25%;
+    top: 30px;
     background: #353642;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    letter-spacing: 2px;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    color: white;
 }
 
 .add-button:hover {
@@ -529,44 +533,54 @@ img {
 
 .table-row-header {
     border-bottom: 2px solid #272626;
-    font-family: "Montserrat", sans-serif;
-    font-size: 120%;
+    font-family: 'Darker Grotesque';
+    font-size: 24px;
 }
 
 .table-header {
     width: 100% / 7;
 }
 
+.table-row-body{
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
+}
+
 .open-regis {
     background: #72e48b;
     border-radius: 15px;
-    left: 25%;
-    width: 50%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .close-regis {
     background: #ec7b7b;
     border-radius: 15px;
-    left: 25%;
-    width: 50%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .status-publish {
     background: #72e48b;
     border-radius: 15px;
-    left: 25%;
-    width: 50%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .status-publish-not {
     background: #ec7b7b;
     border-radius: 15px;
-    left: 25%;
-    width: 60%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .detail-button {
@@ -574,8 +588,9 @@ img {
     background: #deddd8;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    font-size: 16px;
 }
 </style>
