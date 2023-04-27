@@ -1,6 +1,6 @@
 <template>
     <div class="album-photo">
-        <AdminSidebar class="sidebar"/>
+        <AdminSidebar class="sidebar" album="true"/>
         <div class="layout">
             <div class="tabs">
                 <RouterLink class="back" :to="{ name: 'albumAdmin'}" ><img src="/left-arrow.png"></RouterLink>
