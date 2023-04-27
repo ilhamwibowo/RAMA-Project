@@ -20,14 +20,14 @@
                     <button class="btn light" @click="deleteClicked">Delete</button>
                     <button class="btn dark" @click="uploadClicked">Upload</button>
                 </div>
-                <div class="header">
-                    <input type="checkbox" name="select-all" @click="selectAllClicked($event)">
+                <div class="check-container">
+                    <input type="checkbox" name="select-all" class="checkbox" @click="selectAllClicked($event)">
                     <label for="select-all">select all</label>
                 </div>
                 <div class="album">
                     <AdminAlbumPagination :photosInput="photoShow" :key="albumPaginationKey" />
                 </div>
-                <pagination
+                <Pagination
                     class="pagination"
                     :totalPage="totalPage"
                     :pager="pager"
@@ -252,14 +252,6 @@ export default {
     border-radius: 15px;
 }
 
-.header {
-    width: 100%;
-    height: auto;
-    margin-top: 2%;
-    text-align: left;
-    margin-left: 2%;
-}
-
 .btn-container {
     position: absolute;
     top: 15px;
@@ -298,6 +290,22 @@ export default {
     max-width: 1100px;
     width: auto;
     margin: 0 auto; 
+}
+
+.check-container {
+    font-family: "Darker Grotesque";
+    font-size: 24px;
+    display: grid;
+    grid-template-columns: 27px auto;
+    grid-template-rows: 30px;
+    column-gap: 36px;
+    align-items: center;
+    margin-left: 78px
+}
+
+.checkbox {
+    width: 27px;
+    height: 27px;
 }
 
 </style>

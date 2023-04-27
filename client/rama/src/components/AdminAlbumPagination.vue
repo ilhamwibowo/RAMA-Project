@@ -27,7 +27,9 @@ export default {
     display: flex;
     flex-wrap: wrap;
     column-gap: 25px;
-    row-gap: 25px;
+    row-gap: 15px;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 </style>
