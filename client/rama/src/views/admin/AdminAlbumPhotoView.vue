@@ -21,7 +21,7 @@
                     <button class="btn dark" @click="uploadClicked">Upload</button>
                 </div>
                 <div class="header">
-                    <input type="checkbox" name="select-all">
+                    <input type="checkbox" name="select-all" @click="selectAllClicked($event)">
                     <label for="select-all">select all</label>
                 </div>
                 <div class="album">
@@ -45,6 +45,10 @@ import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import AdminAlbumPagination from '@/components/AdminAlbumPagination.vue';
 import Pagination from '@/components/Pagination.vue';
+
+import { useProductStore } from "@/stores/photos";
+import { forEach } from 'jszip';
+const photos = useProductStore();
 export default {
     name: "AlbumDetailView",
     data() {
@@ -56,6 +60,7 @@ export default {
             page: 1,
             pager: 10,
             photoShow: [],
+            timer: 0,
             albumPaginationKey: 0,
         };
     },
@@ -65,6 +70,18 @@ export default {
         Pagination
 },
     methods: {
+      selectAllClicked(event) {
+        if (event.target.checked) {
+            this.listPhotos.forEach(function(photo) {
+                photos.addPhoto(photo);
+            })
+        } else {
+            this.listPhotos.forEach(function(photo) {
+                photos.deletePhoto(photo);
+            })
+        }
+        this.albumPaginationKey += 1;
+      },
       deleteClicked() {
 
       },
@@ -107,6 +124,13 @@ export default {
                 )
                 .then((response) => console.log(response))
                 .catch((err) => console.log(err));
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+            this.timer = setTimeout(() => {
+                this.albumPaginationKey += 1;
+            }, 200)
         },
 
         /** Pagination */
@@ -118,7 +142,9 @@ export default {
 
             let start = pager * (page - 1);
             let end = pager * page;
-            this.photoShow = this.listPhotos.slice(start,end);
+            this.photoShow = this.listPhotos.slice(start, end);
+            this.albumPaginationKey += 1;
+            console.log(this.photoShow);
         },
         updatePager(n) {
             this.pager = n;
@@ -130,6 +156,7 @@ export default {
             let start = pager * (page - 1);
             let end = pager * page;
             this.photoShow = this.listPhotos.slice(start, end);
+            this.albumPaginationKey += 1;
         }
     },
     async created() {

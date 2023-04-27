@@ -6,7 +6,7 @@
                 class="checkbox"
                 type="checkbox"
                 :value="photoId"
-                @change="onClickCheck(event)"
+                @change="onClickCheck($event)"
                 :checked="isCheck"
             />
             <img :src="url">
@@ -16,6 +16,9 @@
 </template>
 
 <script>
+import { useProductStore } from '../stores/photos';
+const photos = useProductStore();
+
 export default {
     name: "AdminAlbumPhoto",
     data() {
@@ -34,18 +37,28 @@ export default {
     },
     methods: {
         onClickCheck(event) {
+            // console.log(event);
             let isCheck = event.target.checked;
             let photo = { id: history.photoId, url: this.photoUrl};
             this.isCheck = isCheck;
+            if (isCheck) {
+                photos.addPhoto(photo);
+            } else {
+                photos.deletePhoto(photo);
+            }
         }
     },
     async created() {
+        // check
+        this.isCheck = photos.isFound({ id: this.photoId, url: this.photoUrl });
+
+        // photo name
         let index = this.photoUrl.lastIndexOf("/") + 1;
         this.name = this.photoUrl.substring(index);
-
-        // this.url = this.photoUrl.substring(0, index) + "q_auto:low/" + this.photoUrl.substring(index);
-        this.url = this.photoUrl;
-        console.log(this.url);
+        
+        // photo img url
+        index = this.photoUrl.indexOf("upload/") + 7;
+        this.url = this.photoUrl.substring(0, index) + "w_64/f_auto/" + this.photoUrl.substring(index);
     }
 }
 </script>
