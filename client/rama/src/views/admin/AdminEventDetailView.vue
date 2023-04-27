@@ -1,6 +1,6 @@
 <template>
     <div class="detail-event">
-        <AdminSidebar class="sidebar"/>
+        <AdminSidebar class="sidebar" event="true"/>
         <AdminEventDetailEdit v-if="showForm" @cancel="toogleForm" />
         <div class="layout">
             <div class="tabs">
