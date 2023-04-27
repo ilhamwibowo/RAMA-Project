@@ -309,7 +309,7 @@ export default {
     background: #000;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
     letter-spacing: 2px;
     color: #fff;
@@ -330,7 +330,7 @@ export default {
     background: rgb(234, 54, 54);
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
     /* letter-spacing: 2px; */
     color: #fff;
@@ -408,12 +408,14 @@ p {
     color: #000;
     left: 5%;
     bottom: 6%;
-    font-size: 1.25rem;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
 }
 
 label {
-    font-size: 1.25rem;
+    font-size: 24px;
     color: #000;
+    font-family: 'Darker Grotesque';
 }
 .label-race-name,
 .label-race-province,
@@ -428,9 +430,10 @@ label {
 }
 
 h2 {
-    font-size: 1.25rem;
+    font-size: 24px;
     color: #000;
-    text-align:center
+    text-align:center;
+    font-family: 'Darker Grotesque';
 }
 
 .maps {

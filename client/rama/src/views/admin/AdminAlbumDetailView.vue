@@ -11,21 +11,19 @@
                 <div class="edit-button-container">
                     <button class="edit-button" >EDIT</button>
                 </div>
-                <div class="photos-button-container">
-                    <button class="photos-button">PHOTOS</button>
-                </div>
                 <div class="information-container">
                     <div class="row">
                         <div class="album-name">
                             <label class="label-album-name">Name</label>
                             <div class="album-name-container">
-                                <p></p>
+                                <p v-text="album.albumName"></p>
                             </div>
                         </div>
                         <div class="album-status">
                             <label class="label-album-status">Status</label>
                             <div class="album-status-container">
-                                <p></p>
+                                <!-- ubah ini jika sudah ada di back end -->
+                                <p>Published</p>
                             </div>
                         </div>
                     </div>
@@ -50,34 +48,34 @@ export default {
         AdminSidebar
     },
     methods: {
-        // async getAlbum(){
-        //     const token = localStorage.getItem("token");
+        async getAlbum(){
+            const token = localStorage.getItem("token");
 
-        //     // Configuration for API
-        //     const config = {
-        //         headers: { Authorization: `Bearer ${token}` }
-        //     };
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
 
-        //     axios
-        //     .get(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
-        //     .then((response) => {
-        //         if(response.status !== 200){
-        //             console.log(response);
-        //         }else{
-        //             this.album = response.data;
-        //             console.log(this.album);
-        //             // for debug
-        //             // console.log(this.event);
-        //             // console.log(this.events[0].raceName);
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-        // }
+            axios
+            .get(import.meta.env.VITE_API_URI + "/Album/" + this.id, config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    this.album = response.data;
+                    // console.log(this.album);
+                    // for debug
+                    // console.log(this.event);
+                    // console.log(this.events[0].raceName);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
     },
     mounted(){
-        // this.getAlbum();
+        this.getAlbum();
     }
 };
 </script>
@@ -142,7 +140,7 @@ export default {
 .body {
     grid-area: body;
     background: #fff;
-    padding: 30px 20px 30px 20px;
+    padding: 20px 20px 20px 20px;
     width: 100%;
     justify-content: center;
     border-radius: 15px;
@@ -154,35 +152,18 @@ export default {
     margin-top: 2%;
     height: 2rem;
     width: 5rem;
-    background: #000;
+    background: #353642;
     border: 1px solid grey;
-    border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    border-radius: 20px;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
     letter-spacing: 2px;
     color: #fff;
 }
 
-.photos-button {
-    position: absolute;
-    right: 2%;
-    margin-top: 5%;
-    height: 2rem;
-    width: 5rem;
-    background: #b7ed06;
-    border: 1px solid grey;
-    border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: #fff;
-}
 
 .information-container {
-    margin-top: 2%;
     width: 100%;
-    height: auto;
-    margin-bottom: 2%;
 }
 .row{
     width: 100%;
@@ -203,7 +184,6 @@ export default {
     border-radius: 15px;
     border: 2px solid #000;
     width: 50%;
-    height: 100%;
     left: 45%;
     height: 2rem;
 }
@@ -219,21 +199,23 @@ export default {
 
 p {
     color: #000;
-    left: 5%;
-    bottom: 6%;
-    font-size: 1.25rem;
+    left: 20px;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
 }
 
 label {
-    font-size: 1.25rem;
+    font-size: 24px;
     color: #000;
 }
 
 .label-album-name{
     left: 46%;
+    font-family: 'Darker Grotesque';
 }
 .label-album-status{
     left: 6%;
+    font-family: 'Darker Grotesque';
 }
 
 </style>
