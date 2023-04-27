@@ -80,4 +80,18 @@ export default {
     border-radius: 5px;
     justify-content: center;
 }
+
+#pager{
+    border: none;
+    padding: 5px;
+    height: 36px;
+    width: 55px;
+    font-family: "Bebas Neue";
+    font-size: 24px;
+    border: 0px;
+    background-color: #d9d9d9;
+    border-radius: 5px;
+    justify-content: center;
+}
+
 </style>
