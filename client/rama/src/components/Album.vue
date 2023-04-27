@@ -3,15 +3,6 @@
         <div id="box">
             <AlbumSearch @searchInput="search" id="search" />
             <div id="button">
-                <input
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    multiple="multiple"
-                    @change="uploadPhoto"
-                    style="display: none"
-                />
-                <button class="btn upload" @click="uploadClicked">Upload</button>
                 <button class="btn download" @click="download">Download</button>
             </div>
         </div>
@@ -122,48 +113,6 @@ export default {
         clearPhoto() {
             // Clear photo checklist after download
             photos.clearPhoto();
-        },
-
-        /** Upload Photo */
-        uploadPhoto(event) {
-            // get input photos
-            const inputPhotos = Array.from(event.target.files);
-
-            // Post one by one
-            inputPhotos.forEach((file) => {
-                this.sendPostPhoto(file);
-            });
-            this.albumPaginationKey += 1;
-        },
-        async sendPostPhoto(file) {
-            var status;
-
-            // get token
-            const token = localStorage.getItem("token");
-
-            // create form data
-            var formData = new FormData();
-            formData.append("file", file);
-
-            // configuration for post api
-            const configPhoto = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
-                }
-            };
-
-            await axios
-                .post(
-                    import.meta.env.VITE_API_URI + "/Album/" + this.albumId,
-                    formData,
-                    configPhoto
-                )
-                .then((response) => console.log(response))
-                .catch((err) => console.log(err));
-        },
-        uploadClicked() {
-            document.getElementById("image").click();
         },
 
         /** Pagination */
