@@ -132,6 +132,14 @@
                         </tr>
                     </tbody>
                 </table>
+                <pagination
+                    class="pagination"
+                    :totalPage="totalPage"
+                    :pager="pager"
+                    :page="page"
+                    @changePage="updatePage"
+                    @changePager="updatePager"
+                />
             </div>
         </div>
     </div>
@@ -140,6 +148,7 @@
 <script>
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
+import Pagination from '@/components/Pagination.vue';
 export default {
     name: "EventView",
     data() {
@@ -164,11 +173,18 @@ export default {
             description: "",
             startRegis: "",
             endRegis: "",
-            profilePhoto:Object
+            profilePhoto:Object,
+            // for pagination
+            totalEvent: 0,
+            totalPage: 1,
+            page: 1,
+            pager: 10,
+            eventShow: []
         };
     },
     components: {
-        AdminSidebar
+        AdminSidebar,
+        Pagination
     },
     methods: {
         async getEvent() {
@@ -186,6 +202,9 @@ export default {
                     console.log(response);
                 }else{
                     this.events = response.data.races;
+                    this.totalEvent = this.events.length;
+                    this.updatePage(this.page);
+                    this.updatePager(this.pager);
                 }
             })
             .catch((err) => {
@@ -281,30 +300,52 @@ export default {
             }
         },
         changePhoto(event) {
-        const image = event.target.files[0];
-        this.profilePhoto = image;
-        this.previewImageUrl = URL.createObjectURL(image);
-    },
-    uploadphoto() {
-        const token = localStorage.getItem("token");
-        // Configuration for post api
-        const configPhoto = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
-                }
-            };
+            const image = event.target.files[0];
+            this.profilePhoto = image;
+            this.previewImageUrl = URL.createObjectURL(image);
+        },
+        uploadphoto() {
+            const token = localStorage.getItem("token");
+            // Configuration for post api
+            const configPhoto = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    }
+                };
 
-        // Create FormData file for post api
-        var formData = new FormData();
-        formData.append("file", this.previewImage);
+            // Create FormData file for post api
+            var formData = new FormData();
+            formData.append("file", this.previewImage);
 
-        // Axios Post
-        axios
-            .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
-            .then((response) => (console.log(this.profilePhoto = response.data)))
-            .catch((err) => console.log(err));
-    },
+            // Axios Post
+            axios
+                .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
+                .then((response) => (console.log(this.profilePhoto = response.data)))
+                .catch((err) => console.log(err));
+        },
+        //for pagination
+        updatePage(n) {
+            this.page = n;
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.eventShow = this.events.slice(start,end);
+        },
+        updatePager(n) {
+            this.pager = n;
+            this.totalPage = Math.ceil(this.totalEvent / this.pager);
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.eventShow = this.events.slice(start,end);
+        }
     },
     
     mounted() {
@@ -545,6 +586,7 @@ img {
     text-align: center;
     font-size: 20px;
     font-family: 'Darker Grotesque';
+    border-bottom: 2px solid #272626;
 }
 
 .open-regis {
@@ -553,7 +595,7 @@ img {
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .close-regis {
@@ -562,7 +604,7 @@ img {
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .status-publish {
@@ -571,7 +613,7 @@ img {
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .status-publish-not {
@@ -580,7 +622,7 @@ img {
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .detail-button {
@@ -591,6 +633,6 @@ img {
     font-family: 'Darker Grotesque';
     font-weight: bold;
     letter-spacing: 1px;
-    font-size: 16px;
+    font-size: 20px;
 }
 </style>
