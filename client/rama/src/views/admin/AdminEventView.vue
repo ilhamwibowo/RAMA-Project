@@ -589,6 +589,10 @@ img {
     border-bottom: 2px solid #272626;
 }
 
+td{
+    padding: 8px;
+}
+
 .open-regis {
     background: #72e48b;
     border-radius: 15px;

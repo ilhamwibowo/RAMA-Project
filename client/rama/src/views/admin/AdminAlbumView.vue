@@ -181,6 +181,7 @@ export default {
 .table-row-body{
     text-align: center;
     border-bottom: 2px solid #272626;
+    /* border-spacing: ; */
 }
 
 .table-row-header {
@@ -211,6 +212,10 @@ export default {
 .table-header-status, .table-data-status,
 .table-header-action, .table-data-action{
     width: 20%;
+}
+
+td{
+    padding: 8px;
 }
 
 .detail-button {
