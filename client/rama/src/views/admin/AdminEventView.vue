@@ -110,19 +110,19 @@
                     </thead>
                     <tbody class="table-body">
                         <tr class="table-row-body" v-for="(event) in events" :key="event.raceId" >
-                            <td class="table-data" v-text="event.raceName"></td>
-                            <td class="table-data" v-text="event.startLocation?.name"></td>
-                            <td class="table-data" v-text="event.startTime.slice(0,10)"></td>
+                            <td class="table-data-name" v-text="event.raceName"></td>
+                            <td class="table-data-location" v-text="event.startLocation?.name"></td>
+                            <td class="table-data-time" v-text="event.startTime.slice(0,10)"></td>
                             <!-- <td class="table-data">h</td> -->
-                            <td class="table-data">
+                            <td class="table-data-regis">
                                 <p class="open-regis" id="open-regis" v-if="event.isOpened">Opened</p>
                                 <p class="close-regis" id="close-regis" v-if="!event.isOpened">Closed</p>
                             </td>
-                            <td class="table-data">
+                            <td class="table-data-status">
                                 <p class="status-publish" id="published" v-if="event.isPublished">Published</p>
                                 <p class="status-publish-not" id="notPublished" v-if="!event.isPublished">Unpublished</p>
                             </td>
-                            <td class="table-data">
+                            <td class="table-data-action">
                                 <button class="detail-button">
                                     <router-link :to="{params: {id : event.raceId}, name: 'detailEvent'}">
                                         Detail
@@ -524,7 +524,7 @@ img {
 }
 
 .title-page {
-    left: 20%;
+    margin-left: 50px;
     height: 100%;
     font-family: 'Darker Grotesque';
     font-weight: bold;
@@ -536,16 +536,17 @@ img {
     text-align: right;
 }
 .add-button {
-    right: 25%;
-    top: 30px;
+    right: 13%;
+    top: 25px;
     background: #353642;
     border: 1px solid grey;
     border-radius: 15px;
     font-size: 20px;
     font-family: 'Darker Grotesque';
+    font-weight: bold;
     letter-spacing: 1px;
     display: inline-block;
-    padding: 0 10px 0 10px;
+    padding: 3px 10px;
     color: white;
 }
 
@@ -554,22 +555,23 @@ img {
 }
 
 .table-container{
-    width: 80%;
-    left: 10%;
+    width: 90%;
     background: #fff;
     border-radius: 10px;
+    margin-left: 50px;
+    margin-top: 10px;
+    padding: 20px 20px 10px 20px;
 }
 
 .event-table {
     border-collapse: collapse;
     text-align: center;
 
-    margin-bottom: 1rem;
     color: #000;
     padding: 20px;
 
     width: 100%;
-    table-layout: fixed;
+    /* table-layout: fixed; */
 }
 
 .table-row-header {
@@ -579,7 +581,7 @@ img {
 }
 
 .table-header {
-    width: 100% / 7;
+    width: 14.285%;
 }
 
 .table-row-body{
@@ -593,6 +595,14 @@ td{
     padding: 8px;
 }
 
+.table-data-name{
+    text-align: left;
+    left: 5px;
+}
+.table-data-location{
+    text-align: left;
+    left: 5px;
+}
 .open-regis {
     background: #72e48b;
     border-radius: 15px;
@@ -638,5 +648,10 @@ td{
     font-weight: bold;
     letter-spacing: 1px;
     font-size: 20px;
+}
+
+.pagination{
+    justify-content: end;
+    margin-top: 15px;
 }
 </style>
