@@ -96,7 +96,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-    const publicPages = ["home", "login", "register", "forgot"];
+    const publicPages = ["home", "login", "register", "forgot", "album"];
     const authRequired = !publicPages.includes(to.name);
     const loggedIn = localStorage.getItem("token") !== null;
 
