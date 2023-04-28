@@ -1,5 +1,13 @@
 <template>
     <div class="detail-event">
+        <!-- Toast -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toastError">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+
         <AdminSidebar class="sidebar"/>
         <AdminEventDetailEdit v-if="showForm" @cancel="toogleForm" />
         <div class="layout">
@@ -98,12 +106,14 @@
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import AdminEventDetailEdit from '@/components/AdminEventDetailEdit.vue';
+import Toast from '@/components/Toast.vue';
 
 export default {
     name: "detailEvent",
     components: {
         AdminSidebar,
-        AdminEventDetailEdit
+        AdminEventDetailEdit,
+        Toast
     },
     data(){
         return {
@@ -128,7 +138,10 @@ export default {
             startRegis: "",
             endRegis: "",
             albumId: "",
-            photo:Object
+            photo:Object,
+            showToastError: false,
+            showToastSuccess: false,
+            message: "",
         };
     },
 
@@ -184,8 +197,8 @@ export default {
                 this.showForm = false;
             }
         },deleteRace(){
-            // console.log("event di delete")
             const token = localStorage.getItem("token");
+            var status;
 
             // Configuration for API
             const config = {
@@ -194,6 +207,7 @@ export default {
 
             axios.delete(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
             .then((response) => {
+                status = response.status
                 if(response.status !== 200){
                     console.log(response);
                 }else{
@@ -201,8 +215,35 @@ export default {
                 }
             })
             .catch((err) => {
+                status = err.response.status;
                 console.log(err);
             });
+
+            // Status Alert
+            if (status === 200) {
+                this.message = "Data has been updated!"
+                this.showToastSuccess = true; 
+                setTimeout(() => {
+                    this.showToastSuccess = false
+                }, 3000);
+                setTimeout(() => {
+                    this.$router.push("/event");
+                }, 3500);
+            }
+            else if (status === 400) {
+                this.message = errorMsg;
+                this.showToastError = true;
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            } else {
+                this.message = "Sorry, there is an error on the server"
+                this.showToastError = true;
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            }
+
         }, async getAlbum(){
             const token = localStorage.getItem("token");
 

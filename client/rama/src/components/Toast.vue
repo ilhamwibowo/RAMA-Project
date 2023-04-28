@@ -22,6 +22,7 @@ export default {
     position: fixed;
     width: 100%;
     top: 20px;
+    z-index: 10000;
 }
 .toast {
     font-family: "Darker Grotesque";

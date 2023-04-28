@@ -1,6 +1,6 @@
 <template>
     <div class="profile">
-        <!-- Toaster -->
+        <!-- Toast -->
         <Transition name="toast">
             <Toast v-if="showToastSuccess" type="success" :message="message"/>
         </Transition>

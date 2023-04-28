@@ -1,5 +1,13 @@
 <template>
     <div>
+        <!-- Toast -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toastError">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+
         <form>
             <div class="container-image">
             <label for="image">
@@ -94,6 +102,7 @@
 
 <script>
 import axios from 'axios';
+import Toast from '@/components/Toast.vue';
 export default {
     name: "AdminEventDetailEdit",
     data() {
@@ -111,6 +120,9 @@ export default {
             startRegis: "",
             endRegis: "",
             albumId: "",
+            showToastError: false,
+            showToastSuccess: false,
+            message: "",
         }
     },
     methods: {
@@ -161,13 +173,31 @@ export default {
             axios
             .put(import.meta.env.VITE_API_URI + "/Race/" + this.id, formData, config)
             .then((response) => {
-
-                // Reload page when success.
-                this.showForm = false;
-                location.reload()
+                // Alert message
+                this.message = "Data has been saved!";
+                this.showToastSuccess = true;
+                setTimeout(() => {
+                    this.showToastSuccess = false;
+                }, 3000);
+                setTimeout (() => {
+                    // Reload when success
+                    this.showForm = false;
+                    location.reload()
+                }, 3500)
             })
             .catch((err) => {
                 console.log(err);
+
+                // Alert message
+                if (err.response.status === 400) {
+                    this.message = err.response.data;
+                } else {
+                    this.message = "Sorry, there is an error on the server";
+                }
+                this.showToastError = true;
+                setTimeout(() => {
+                    this.showToastError = false;
+                }, 3000);
             });
         },
     }
