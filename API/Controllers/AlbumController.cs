@@ -80,7 +80,39 @@ namespace API.Controllers
             return Ok(_mapper.Map<AlbumDto>(album));
 
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateAlbum(Guid id, AlbumDto aDto)
+        {
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
 
+            if (requester == null || requester.Role != "Admin") Unauthorized("No Permission!");
+            
+            Album album = await _context.Albums.FirstOrDefaultAsync(x => x.AlbumId.Equals(id));
+
+            if (album == null) return NotFound();
+
+            album.AlbumName = aDto.AlbumName;
+
+            _context.Update(album);
+            await _context.SaveChangesAsync();
+            return Ok(_mapper.Map<AlbumDto>(album));
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAlbum(Guid id)
+        {
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
+
+            if (requester == null || requester.Role != "Admin") Unauthorized("No Permission!");
+            
+            Album album = await _context.Albums.FirstOrDefaultAsync(x => x.AlbumId.Equals(id));
+
+            if (album == null) return NotFound();
+
+            _context.Remove(album);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        
         [HttpDelete("photos/{photoId}")]
         public async Task<IActionResult> DeletePhoto(Guid photoId)
         {
