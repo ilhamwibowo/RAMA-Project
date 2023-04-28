@@ -54,7 +54,7 @@
                             <!-- <input type="text" id="course-map" v-model="albumid" placeholder="TBI"> -->
                             <select id="albumid" v-model="albumId">
                                 <option value="">Pilih Album</option>
-                                <option v-for="namaAlbum in this.album" :key="namaAlbum.albumId" :value="namaAlbum.albumId">{{ namaAlbum.albumName }}</option>
+                                <option v-for="album in this.albums" :key="album.albumId" :value="album.albumId">{{ album.albumName }}</option>
                             </select>
                             <p>{{ this.albumid }}</p>
                         </div>
@@ -108,6 +108,7 @@ export default {
     },
     data() {
         return {
+            albums: [],
             name: "", 
             city: "", 
             startDate: "",
@@ -218,8 +219,28 @@ export default {
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             console.log(now.toISOString().slice(0,16));
         },
+        async getAlbum() {
+            const token = localStorage.getItem("token");
+            var status;
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            await axios.get(import.meta.env.VITE_API_URI + "/Album", config)
+                .then((response) => {
+                    status = response.status;
+                    this.albums = response.data.albums;
+                    console.log(this.albums);
+                })
+                .catch((err) => {
+                    status = err.response.status;
+                    console.log(err);
+                });
+        }
     },
-    created() {
+    async created() {
         console.log(this.event);
         var time = new Date(this.event.startTime);
         time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
@@ -230,11 +251,12 @@ export default {
         this.description = this.event.raceDesc;
         this.startRegis = this.event.startDateRegistration;
         this.endRegis = this.event.endDateRegistration;
-        this.albumId = this.event.albumId
+        this.albumId = this.event.raceAlbum.albumId;
         this.distance = this.event.distance;
         this.price = this.event.registrationFee;
         this.previewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
         this.basePreviewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
+        this.getAlbum();
     }
 }
 </script>
