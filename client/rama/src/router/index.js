@@ -96,15 +96,56 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-    if (
-        localStorage.getItem("token") === null &&
-        to.name !== "home" &&
-        to.name !== "login" &&
-        to.name !== "register" &&
-        to.name !== "forgot"
-    ) {
+    const publicPages = ["home", "login", "register", "forgot"];
+    const authRequired = !publicPages.includes(to.name);
+    const loggedIn = localStorage.getItem("token") !== null;
+
+    if (authRequired && !loggedIn) {
         return { name: "login" };
     }
+
+    // Restrict access to admin routes based on a user's role
+    const adminPages = [
+        "event",
+        "detailEvent",
+        "albumAdmin",
+        "albumDetail",
+        "listPhoto",
+        "EventRegistrant"
+    ];
+
+    const isAdminRoute = adminPages.includes(to.name);
+    // const userRole = localStorage.getItem("userRole");
+    const userRole = getRole();
+
+    if (isAdminRoute && userRole !== "Admin") {
+        return { name: "home" };
+    }
 });
+
+// Helper function
+// As this is not very good, might want to change it to store role in local storage
+async function getRole() {
+    const token = localStorage.getItem("token");
+
+    // Configuration for API
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+
+    // Axios Get
+    await axios
+        .get(import.meta.env.VITE_API_URI + "/User", config)
+        .then((response) => {
+            if (response.status !== 200) {
+                return "User";
+            } else {
+                return response.data.role;
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
 
 export default router;
