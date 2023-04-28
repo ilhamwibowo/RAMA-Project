@@ -2,31 +2,26 @@
     <div class="layout">
         <AdminSidebar class="sidebar" album="true"/>
         <div class="main">
-            <div class="header">
-                <div class="title-page-container">
-                    <h1 class="title-page">Album</h1>
-                </div>
-                <div class="button-add-container">
-                    <button class="add-button">ADD</button>
-                </div>
+            <div class="title-page-container">
+                <h1 class="title-page">Album</h1>
             </div>
             <div class="table-container"> 
                 <table class="event-table">
                     <thead class="table-head">
                         <tr class="table-row-header">
-                            <th class="table-header" scope="col">Title</th>
-                            <th class="table-header" scope="col">Status</th>
-                            <th class="table-header" scope="col">Action</th>
+                            <th class="table-header-title" scope="col">Title</th>
+                            <th class="table-header-status" scope="col">Status</th>
+                            <th class="table-header-action" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody class="table-body">
                         <tr class="table-row-body" v-for="album in albums" :key="album.albumId">
-                            <td class="table-data" v-text="album.albumName"></td>
-                            <td class="table-data">
+                            <td class="table-data-title" v-text="album.albumName"></td>
+                            <td class="table-data-status">
                                 <p class="status-publish" id="published" v-if="this.isPublished">Published</p>
                                 <p class="status-publish-not" id="notPublished" v-if="!this.isPublished">Unpublished</p>
                             </td>
-                            <td class="table-data">
+                            <td class="table-data-action">
                                 <button class="detail-button">
                                     <router-link :to="{params: {id : album.albumId}, name: 'albumDetail'}">
                                         Detail
@@ -93,6 +88,7 @@ export default {
     grid-template-columns: 333px auto;
     grid-template-areas: 
     "sidebar main";
+    min-height: 100vh;   
 }
 
 .sidebar {
@@ -113,88 +109,97 @@ export default {
 }
 
 .title-page-container {
-    width: 50%;
-    height: 100%;
+    width: 100%;
     text-align: left;
+    margin-top: 20px;
 }
 
 .title-page {
-    left: 20%;
-    height: 100%;
-}
-.button-add-container {
-    width: 50%;
-    height: 100%;
-    text-align: right;
-}
-.add-button {
-    width: 10%;
-    height: 40%;
-    right: 20%;
-    top: 10%;
-    background: #353642;
-    border: 1px solid grey;
-    border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
-    letter-spacing: 2px;
+    font-size: 48px;
+    margin-left: 50px;
 }
 
-.add-button:hover {
-    background-color: #171817;
-}
 
 .table-container{
-    width: 80%;
-    left: 10%;
+    width: 90%;
     background: #fff;
     border-radius: 10px;
+    margin-left: 50px;
+    margin-top: 10px;
+    padding: 20px 20px 10px 20px;
 }
 
 .event-table {
     border-collapse: collapse;
-    text-align: center;
-
-    margin-bottom: 1rem;
+    /* text-align: center; */
     color: #000;
     padding: 20px;
-
     width: 100%;
-    table-layout: fixed;
+    /* table-layout: fixed; */
+}
+.table-row-body{
+    text-align: center;
 }
 
 .table-row-header {
     border-bottom: 2px solid #272626;
-    font-family: "Montserrat", sans-serif;
-    font-size: 120%;
+    font-family: 'Darker Grotesque';
+    font-size: 24px;
+    text-align: center;
 }
 
-.table-header {
-    width: 100% / 7;
+/* for table title */
+.table-header-title{
+    width: 60%;
+    text-align: left;
+    left: 50px;
 }
+
+/* fot table row data */
+
+.table-data-title{
+    width: 60%;
+    text-align: left;
+    font-family: 'Darker Grotesque';
+    font-size: 20px;
+    left: 5px;
+}
+
+
+.table-header-status, .table-data-status,
+.table-header-action, .table-data-action{
+    width: 20%;
+}
+
 .detail-button {
-    width: 50%;
     background: #deddd8;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 0 10px 0 10px;
 }
 
 .status-publish {
     background: #72e48b;
     border-radius: 15px;
-    left: 25%;
-    width: 50%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    font-size: 20px;
+    display: inline-block;
+    padding: 0px 10px 0px 10px;
 }
 
 .status-publish-not {
     background: #ec7b7b;
     border-radius: 15px;
-    left: 25%;
-    width: 60%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    font-size: 20px;
+    display: inline-block;
+    padding: 0px 10px 0px 10px;
 }
 </style>

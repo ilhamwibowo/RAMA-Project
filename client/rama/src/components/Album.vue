@@ -37,7 +37,7 @@ export default {
         return {
             listPhotos: [],
             totalPhoto: 0,
-            totalPage: 0,
+            totalPage: 1,
             page: 1,
             pager: 10,
             photoShow: [],
@@ -154,7 +154,8 @@ export default {
             .get(import.meta.env.VITE_API_URI + "/Album", config)
             .then((response) => {
                 console.log(response.data.albums[0].albumId);
-                this.albumId = response.data.albums[0].albumId
+                // this.albumId = response.data.albums[0].albumId
+                this.albumId = "3f018a5e-9806-47a6-a0a0-9a6dea826742";
             })
             .catch((err) => {
                 console.log(err);
