@@ -71,6 +71,7 @@ export default {
                     console.log(response);
                 }else{
                     this.albums = response.data.albums;
+                    console.log(response.data);
                     console.log(this.albums);
                 }
             })
