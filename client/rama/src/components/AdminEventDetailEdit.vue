@@ -1,16 +1,22 @@
 <template>
     <div>
+        <!-- Toast -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toastError">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+
         <form>
             <div class="container-image">
-            <label for="image">
-                <img :src="previewImageUrl" />
-            </label>
-            <input
+                <input
                     type="file"
                     id="image"
                     accept="image/*"
                     @change="changePhoto"
                 />
+                <img :src="previewImageUrl" />
             </div>
 
             <div class="form-grid">
@@ -48,9 +54,8 @@
                             <!-- <input type="text" id="course-map" v-model="albumid" placeholder="TBI"> -->
                             <select id="albumid" v-model="albumId">
                                 <option value="">Pilih Album</option>
-                                <option v-for="namaAlbum in this.album" :key="namaAlbum.albumId" :value="namaAlbum.albumId">{{ namaAlbum.albumName }}</option>
+                                <option v-for="album in this.albums" :key="album.albumId" :value="album.albumId">{{ album.albumName }}</option>
                             </select>
-                            <p>{{ this.albumid }}</p>
                         </div>
 
                     </div>           
@@ -83,7 +88,7 @@
                 <div class="grid-item">
                     <div class="button-container"> 
                         <button class="btn-cancel" >CANCEL</button>
-                        <button class="btn-save" @click.prevent="saveEvent">SAVE</button>
+                        <button class="btn-save" @click.prevent="validationInput">SAVE</button>
                     </div> 
                 </div>                      
                 </div>
@@ -94,10 +99,20 @@
 
 <script>
 import axios from 'axios';
+import Toast from '@/components/Toast.vue';
 export default {
     name: "AdminEventDetailEdit",
+    props: {
+        event: Object
+    },
+    components: {
+        Toast
+    },
     data() {
         return {
+            albums: [],
+            id: "",
+            photo: "",
             name: "", 
             city: "", 
             startDate: "",
@@ -111,9 +126,41 @@ export default {
             startRegis: "",
             endRegis: "",
             albumId: "",
+            distance: 0,
+            price: 0,
+            previewImageUrl: "",
+            basePreviewImageUrl: "",
+            showToastError: false,
+            showToastSuccess: false,
+            message: "",
         }
     },
     methods: {
+        validationInput() {
+            try {
+                if (this.name === "") throw "Name";
+                if (this.city === "") throw "City";
+                if (this.startDate === "") throw "Start date";
+                if (this.distance === "") throw "Distance";
+                if (this.price === "") throw "Price";
+                if (this.description === "") throw "Description";
+                if (this.startRegis === "") throw "Start registration date";
+                if (this.endRegis === "") throw "End registration date";
+                if (this.photo === "") throw "Image";
+                console.log(this.photo);
+                this.saveEvent();
+            }
+            catch (err) {
+                this.message = err + " is empty";
+                console.log(this.message);
+                this.showToastError = true;
+                console.log(this.showToastError);
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false;
+                }, 3000)
+            }
+        },
         saveEvent() {
             const token = localStorage.getItem("token");
 
@@ -161,28 +208,92 @@ export default {
             axios
             .put(import.meta.env.VITE_API_URI + "/Race/" + this.id, formData, config)
             .then((response) => {
-
-                // Reload page when success.
-                this.showForm = false;
-                location.reload()
+                // Alert message
+                this.message = "Data has been saved!";
+                this.showToastSuccess = true;
+                setTimeout(() => {
+                    this.showToastSuccess = false;
+                }, 3000);
+                setTimeout (() => {
+                    // Reload when success
+                    this.showForm = false;
+                    location.reload()
+                }, 3500)
             })
             .catch((err) => {
                 console.log(err);
+
+                // Alert message
+                if (err.response.status === 400) {
+                    this.message = err.response.data;
+                } else {
+                    this.message = "Sorry, there is an error on the server";
+                }
+                this.showToastError = true;
+                setTimeout(() => {
+                    this.showToastError = false;
+                }, 3000);
             });
         },
+        changePhoto(event) {
+            const image = event.target.files[0];
+            this.photo = image;
+            this.previewImageUrl = URL.createObjectURL(image);
+        },
+        print(event) {
+            console.log(this.startDate);
+            const startTime = new Date(this.startDate).toISOString();
+            console.log(startTime);            
+            var now = new Date(startTime);
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            console.log(now.toISOString().slice(0,16));
+        },
+        async getAlbum() {
+            const token = localStorage.getItem("token");
+            var status;
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            await axios.get(import.meta.env.VITE_API_URI + "/Album", config)
+                .then((response) => {
+                    status = response.status;
+                    this.albums = response.data.albums;
+                })
+                .catch((err) => {
+                    status = err.response.status;
+                    console.log(err);
+                });
+        }
+    },
+    async created() {
+        this.id = this.event.raceId;
+        var time = new Date(this.event.startTime);
+        time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
+        this.startDate = time.toISOString().slice(0,16)
+        this.name = this.event.raceName;
+        this.city = this.event.startLocation.name;
+        this.isPublish = this.event.isPublished;
+        this.description = this.event.raceDesc;
+        this.startRegis = this.event.startDateRegistration;
+        this.endRegis = this.event.endDateRegistration;
+        this.albumId = this.event.raceAlbum.albumId;
+        this.distance = this.event.distance;
+        this.price = this.event.registrationFee;
+        this.previewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
+        this.basePreviewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
+        this.photo = this.event.raceThumbnail;
+        this.getAlbum();
     }
 }
 </script>
 
 <style scoped>
 .container-image {
-    display: flex;
-    margin: 0 auto;
-    max-width: 400px;
-    align-items: center;
-    overflow: hidden;
+    width: 100%;
     text-align: center;
-    justify-content: center;
 }
 
 form {
@@ -222,35 +333,14 @@ form {
     grid-row-gap: 10px;
 }
 
-
-.category-container {
-    width: 50%;
-    left: 25%;
-    margin-bottom: 2.5rem;
-}
-
-.category-table {
-    border-collapse: collapse;
-    text-align: center;
-    margin-bottom: 1rem;
-    width: 100%;
-    table-layout: fixed;
-    color: #000;
-}
-
-.table-row-header {
-    border-bottom: 2px solid #272626;
-    font-family: "Montserrat", sans-serif;
-    font-size: 1.25rem;
-}
-
-.table-row-body {
-    font-size: 1.25rem;
-}
-
 /* Optional styling for labels and inputs */
 label {
     font-weight: bold;
+}
+
+img {
+    max-width: 400px;
+    max-height:200px;
 }
   
 input {
@@ -323,4 +413,48 @@ input {
 .row input {
     flex-grow: 1;
 }
+
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
+}
+
 </style>
