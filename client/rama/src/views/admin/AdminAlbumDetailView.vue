@@ -9,7 +9,7 @@
             </div>
             <div class="body">
                 <div class="edit-button-container">
-                    <button class="edit-button" >EDIT</button>
+                    <button class="edit-button" @click="showPopup = true">EDIT</button>
                 </div>
                 <div class="information-container">
                     <div class="row">
@@ -23,11 +23,33 @@
                             <label class="label-album-status">Status</label>
                             <div class="album-status-container">
                                 <!-- ubah ini jika sudah ada di back end -->
-                                <p>Published</p>
+                                <p v-text="this.status"></p>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="popup" v-if="showPopup">
+            <div class="popup-content">
+                <h2 class="popup-title">Edit Album</h2>
+                <form class="form-edit-album" @submit.prevent="submitForm">
+                    <div class="form-group">
+                        <label class="form-label" for="album-name">Album Name</label>
+                        <input class="form-input" type="text" id="album-name" v-model="album.albumName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="status">Status</label>
+                        <select class="form-input" id="status" v-model="statusEdit">
+                            <option value="published">Published</option>
+                            <option value="unpublished">Unpublished</option>
+                        </select>
+                    </div>
+                    <div class="form-buttons">
+                        <button class="form-button form-button-save" @click="saveAlbum">Save</button>
+                        <button class="form-button form-button-cancel" @click="showPopup = false">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -41,7 +63,11 @@ export default {
     data() {
         return {
             album : [],
-            id :this.$route.params.id
+            id :this.$route.params.id,
+            showPopup: false,
+            albumName: '',
+            status: "Published",
+            statusEdit: ''
         };
     },
     components: {
@@ -72,6 +98,23 @@ export default {
             .catch((err) => {
                 console.log(err);
             });
+        },
+        saveAlbum(){
+            // const token = localStorage.getItem("token");
+
+            // // Configuration for API
+            // const config = {
+            //     headers: { Authorization: `Bearer ${token}`}
+            // };
+            // axios.put(import.meta.env.VITE_API_URI + "/Album/" + this.id, {albumName : this.albumName}, config)
+            // .then((responese) => {
+            //     this.showPopup = false;
+            //     location.reload();
+            // })
+            // .catch((err) =>{
+            //     console.log(err);
+            // })
+
         }
     },
     mounted(){
@@ -145,11 +188,13 @@ export default {
     justify-content: center;
     border-radius: 15px;
 }
-
+.edit-button-container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+}
 .edit-button {
-    position: absolute;
-    right: 2%;
-    margin-top: 2%;
     height: 2rem;
     width: 5rem;
     background: #353642;
@@ -217,5 +262,82 @@ label {
     left: 6%;
     font-family: 'Darker Grotesque';
 }
+
+.popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 15px;
+  width: 500px;
+  font-family: 'Darker Grotesque';
+}
+
+.popup-title {
+  font-size: 48px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.form-edit-album {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.form-button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.form-button-save {
+  background-color: #5cb85c;
+  color: #fff;
+  border: none;
+  margin-right: 1rem;
+}
+
+.form-button-cancel {
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+}
+
 
 </style>
