@@ -10,6 +10,7 @@
             <div class="body">
                 <div class="edit-button-container">
                     <button class="edit-button" @click="showPopup = true">EDIT</button>
+                    <button class="delete-button" @click="deleteAlbum">DELETE</button>
                 </div>
                 <div class="information-container">
                     <div class="row">
@@ -89,7 +90,7 @@ export default {
                     console.log(response);
                 }else{
                     this.album = response.data;
-                    // console.log(this.album);
+                    console.log(this.album);
                     // for debug
                     // console.log(this.event);
                     // console.log(this.events[0].raceName);
@@ -112,6 +113,24 @@ export default {
                 location.reload();
             })
             .catch((err) =>{
+                console.log(err);
+            })
+        },
+        deleteAlbum(){
+            const token = localStorage.getItem("token");
+
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}`}
+            };
+            axios.delete(import.meta.env.VITE_API_URI + "/Album/" + this.id, config)
+            .then((response) => {
+                if(response.status !== 200){
+                    console.log(response);
+                }else{
+                    this.$router.push("/admin/album");
+                }
+            }).catch((err) =>{
                 console.log(err);
             })
         }
@@ -197,6 +216,19 @@ export default {
     height: 2rem;
     width: 5rem;
     background: #353642;
+    border: 1px solid grey;
+    border-radius: 20px;
+    font-family: 'Darker Grotesque';
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-right: 5px;
+}
+
+.delete-button {
+    height: 2rem;
+    width: 5rem;
+    background: #EC7B7B;
     border: 1px solid grey;
     border-radius: 20px;
     font-family: 'Darker Grotesque';
