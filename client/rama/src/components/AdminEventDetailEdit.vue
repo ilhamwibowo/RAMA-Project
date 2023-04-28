@@ -10,15 +10,13 @@
 
         <form>
             <div class="container-image">
-            <label for="image">
-                <img :src="previewImageUrl" />
-            </label>
-            <input
+                <input
                     type="file"
                     id="image"
                     accept="image/*"
                     @change="changePhoto"
                 />
+                <img :src="previewImageUrl" />
             </div>
 
             <div class="form-grid">
@@ -207,6 +205,11 @@ export default {
                 }, 3000);
             });
         },
+        changePhoto(event) {
+            const image = event.target.files[0];
+            this.profilePhoto = image;
+            this.previewImageUrl = URL.createObjectURL(image);
+        },
     },
     created() {
         console.log(this.event);
@@ -228,13 +231,8 @@ export default {
 
 <style scoped>
 .container-image {
-    display: flex;
-    margin: 0 auto;
-    max-width: 400px;
-    align-items: center;
-    overflow: hidden;
+    width: 100%;
     text-align: center;
-    justify-content: center;
 }
 
 form {
@@ -274,35 +272,14 @@ form {
     grid-row-gap: 10px;
 }
 
-
-.category-container {
-    width: 50%;
-    left: 25%;
-    margin-bottom: 2.5rem;
-}
-
-.category-table {
-    border-collapse: collapse;
-    text-align: center;
-    margin-bottom: 1rem;
-    width: 100%;
-    table-layout: fixed;
-    color: #000;
-}
-
-.table-row-header {
-    border-bottom: 2px solid #272626;
-    font-family: "Montserrat", sans-serif;
-    font-size: 1.25rem;
-}
-
-.table-row-body {
-    font-size: 1.25rem;
-}
-
 /* Optional styling for labels and inputs */
 label {
     font-weight: bold;
+}
+
+img {
+    max-width: 400px;
+    max-height:200px;
 }
   
 input {
