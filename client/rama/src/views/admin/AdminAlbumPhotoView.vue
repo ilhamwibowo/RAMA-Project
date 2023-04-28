@@ -73,30 +73,61 @@ export default {
       selectAllClicked(event) {
         if (event.target.checked) {
             this.listPhotos.forEach(function(photo) {
-                photos.addPhoto(photo);
+                const temp = {
+                    id: photo.photoId,
+                    url: photo.url
+                }
+                photos.addPhoto(temp);
             })
         } else {
             this.listPhotos.forEach(function(photo) {
-                photos.deletePhoto(photo);
+                const temp = {
+                    id: photo.photoId,
+                    url: photo.url
+                }
+                photos.deletePhoto(temp);
             })
         }
         this.albumPaginationKey += 1;
       },
-      deleteClicked() {
+      async deleteClicked() {
+        const listCheck = photos.PhotosCheckId();
+        console.log(listCheck);
+        for (let i = 0; i < listCheck.length; i++) {
+            await this.deletePhoto(listCheck[i]);
+        }
+        location.reload();
+      },
+      async deletePhoto(id) {
+        const token = localStorage.getItem("token");
+        var status;
 
+        // Configuration for API
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        await axios.delete(import.meta.env.VITE_API_URI + "/Album/photos/" + id, config)
+        .then((response) => {
+            status = response.status;
+            console.log(response);
+        })
+        .catch((err) => {
+            status = err.response.status;
+            console.log(err);
+        });
       },
       uploadClicked() {
         document.getElementById("image").click();
       },
-      uploadPhoto(event) {
+      async uploadPhoto(event) {
             // get input photos
             const inputPhotos = Array.from(event.target.files);
 
-            // Post one by one
-            inputPhotos.forEach((file) => {
-                this.sendPostPhoto(file);
-            });
-            this.albumPaginationKey += 1;
+            for (let i = 0; i < inputPhotos.length; i++) {
+                await this.sendPostPhoto(inputPhotos[i]);
+            }
+            location.reload();
         },
         async sendPostPhoto(file) {
             var status;
@@ -256,6 +287,7 @@ export default {
     position: absolute;
     top: 15px;
     right: 25px;
+    z-index: 100;
 }
 .btn {
     font-family: "Bebas Neue";

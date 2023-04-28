@@ -39,7 +39,7 @@ export default {
         onClickCheck(event) {
             // console.log(event);
             let isCheck = event.target.checked;
-            let photo = { id: history.photoId, url: this.photoUrl};
+            let photo = { id: this.photoId, url: this.photoUrl};
             this.isCheck = isCheck;
             if (isCheck) {
                 photos.addPhoto(photo);

@@ -5,7 +5,7 @@ export const useProductStore = defineStore("product", {
         photos: []
     }),
     getters: {
-        PhotosCheckId(state) {
+        GetCheckId(state) {
             var returnValue = [];
             for (let i = 0; i < state.photos.length; i++) {
                 returnValue.push(state.photos[i].id);
@@ -35,6 +35,14 @@ export const useProductStore = defineStore("product", {
             for (let i = 0; i < this.photos.length; i++) {
                 returnValue.push(this.photos[i].url);
             }
+            console.log("Return", returnValue);
+            return returnValue;
+        },
+        PhotosCheckId() {
+            var returnValue = [];
+            for (let i = 0; i < this.photos.length; i++) {
+                returnValue.push(this.photos[i].id)
+            } 
             console.log("Return", returnValue);
             return returnValue;
         }

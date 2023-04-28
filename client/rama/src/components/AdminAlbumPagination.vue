@@ -2,8 +2,8 @@
     <div class="photo-container">
         <AdminAlbumPhoto
             v-for="photo in this.photosInput"
-            :key="photo.id"
-            :photoId="photo.id"
+            :key="photo.photoId"
+            :photoId="photo.photoId"
             :photoUrl="photo.url"
         />
     </div>    
