@@ -9,7 +9,7 @@
         </Transition> 
 
         <AdminSidebar class="sidebar"/>
-        <AdminEventDetailEdit v-if="showForm" @cancel="toogleForm" />
+        <AdminEventDetailEdit v-if="showForm" :event="event"/>
         <div class="layout">
             <div class="tabs">
                 <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'detailEvent'}">Detail Event</RouterLink> 
@@ -19,7 +19,7 @@
             <div class="body">
                 <div class="buttons-container">
                     <div class="edit-button-container">
-                        <button class="edit-button" @click="toggleForm()" >EDIT</button> 
+                        <button class="edit-button" @click="toggleForm">EDIT</button> 
                     </div>
                         <!-- END OF POP UP FORM -->
                     <div class="delete-button-container">
@@ -166,6 +166,7 @@ export default {
                     console.log(response);
                 }else{
                     this.event = response.data;
+                    console.log(typeof(this.event));
                     this.name = this.event.raceName;
                     this.description = this.event.raceDesc;
                     this.city = this.event.startLocation.name;
@@ -196,7 +197,7 @@ export default {
             if (event.keyCode === 27) {
                 this.showForm = false;
             }
-        },deleteRace(){
+        },async deleteRace(){
             const token = localStorage.getItem("token");
             var status;
 
@@ -205,14 +206,9 @@ export default {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            axios.delete(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
+            await axios.delete(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
             .then((response) => {
-                status = response.status
-                if(response.status !== 200){
-                    console.log(response);
-                }else{
-                    this.$router.push("/event");
-                }
+                status = response.status;
             })
             .catch((err) => {
                 status = err.response.status;
@@ -220,9 +216,11 @@ export default {
             });
 
             // Status Alert
+            console.log(status);
             if (status === 200) {
-                this.message = "Data has been updated!"
+                this.message = "Data has been deleted!"
                 this.showToastSuccess = true; 
+                clearTimeout();
                 setTimeout(() => {
                     this.showToastSuccess = false
                 }, 3000);
@@ -233,12 +231,14 @@ export default {
             else if (status === 400) {
                 this.message = errorMsg;
                 this.showToastError = true;
+                clearTimeout();
                 setTimeout(() => {
                     this.showToastError = false
                 }, 3000);
             } else {
                 this.message = "Sorry, there is an error on the server"
                 this.showToastError = true;
+                clearTimeout();
                 setTimeout(() => {
                     this.showToastError = false
                 }, 3000);
@@ -590,6 +590,49 @@ img {
 
 .circle:hover {
     opacity: 0.3;
+}
+
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
 }
 
 </style>

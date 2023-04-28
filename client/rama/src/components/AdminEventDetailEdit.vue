@@ -105,6 +105,9 @@ import axios from 'axios';
 import Toast from '@/components/Toast.vue';
 export default {
     name: "AdminEventDetailEdit",
+    props: {
+        event: []
+    },
     data() {
         return {
             name: "", 
@@ -120,6 +123,10 @@ export default {
             startRegis: "",
             endRegis: "",
             albumId: "",
+            distance: 0,
+            price: 0,
+            previewImageUrl: "",
+            basePreviewImageUrl: "",
             showToastError: false,
             showToastSuccess: false,
             message: "",
@@ -200,6 +207,21 @@ export default {
                 }, 3000);
             });
         },
+    },
+    created() {
+        console.log(this.event);
+        this.name = this.event.raceName;
+        this.city = this.event.startLocation.name;
+        this.startDate = this.event.startTime;
+        this.isPublish = this.event.isPublished;
+        this.description = this.event.raceDesc;
+        this.startRegis = this.event.startDateRegistration;
+        this.endRegis = this.event.endDateRegistration;
+        this.albumId = this.event.albumId
+        this.distance = this.event.distance;
+        this.price = this.event.registrationFee;
+        this.previewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
+        this.basePreviewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
     }
 }
 </script>
