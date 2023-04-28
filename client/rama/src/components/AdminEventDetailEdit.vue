@@ -210,12 +210,22 @@ export default {
             this.profilePhoto = image;
             this.previewImageUrl = URL.createObjectURL(image);
         },
+        print(event) {
+            console.log(this.startDate);
+            const startTime = new Date(this.startDate).toISOString();
+            console.log(startTime);            
+            var now = new Date(startTime);
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            console.log(now.toISOString().slice(0,16));
+        },
     },
     created() {
         console.log(this.event);
+        var time = new Date(this.event.startTime);
+        time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
+        this.startDate = time.toISOString().slice(0,16)
         this.name = this.event.raceName;
         this.city = this.event.startLocation.name;
-        this.startDate = this.event.startTime;
         this.isPublish = this.event.isPublished;
         this.description = this.event.raceDesc;
         this.startRegis = this.event.startDateRegistration;
