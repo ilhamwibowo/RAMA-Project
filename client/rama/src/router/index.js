@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import axios from "axios";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -114,12 +115,15 @@ router.beforeEach(async (to) => {
         "EventRegistrant"
     ];
 
-    const isAdminRoute = adminPages.includes(to.name);
-    // const userRole = localStorage.getItem("userRole");
-    const userRole = getRole();
-
-    if (isAdminRoute && userRole !== "Admin") {
-        return { name: "home" };
+    console.log("laksdj");
+    if (loggedIn) {
+        const isAdminRoute = adminPages.includes(to.name);
+        // const userRole = localStorage.getItem("userRole");
+        const userRole = await getRole();
+        console.log(userRole);
+        if (isAdminRoute && userRole !== "Admin") {
+            return { name: "home" };
+        }
     }
 });
 
@@ -133,19 +137,18 @@ async function getRole() {
         headers: { Authorization: `Bearer ${token}` }
     };
 
-    // Axios Get
-    await axios
-        .get(import.meta.env.VITE_API_URI + "/User", config)
-        .then((response) => {
-            if (response.status !== 200) {
-                return "User";
-            } else {
-                return response.data.role;
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    try {
+        // Axios Get
+        const response = await axios.get(import.meta.env.VITE_API_URI + "/User", config);
+        if (response.status !== 200) {
+            return "User";
+        } else {
+            return response.data.role;
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
+
 
 export default router;

@@ -97,7 +97,9 @@ export default {
                     .then((response) => {
                         this.response = "";
                         localStorage.setItem("token", response.data.token);
-                        if (response.data.Role == 'Admin') {
+                        console.log("asldkjflaskdfj");
+                        console.log(response.data);
+                        if (response.data.role == "Admin") {
                             this.$router.push("/event");
                         } 
                         else {
