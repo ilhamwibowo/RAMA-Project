@@ -3,7 +3,7 @@
         <button class="button" @click="onClick"><img src="/navbar-button.png"></button>
         <div v-if="isOpen" class="popup">
             <RouterLink class="text" to="/">Home</RouterLink>
-            <RouterLink class="text" to="/album">Album</RouterLink>
+            <RouterLink class="text" to="/albums">Album</RouterLink>
             <RouterLink v-if="isLogin" class="text" to="/events">Event</RouterLink>
         </div>
     </div>    

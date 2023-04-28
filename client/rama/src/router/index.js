@@ -47,7 +47,7 @@ const router = createRouter({
             component: () => import("../views/user/ForgotView.vue")
         },
         {
-            path: "/album",
+            path: "/album/:id",
             name: "album",
             component: () => import("../views/user/AlbumView.vue")
         },
@@ -60,6 +60,11 @@ const router = createRouter({
             path: "/events/:id",
             name: "userEventDetail",
             component: () => import("../views/user/UserEventDetail.vue")
+        },
+        {
+            path: "/albums",
+            name: "albums",
+            component: () => import("../views/user/UserAlbumView.vue")
         },
 
         // Admin
@@ -97,7 +102,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-    const publicPages = ["home", "login", "register", "forgot", "album"];
+    const publicPages = ["home", "login", "register", "forgot", "albums", "album"];
     const authRequired = !publicPages.includes(to.name);
     const loggedIn = localStorage.getItem("token") !== null;
 
