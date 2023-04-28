@@ -218,7 +218,7 @@ export default {
                 if (this.description === "") throw "Description";
                 if (this.startRegis === "") throw "Start registration date";
                 if (this.endRegis === "") throw "End registration date";
-                if (this.previewImage === "") throw "Image";
+                if (this.profilePhoto === null) throw "Image";
                 this.saveEvent()
             }
             catch (err) {

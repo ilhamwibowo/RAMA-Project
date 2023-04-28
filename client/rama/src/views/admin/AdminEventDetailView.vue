@@ -387,6 +387,8 @@ export default {
     height: 20%;
     width: 60%;
     left: 20%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #race-photo{

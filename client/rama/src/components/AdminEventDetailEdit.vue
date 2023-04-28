@@ -56,7 +56,6 @@
                                 <option value="">Pilih Album</option>
                                 <option v-for="album in this.albums" :key="album.albumId" :value="album.albumId">{{ album.albumName }}</option>
                             </select>
-                            <p>{{ this.albumid }}</p>
                         </div>
 
                     </div>           
@@ -89,7 +88,7 @@
                 <div class="grid-item">
                     <div class="button-container"> 
                         <button class="btn-cancel" >CANCEL</button>
-                        <button class="btn-save" @click.prevent="saveEvent">SAVE</button>
+                        <button class="btn-save" @click.prevent="validationInput">SAVE</button>
                     </div> 
                 </div>                      
                 </div>
@@ -104,11 +103,16 @@ import Toast from '@/components/Toast.vue';
 export default {
     name: "AdminEventDetailEdit",
     props: {
-        event: []
+        event: Object
+    },
+    components: {
+        Toast
     },
     data() {
         return {
             albums: [],
+            id: "",
+            photo: "",
             name: "", 
             city: "", 
             startDate: "",
@@ -132,6 +136,31 @@ export default {
         }
     },
     methods: {
+        validationInput() {
+            try {
+                if (this.name === "") throw "Name";
+                if (this.city === "") throw "City";
+                if (this.startDate === "") throw "Start date";
+                if (this.distance === "") throw "Distance";
+                if (this.price === "") throw "Price";
+                if (this.description === "") throw "Description";
+                if (this.startRegis === "") throw "Start registration date";
+                if (this.endRegis === "") throw "End registration date";
+                if (this.photo === "") throw "Image";
+                console.log(this.photo);
+                this.saveEvent();
+            }
+            catch (err) {
+                this.message = err + " is empty";
+                console.log(this.message);
+                this.showToastError = true;
+                console.log(this.showToastError);
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false;
+                }, 3000)
+            }
+        },
         saveEvent() {
             const token = localStorage.getItem("token");
 
@@ -208,7 +237,7 @@ export default {
         },
         changePhoto(event) {
             const image = event.target.files[0];
-            this.profilePhoto = image;
+            this.photo = image;
             this.previewImageUrl = URL.createObjectURL(image);
         },
         print(event) {
@@ -232,7 +261,6 @@ export default {
                 .then((response) => {
                     status = response.status;
                     this.albums = response.data.albums;
-                    console.log(this.albums);
                 })
                 .catch((err) => {
                     status = err.response.status;
@@ -241,7 +269,7 @@ export default {
         }
     },
     async created() {
-        console.log(this.event);
+        this.id = this.event.raceId;
         var time = new Date(this.event.startTime);
         time.setMinutes(time.getMinutes() - time.getTimezoneOffset());
         this.startDate = time.toISOString().slice(0,16)
@@ -256,6 +284,7 @@ export default {
         this.price = this.event.registrationFee;
         this.previewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
         this.basePreviewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
+        this.photo = this.event.raceThumbnail;
         this.getAlbum();
     }
 }
@@ -384,4 +413,48 @@ input {
 .row input {
     flex-grow: 1;
 }
+
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
+}
+
 </style>
