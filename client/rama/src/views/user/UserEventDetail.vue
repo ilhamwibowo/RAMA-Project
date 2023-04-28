@@ -56,7 +56,7 @@
         eventData: {
           raceThumbnail: {url : "../1.jpg"},
           raceName: "Jawa Timur Marathon Festival",
-          raceDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec eros tincidunt, sodales dui quis, congue enim. Morbi tristique ex a lectus tempus, ut iaculis velit lobortis. Nullam sagittis nunc in metus mollis consequat. Praesent bibendum accumsan dolor, vel iaculis mi tincidunt ut. Praesent nec dolor non risus viverra dignissim. Nunc dui sem, lobortis sit amet risus non, euismod euismod purus. Etiam augue metus, lobortis ut ultrices quis, laoreet eu leo.",
+          raceDesc: "lobortis ut ultrices quis, laoreet eu leo.",
           distance: "23km",
           registrationFee: "10000",
           startTime:new Date(),
@@ -124,8 +124,7 @@
       },
       
       viewAlbum() {
-        // TODO : Add parameters to album
-        this.$router.push({ name: 'album'});
+        this.$router.push({ name: 'album', params: { id: this.eventData.raceAlbum.albumId } });
       },formatDate(dateString) {
         const months = [
           "January", "February", "March", "April", "May", "June", 
@@ -156,6 +155,8 @@
 
 .right-side {
   flex: 1;
+  justify-content: center;
+  text-align: center;
 }
 
 .sticky-container {
