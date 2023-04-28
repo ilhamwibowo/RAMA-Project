@@ -36,7 +36,7 @@
                 <form class="form-edit-album" @submit.prevent="submitForm">
                     <div class="form-group">
                         <label class="form-label" for="album-name">Album Name</label>
-                        <input class="form-input" type="text" id="album-name" v-model="album.albumName">
+                        <input class="form-input" type="text" id="album-name" v-model="albumName" :placeholder="album.albumName">
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="status">Status</label>
@@ -100,21 +100,20 @@ export default {
             });
         },
         saveAlbum(){
-            // const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token");
 
-            // // Configuration for API
-            // const config = {
-            //     headers: { Authorization: `Bearer ${token}`}
-            // };
-            // axios.put(import.meta.env.VITE_API_URI + "/Album/" + this.id, {albumName : this.albumName}, config)
-            // .then((responese) => {
-            //     this.showPopup = false;
-            //     location.reload();
-            // })
-            // .catch((err) =>{
-            //     console.log(err);
-            // })
-
+            // Configuration for API
+            const config = {
+                headers: { Authorization: `Bearer ${token}`}
+            };
+            axios.put(import.meta.env.VITE_API_URI + "/Album/" + this.id, {albumName : this.albumName}, config)
+            .then((responese) => {
+                this.showPopup = false;
+                location.reload();
+            })
+            .catch((err) =>{
+                console.log(err);
+            })
         }
     },
     mounted(){
