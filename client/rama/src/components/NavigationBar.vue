@@ -1,17 +1,17 @@
 <template>
     <header>
         <div class="navpage">
-            <NavigationPage />
+            <NavigationPage :isLogin="isLogin" />
         </div>
         <div class="title">
             <RouterLink class="text" to="/">Rama</RouterLink>
         </div>
         <div class="profile">
             <div v-if="isLogin">
-                <RouterLink to="/profile"><img src="/navbar-profile.png" ></RouterLink>
+                <NavigationProfile />
             </div>
             <div v-else>
-                <RouterLink to="/login">Login</RouterLink>
+                <RouterLink class="text" to="/login">Login</RouterLink>
             </div>
         </div>
     </header>
@@ -23,6 +23,7 @@ import { mapState } from "pinia";
 import { useProfileStore } from "@/stores/profile";
 
 import NavigationPage from "./NavigationPage.vue";
+import NavigationProfile from "./NavigationProfile.vue";
 
 export default {
     name: "NavigationBar",
@@ -35,7 +36,8 @@ export default {
     },
 
     components: {
-        NavigationPage
+        NavigationPage,
+        NavigationProfile
     },
 
     computed: {
@@ -82,7 +84,7 @@ header {
     text-decoration: none;
     color: black;
     font-family: "Bebas Neue";
-    font-size: 48;
+    font-size: 48px;
 }
 
 .profile {
@@ -92,7 +94,11 @@ header {
     align-items: center;
 }
 
-.profile img {
-    width: 80px;
+.profile .text {
+    text-decoration: none;
+    color: black;
+    font-family: "Bebas Neue";
+    font-size: 48px;
 }
+
 </style>

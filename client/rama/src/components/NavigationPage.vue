@@ -4,7 +4,7 @@
         <div v-if="isOpen" class="popup">
             <RouterLink class="text" to="/">Home</RouterLink>
             <RouterLink class="text" to="/album">Album</RouterLink>
-            <RouterLink class="text" to="/events">Event</RouterLink>
+            <RouterLink v-if="isLogin" class="text" to="/events">Event</RouterLink>
         </div>
     </div>    
 </template>
@@ -13,6 +13,9 @@
 
 export default {
     name: "NavigationPage",
+    props: {
+        isLogin: Boolean
+    },
     data() {
         return {
             isOpen: false

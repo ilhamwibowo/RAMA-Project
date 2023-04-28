@@ -97,7 +97,12 @@ export default {
                     .then((response) => {
                         this.response = "";
                         localStorage.setItem("token", response.data.token);
-                        this.$router.push("/profile");
+                        if (response.data.Role == 'Admin') {
+                            this.$router.push("/event");
+                        } 
+                        else {
+                            this.$router.push("/");
+                        }
                     })
                     .catch((error) => {
                         this.response = error.response.data;
