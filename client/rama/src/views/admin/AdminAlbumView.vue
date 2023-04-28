@@ -10,17 +10,17 @@
                     <thead class="table-head">
                         <tr class="table-row-header">
                             <th class="table-header-title" scope="col">Title</th>
-                            <th class="table-header-status" scope="col">Status</th>
+                            <!-- <th class="table-header-status" scope="col">Status</th> -->
                             <th class="table-header-action" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody class="table-body">
                         <tr class="table-row-body" v-for="album in albums" :key="album.albumId">
                             <td class="table-data-title" v-text="album.albumName"></td>
-                            <td class="table-data-status">
+                            <!-- <td class="table-data-status">
                                 <p class="status-publish" id="published" v-if="this.isPublished">Published</p>
                                 <p class="status-publish-not" id="notPublished" v-if="!this.isPublished">Unpublished</p>
-                            </td>
+                            </td> -->
                             <td class="table-data-action">
                                 <button class="detail-button">
                                     <router-link :to="{params: {id : album.albumId}, name: 'albumDetail'}">
@@ -193,7 +193,7 @@ export default {
 
 /* for table title */
 .table-header-title{
-    width: 60%;
+    width: 80%;
     text-align: left;
     left: 50px;
 }
@@ -201,7 +201,7 @@ export default {
 /* fot table row data */
 
 .table-data-title{
-    width: 60%;
+    width: 80%;
     text-align: left;
     font-family: 'Darker Grotesque';
     font-size: 20px;
@@ -209,7 +209,7 @@ export default {
 }
 
 
-.table-header-status, .table-data-status,
+/* .table-header-status, .table-data-status, */
 .table-header-action, .table-data-action{
     width: 20%;
 }

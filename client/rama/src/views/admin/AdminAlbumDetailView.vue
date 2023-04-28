@@ -13,21 +13,18 @@
                     <button class="delete-button" @click="deleteAlbum">DELETE</button>
                 </div>
                 <div class="information-container">
-                    <div class="row">
-                        <div class="album-name">
-                            <label class="label-album-name">Name</label>
-                            <div class="album-name-container">
-                                <p v-text="album.albumName"></p>
-                            </div>
-                        </div>
-                        <div class="album-status">
-                            <label class="label-album-status">Status</label>
-                            <div class="album-status-container">
-                                <!-- ubah ini jika sudah ada di back end -->
-                                <p v-text="this.status"></p>
-                            </div>
+                    <div class="album-name">
+                        <label class="label-album-name">Name</label>
+                        <div class="album-name-container">
+                            <p v-text="album.albumName"></p>
                         </div>
                     </div>
+                    <!-- <div class="album-status">
+                        <label class="label-album-status">Status</label>
+                        <div class="album-status-container">
+                            <p v-text="this.status"></p>
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -39,13 +36,13 @@
                         <label class="form-label" for="album-name">Album Name</label>
                         <input class="form-input" type="text" id="album-name" v-model="albumName" :placeholder="album.albumName">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="form-label" for="status">Status</label>
                         <select class="form-input" id="status" v-model="statusEdit">
                             <option value="published">Published</option>
                             <option value="unpublished">Unpublished</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="form-buttons">
                         <button class="form-button form-button-save" @click="saveAlbum">Save</button>
                         <button class="form-button form-button-cancel" @click="showPopup = false">Cancel</button>
@@ -241,36 +238,24 @@ export default {
 .information-container {
     width: 100%;
 }
-.row{
-    width: 100%;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-.album-name,
-.album-status{
-    width: 50%;
+.album-name{
+    /* width: 50%; */
     height: auto;
-    text-align: left;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
 }
 .album-name-container{
     background: #fff;
     border-radius: 15px;
     border: 2px solid #000;
-    width: 50%;
-    left: 45%;
+    width: 40%;
     height: 2rem;
-}
-
-.album-status-container{
-    background: #fff;
-    border-radius: 15px;
-    border: 2px solid #000;
-    width: 50%;
-    height: 2rem;
-    left: 5%;
+    text-align: left;
+    justify-content: end;
+    margin: 0 auto;
 }
 
 p {
@@ -286,13 +271,10 @@ label {
 }
 
 .label-album-name{
-    left: 46%;
     font-family: 'Darker Grotesque';
+    text-align: center;
 }
-.label-album-status{
-    left: 6%;
-    font-family: 'Darker Grotesque';
-}
+
 
 .popup {
   display: flex;
