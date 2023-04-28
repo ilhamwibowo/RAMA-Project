@@ -1,5 +1,13 @@
 <template>
     <div class="layout">
+        <!-- Toast -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toastError">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+
         <AdminSidebar class="sidebar" event="true"/>
         <div class="main">
             <div class="header">
@@ -85,7 +93,7 @@
                        <div class="grid-item">
                            <div class="button-container"> 
                                <button class="btn-cancel" @click="toggleForm">CANCEL</button>
-                               <button class="btn-save" @click.prevent="saveEvent">SAVE</button>
+                               <button class="btn-save" @click.prevent="validationInput">SAVE</button>
                            </div> 
                        </div>                      
                        </div>
@@ -140,6 +148,7 @@
 <script>
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
+import Toast from '@/components/Toast.vue';
 export default {
     name: "EventView",
     data() {
@@ -164,11 +173,15 @@ export default {
             description: "",
             startRegis: "",
             endRegis: "",
-            profilePhoto:Object
+            profilePhoto:Object,
+            showToastError: false,
+            showToastSuccess: false,
+            message: "",
         };
     },
     components: {
-        AdminSidebar
+        AdminSidebar,
+        Toast
     },
     methods: {
         async getEvent() {
@@ -192,8 +205,32 @@ export default {
                 console.log(err);
             });
         },
+
         // This method is for creating a new event which is used 
         // in the "Save" button on the form
+        validationInput() {
+            try {
+                if (this.name === "") throw "Name";
+                if (this.city === "") throw "City";
+                if (this.startDate === "") throw "Start date";
+                if (this.distance === "") throw "Distance";
+                if (this.price === "") throw "Price";
+                if (this.description === "") throw "Description";
+                if (this.startRegis === "") throw "Start registration date";
+                if (this.endRegis === "") throw "End registration date";
+                if (this.profilePhoto === null) throw "Image";
+                this.saveEvent()
+            }
+            catch (err) {
+                this.message = err + " is empty";
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false;
+                }, 3000)
+            }
+        },
+
         saveEvent() {
             // this.uploadphoto();
             const token = localStorage.getItem("token");
@@ -202,7 +239,7 @@ export default {
             const config = {
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
             };
-
+            
             // Convert local time to UTC time
             const startTime = new Date(this.startDate).toISOString();
 
@@ -221,8 +258,6 @@ export default {
             var dayEnd = EndDate.getDate();
             const endRegistration = yearEnd+"-"+monthEnd+"-"+dayEnd;
 
-
-            // console.log(myDate)
             //ini baru bagian yang wajib diisi
             let formData = new FormData();
             formData.append('RaceName', this.name);
@@ -235,38 +270,65 @@ export default {
             formData.append('StartDateRegistration', startRegistration);
             formData.append('EndDateRegistration', endRegistration);
             formData.append('file', this.profilePhoto)
-            // formData.append('isOpened', this.isOpen);
             
             console.log([...formData]);
             axios
             .post(import.meta.env.VITE_API_URI + "/Race", formData, config)
             .then((response) => {
-                alert("Success");
-                this.showForm = false;
-
-                // Clear input valeus.
-                this.name = "", 
-                this.city = "", 
-                this.startDate = "",
-                this.startLocation = "",
-                this.latitude = "",
-                this.longitude = "",
-                this.courseMap = "",
-                this.isOpen = false,
-                this.isPublish = false,
-                this.category = "",
-                this.distance = "",
-                this.price = "",
-                this.previewImageUrl = "",
-                this.description = "",
-                this.startRegis = "",
-                this.endRegis = "",
                 console.log(response.data);
+
+                // Alert message
+                this.message = "Data has been saved!";
+                this.showToastSuccess = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastSuccess = false;
+                }, 3000);
+                setTimeout (() => {
+                    // Reload when success
+                    this.showForm = false;
+                    location.reload()
+                    this.clearForm();
+                }, 3500)
+                
             })
             .catch((err) => {
                 console.log(err);
+
+                // Alert message
+                if (err.response.status === 400) {
+                    this.message = err.response.data;
+                } else {
+                    this.message = "Sorry, there is an error on the server";
+                }
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false;
+                }, 3000);
             });
-        }, toggleForm() {
+        }, 
+
+        // clear input values.
+        clearForm() {
+            this.name = "";
+            this.city = "";
+            this.startDate = "";
+            this.startLocation = "";
+            this.latitude = "";
+            this.longitude = "";
+            this.courseMap = "";
+            this.isOpen = false;
+            this.isPublish = false;
+            this.category = "";
+            this.distance = "";
+            this.price = "";
+            this.previewImageUrl = "";
+            this.description = "";
+            this.startRegis = "";
+            this.endRegis = "";
+        },
+        toggleForm() {
             this.showForm = !this.showForm;
             if (this.showForm) {
                 // add event listener to close form on escape key press
@@ -485,6 +547,9 @@ img {
 .title-page {
     left: 20%;
     height: 100%;
+    font-family: 'Darker Grotesque';
+    font-weight: bold;
+    font-size: 48px;
 }
 .button-add-container {
     width: 50%;
@@ -492,16 +557,17 @@ img {
     text-align: right;
 }
 .add-button {
-    width: 10%;
-    height: 80%;
-    right: 20%;
-    top: 10%;
+    right: 25%;
+    top: 30px;
     background: #353642;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    letter-spacing: 2px;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    color: white;
 }
 
 .add-button:hover {
@@ -529,44 +595,54 @@ img {
 
 .table-row-header {
     border-bottom: 2px solid #272626;
-    font-family: "Montserrat", sans-serif;
-    font-size: 120%;
+    font-family: 'Darker Grotesque';
+    font-size: 24px;
 }
 
 .table-header {
     width: 100% / 7;
 }
 
+.table-row-body{
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
+}
+
 .open-regis {
     background: #72e48b;
     border-radius: 15px;
-    left: 25%;
-    width: 50%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .close-regis {
     background: #ec7b7b;
     border-radius: 15px;
-    left: 25%;
-    width: 50%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .status-publish {
     background: #72e48b;
     border-radius: 15px;
-    left: 25%;
-    width: 50%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .status-publish-not {
     background: #ec7b7b;
     border-radius: 15px;
-    left: 25%;
-    width: 60%;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-family: 'Darker Grotesque';
+    display: inline-block;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
 }
 
 .detail-button {
@@ -574,8 +650,53 @@ img {
     background: #deddd8;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    font-size: 16px;
 }
+
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
+}
+
 </style>

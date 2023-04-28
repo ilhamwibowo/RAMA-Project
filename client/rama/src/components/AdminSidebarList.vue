@@ -22,10 +22,8 @@ export default {
     created() {
         if (this.isPage)
         {
-            console.log(this.iconSrc);
             let index = this.iconSrc.indexOf("-");
             this.imageSrc = this.iconSrc.substring(0, index) + "-page" + this.iconSrc.substring(index);
-            console.log(this.imageSrc);
         } 
         else 
         {

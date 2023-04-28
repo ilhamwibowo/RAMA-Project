@@ -74,17 +74,17 @@ const router = createRouter({
             component: () => import("../views/admin/AdminEventDetailView.vue")
         },
         {
-            path: "/albumAdmin",
+            path: "/admin/album",
             name: "albumAdmin",
             component: () => import("../views/admin/AdminAlbumView.vue")
         },
         {
-            path: "/albumDetail/:id",
+            path: "/admin/album/detail/:id",
             name: "albumDetail",
             component: () => import("../views/admin/AdminAlbumDetailView.vue")
         },
         {
-            path: "/listPhoto/:id",
+            path: "/admin/album/photos/:id",
             name: "listPhoto",
             component: () => import("../views/admin/AdminAlbumPhotoView.vue")
         },

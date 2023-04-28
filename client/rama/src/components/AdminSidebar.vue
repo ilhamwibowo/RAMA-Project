@@ -7,7 +7,7 @@
             <AdminSidebarList iconSrc="/dashboard-icon.png" text="Dashboard" :isPage="dashboard" />
             <AdminSidebarList iconSrc="/accounts-icon.png" text="Accounts" :isPage="account" />
             <RouterLink class="link" to="/event"><AdminSidebarList iconSrc="/events-icon.png" text="Events" :isPage="event"/></RouterLink>
-            <RouterLink class="link" to="/albumAdmin"><AdminSidebarList iconSrc="/album-icon.png" text="Album" :isPage="album"/></RouterLink>
+            <RouterLink class="link" :to="{ name: 'albumAdmin'}"><AdminSidebarList iconSrc="/album-icon.png" text="Album" :isPage="album"/></RouterLink>
             <RouterLink class="link" to="/logout"><AdminSidebarList iconSrc="/logout-icon.png" text="Log Out" :isPage="false"/></RouterLink>
         </div>
     </div>

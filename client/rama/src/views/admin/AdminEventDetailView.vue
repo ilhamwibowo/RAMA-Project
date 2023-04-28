@@ -1,7 +1,15 @@
 <template>
     <div class="detail-event">
+        <!-- Toast -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toastError">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+
         <AdminSidebar class="sidebar"/>
-        <AdminEventDetailEdit v-if="showForm" @cancel="toogleForm" />
+        <AdminEventDetailEdit v-if="showForm" :event="event"/>
         <div class="layout">
             <div class="tabs">
                 <RouterLink class="tab page" :to="{params: {id: this.id}, name: 'detailEvent'}">Detail Event</RouterLink> 
@@ -11,7 +19,7 @@
             <div class="body">
                 <div class="buttons-container">
                     <div class="edit-button-container">
-                        <button class="edit-button" @click="toggleForm()" >EDIT</button> 
+                        <button class="edit-button" @click="toggleForm">EDIT</button> 
                     </div>
                         <!-- END OF POP UP FORM -->
                     <div class="delete-button-container">
@@ -98,12 +106,14 @@
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import AdminEventDetailEdit from '@/components/AdminEventDetailEdit.vue';
+import Toast from '@/components/Toast.vue';
 
 export default {
     name: "detailEvent",
     components: {
         AdminSidebar,
-        AdminEventDetailEdit
+        AdminEventDetailEdit,
+        Toast
     },
     data(){
         return {
@@ -128,7 +138,10 @@ export default {
             startRegis: "",
             endRegis: "",
             albumId: "",
-            photo:Object
+            photo:Object,
+            showToastError: false,
+            showToastSuccess: false,
+            message: "",
         };
     },
 
@@ -153,6 +166,7 @@ export default {
                     console.log(response);
                 }else{
                     this.event = response.data;
+                    console.log(typeof(this.event));
                     this.name = this.event.raceName;
                     this.description = this.event.raceDesc;
                     this.city = this.event.startLocation.name;
@@ -183,26 +197,53 @@ export default {
             if (event.keyCode === 27) {
                 this.showForm = false;
             }
-        },deleteRace(){
-            // console.log("event di delete")
+        },async deleteRace(){
             const token = localStorage.getItem("token");
+            var status;
 
             // Configuration for API
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            axios.delete(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
+            await axios.delete(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
             .then((response) => {
-                if(response.status !== 200){
-                    console.log(response);
-                }else{
-                    this.$router.push("/event");
-                }
+                status = response.status;
             })
             .catch((err) => {
+                status = err.response.status;
                 console.log(err);
             });
+
+            // Status Alert
+            console.log(status);
+            if (status === 200) {
+                this.message = "Data has been deleted!"
+                this.showToastSuccess = true; 
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastSuccess = false
+                }, 3000);
+                setTimeout(() => {
+                    this.$router.push("/event");
+                }, 3500);
+            }
+            else if (status === 400) {
+                this.message = errorMsg;
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            } else {
+                this.message = "Sorry, there is an error on the server"
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            }
+
         }, async getAlbum(){
             const token = localStorage.getItem("token");
 
@@ -309,7 +350,7 @@ export default {
     background: #000;
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
     letter-spacing: 2px;
     color: #fff;
@@ -330,7 +371,7 @@ export default {
     background: rgb(234, 54, 54);
     border: 1px solid grey;
     border-radius: 15px;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Darker Grotesque';
     font-weight: bold;
     /* letter-spacing: 2px; */
     color: #fff;
@@ -346,6 +387,8 @@ export default {
     height: 20%;
     width: 60%;
     left: 20%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #race-photo{
@@ -408,12 +451,14 @@ p {
     color: #000;
     left: 5%;
     bottom: 6%;
-    font-size: 1.25rem;
+    font-size: 20px;
+    font-family: 'Darker Grotesque';
 }
 
 label {
-    font-size: 1.25rem;
+    font-size: 24px;
     color: #000;
+    font-family: 'Darker Grotesque';
 }
 .label-race-name,
 .label-race-province,
@@ -428,9 +473,10 @@ label {
 }
 
 h2 {
-    font-size: 1.25rem;
+    font-size: 24px;
     color: #000;
-    text-align:center
+    text-align:center;
+    font-family: 'Darker Grotesque';
 }
 
 .maps {
@@ -549,6 +595,49 @@ img {
 
 .circle:hover {
     opacity: 0.3;
+}
+
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
 }
 
 </style>
