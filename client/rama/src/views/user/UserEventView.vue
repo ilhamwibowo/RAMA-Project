@@ -139,6 +139,7 @@ export default {
   cursor: pointer;
   text-align: left;
   background-color: #ececec;
+  transition: 0.2s;
 }
 
 .event-card:hover {
