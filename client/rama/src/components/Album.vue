@@ -43,7 +43,7 @@ export default {
             photoShow: [],
             albumPaginationKey: 0,
             timer: 0,
-            albumId: "",
+            albumId: this.$route.params.id,
         };
     },
     components: {
@@ -74,12 +74,11 @@ export default {
                     config
                 )
                 .then((response) => {
-                    this.listPhotos = response.data.photos;
+                    this.listPhotos = response.data.albumPhotos;
                 })
                 .catch((err) => {
                     console.log(err);
                 });
-
             this.totalPhoto = this.listPhotos.length;
 
             this.updatePage(this.page);
@@ -150,22 +149,23 @@ export default {
 
 
         // Axios get Album Id
-        await axios
-            .get(import.meta.env.VITE_API_URI + "/Album", config)
-            .then((response) => {
-                console.log(response.data.albums[0].albumId);
-                // this.albumId = response.data.albums[0].albumId
-                this.albumId = "3f018a5e-9806-47a6-a0a0-9a6dea826742";
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        // await axios
+        //     .get(import.meta.env.VITE_API_URI + "/Album", config)
+        //     .then((response) => {
+        //         console.log(response.data.albums[0].albumId);
+        //         // this.albumId = response.data.albums[0].albumId
+        //         this.albumId = "3f018a5e-9806-47a6-a0a0-9a6dea826742";
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
 
         // Axios get Photo
         await axios
             .get(import.meta.env.VITE_API_URI + "/Album/" + this.albumId, config)
             .then((response) => {
                 this.listPhotos = response.data.albumPhotos;
+                console.log(response.data);
             })
             .catch((err) => {
                 console.log(err);
