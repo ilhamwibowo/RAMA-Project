@@ -24,6 +24,8 @@ namespace API.Controllers
 
         [HttpPost("scan/{ScannerId}")]
         public async Task<ActionResult> PostCheckPointData(string ScannerId, CheckPointDto cpd){
+            var requester = await _context.Accounts.Select(a => new { a.AccId, a.Role }).FirstOrDefaultAsync(x => x.AccId.Equals(User.GetUserId()));
+            if (requester == null || requester.Role != "Admin") return Unauthorized();
             Location l = await _context.Locations.FirstOrDefaultAsync(x => x.ScannerId == ScannerId);
             RaceAttendance ra = await _context.RaceAttendances.Include(x => x.CheckPoints).Include(x => x.Runner).FirstOrDefaultAsync(x => x.RaceId.Equals(cpd.RaceId) && x.RFID == cpd.RFID);
             if (l == null || ra == null) return NotFound();
