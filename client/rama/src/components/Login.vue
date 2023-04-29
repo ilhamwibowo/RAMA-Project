@@ -49,13 +49,13 @@
                 <p>{{ response }}</p>
             </div>
             <div id="forgot-password">
-                <a href="http://localhost:5173/forgot">Forgot password</a> <br>
+                <RouterLink class="text" to="/forgot">Forgot password</RouterLink> <br>
             </div> 
             <button type="button" id="submit-login" v-on:click="login()">Login</button>
         </div>
         <div id="register-container">
             <hr>
-            <p>Don't have an account? <a href="http://localhost:5173/register">Sign Up</a></p>
+            <p>Don't have an account? <RouterLink class="text" to="/forgot">Sign Up</RouterLink></p>
         </div>
     </div>
 </template>
