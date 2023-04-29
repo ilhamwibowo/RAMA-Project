@@ -25,14 +25,13 @@ namespace API.Controllers
         [HttpPost("scan/{ScannerId}")]
         public async Task<ActionResult> PostCheckPointData(string ScannerId, CheckPointDto cpd){
             Location l = await _context.Locations.FirstOrDefaultAsync(x => x.ScannerId == ScannerId);
-            Account a = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId.Equals(cpd.AccId));
-            RaceAttendance ra = await _context.RaceAttendances.Include(x => x.CheckPoints).FirstOrDefaultAsync(x => x.RaceId.Equals(cpd.RaceId) && x.Runner.Equals(a));
-            if (l == null || a == null || ra == null) return NotFound();
+            RaceAttendance ra = await _context.RaceAttendances.Include(x => x.CheckPoints).Include(x => x.Runner).FirstOrDefaultAsync(x => x.RaceId.Equals(cpd.RaceId) && x.RFID == cpd.RFID);
+            if (l == null || ra == null) return NotFound();
             if (ra.CheckPoints.Any( x => x.ScannerId == ScannerId)) return Ok();
             ra.CheckPoints.Add(
                 new CheckPoint {
-                    RFID = cpd.RFID,
-                    AccId = a.AccId,
+                    RFID = ra.RFID,
+                    AccId = ra.Runner.AccId,
                     RaceId = ra.RaceId,
                     ScannerId = ScannerId,
                     TimeStamp = DateTime.UtcNow
