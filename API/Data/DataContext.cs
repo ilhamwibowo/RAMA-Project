@@ -57,7 +57,8 @@ namespace API.Data
                 .HasKey(nameof(RaceAttendance.RaceId), nameof(RaceAttendance.BibNumber));
             builder.Entity<RaceRegistration>()
                 .HasKey(nameof(RaceRegistration.RaceId), nameof(RaceRegistration.AccId), nameof(RaceRegistration.RegistedAt));
-            
+            builder.Entity<CheckPoint>()
+                .HasKey(nameof(CheckPoint.AccId), nameof(CheckPoint.RaceId), nameof(CheckPoint.ScannerId));
         }
 
         public DbSet<Account> Accounts { get; set; }
@@ -70,5 +71,7 @@ namespace API.Data
         public DbSet<Race> Races { get; set; }
 
         public DbSet<RaceAttendance> RaceAttendances{ get; set; }
+        public DbSet<Location> Locations {get; set;}
+        public DbSet<CheckPoint> CheckPoints {get; set;}
     }
 }

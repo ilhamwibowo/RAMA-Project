@@ -158,21 +158,28 @@ namespace API.Controllers
 
             RaceRegistration rr = await _context.RaceRegistrations.FirstOrDefaultAsync(x => x.RaceId.Equals(RaceId) && x.AccId.Equals(AccId));
 
-            if (rr == null) return NotFound();
+            var account = await _context.Accounts.FirstOrDefaultAsync(x => x.AccId == AccId);
+            if (rr == null || account == null) return NotFound();
 
             rr.Status = rrDto.Status;
             if (rr.Status.Equals(RaceRegistration.PaymentStatus.Paid)) rr.PaidAt = DateTime.UtcNow;
             if (rr.Status.Equals(RaceRegistration.PaymentStatus.TakenKit)) rr.TakenKitAt = DateTime.UtcNow;
             if (rrDto.RFID != null) {
                 rr.RFID = rrDto.RFID;
-                RaceAttendance ra = new RaceAttendance 
-                {
-                    RaceId = RaceId,
-                    Runner = requester,
-                    BibNumber = await GenerateBibNumber("", 5, RaceId),
-                };
-                ra.RFID = rrDto.RFID;
-                _context.RaceAttendances.Update(ra);
+                RaceAttendance ra = await _context.RaceAttendances.FirstOrDefaultAsync(x=> x.RaceId == RaceId && x.Runner == account);
+                if (ra == null) {
+                    ra = new RaceAttendance 
+                    {
+                        RaceId = RaceId,
+                        Runner = requester,
+                        BibNumber = await GenerateBibNumber("", 5, RaceId),
+                    };
+                    ra.RFID = rrDto.RFID;
+                    _context.RaceAttendances.Add(ra);
+                } else{
+                    ra.RFID = rrDto.RFID;
+                    _context.RaceAttendances.Update(ra);
+                }
             }
             rr.RegistrationFee = rrDto.RegistrationFee;
             
@@ -204,7 +211,7 @@ namespace API.Controllers
             Random rnd = new Random();
             string BibNumber;
             do {
-                int rint = rnd.Next(0, (int) Math.Pow(10, len) - 1);
+                int rint = rnd.Next(0, (int) Math.Pow(10, len));
                 BibNumber = prefix + rint.ToString();
             } while (await CheckBibTagExist(BibNumber, RaceId));
             return BibNumber;

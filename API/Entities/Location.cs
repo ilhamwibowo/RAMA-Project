@@ -11,6 +11,7 @@ namespace API.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id{ get; set; }
+        public string ScannerId {get; set;}
         public string Name { get; set; }
         public string Category { get; set; }
         public string Longitude { get; set; }

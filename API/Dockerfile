@@ -11,4 +11,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app/out .
 ENV GOOGLE_APPLICATION_CREDENTIALS /app/key.json
-ENTRYPOINT ["dotnet", "API.dll"]
+ENTRYPOINT ["dotnet", "API.dll", "--environment=Development"]

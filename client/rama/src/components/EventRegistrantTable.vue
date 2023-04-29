@@ -13,6 +13,7 @@
                     <th class="table-header" scope="col">Registered At</th>
                     <th class="table-header" scope="col">Paid At</th>
                     <th class="table-header" scope="col">Taken Kit At</th>
+                    <th class="table-header" scope="col">RFID</th>
                     <th class="table-header" scope="col">Status</th>
                 </tr>
             </thead>
@@ -25,7 +26,12 @@
 
                     <td class="table-data" v-if="user.takenKitAt == '0001-01-01T00:00:00'">Not Yet</td>
                     <td class="table-data" v-else v-text="(new Date(user.takenKitAt)).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',hour: 'numeric', minute:'numeric' })"></td>
-                    <td class="table-data" v-if="this.isEdit">
+                    <td class="table-data" v-if="this.isEdit" >
+                        <input :id="'rfid_'+index" @change="this.rfidChange($event)">
+                    </td>
+                    <td class="table-data" v-else v-text="user.rfid"></td>
+
+                    <td class="table-data" v-if="this.isEdit" >
                         <select size="1" :id="'status_'+index" name="row-1-office" @change="this.statusChange($event)">
                             <option value="Waiting" :selected="user.statusAsText=='Waiting'">
                                 Waiting
@@ -65,25 +71,36 @@ export default {
     data() {
         return {
             edited : {},
+            rfid : {},
             isEdit : false,
         };
     },
     methods: {
             statusChange(event) {
-                console.log(event.target)
                 let id = this.data[event.target.id.split("_")[1]].accId
                 let val = event.target.value
-                console.log(this.edited)
                 this.edited[id] = val
-                console.log(this.edited)
             },
-            saveChanges(){
+            rfidChange(event) {
+                let id = this.data[event.target.id.split("_")[1]].accId
+                let val = event.target.value
+                this.rfid[id] = val
+            },
+            async saveChanges(){
                 if (confirm("Kamu Yakin ingin mengapilkasikan perubahan?"))
                 {
-                    Object.keys(this.edited).forEach( k => 
-                    {
-                        this.changeStatus(this.id, k, this.edited[k])
-                    })
+                    if (this.edited != {})
+                    await Promise.all(
+                        Object.keys(this.edited).map(
+                            async (key) => await this.changeStatus(this.id, key, this.edited[key])
+                        )
+                    )
+                    if (this.rfid != {})
+                    await Promise.all(
+                        Object.keys(this.rfid).map(
+                            async (key) => await this.changeRfid(this.id, key, this.rfid[key])
+                        )
+                    )
                     location.reload()
                 }
                 
@@ -122,6 +139,26 @@ export default {
                     import.meta.env.VITE_API_URI + "/Registration/" + raceid + "/" + accid,
                     {
                         status: status
+                    },
+                    config
+                )
+                .then((response) => console.log(response))
+                .catch((err) => console.log(err));
+        },
+        async changeRfid(raceid, accid, rfid){
+            const token = localStorage.getItem("token");
+
+            // configuration for post api
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+            await axios
+                .put(
+                    import.meta.env.VITE_API_URI + "/Registration/" + raceid + "/" + accid,
+                    {
+                        "rFID": rfid
                     },
                     config
                 )

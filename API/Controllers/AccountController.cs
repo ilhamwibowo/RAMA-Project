@@ -93,7 +93,7 @@ namespace API.Controllers
             var user = await _context.Accounts.Select(x => new {x.Email}).FirstOrDefaultAsync(x => x.Email == Email);
             if (user == null)
                 return BadRequest("Account not found");
-            var forgotPasswordHistory = await _context.ForgotPasswordHistories.FirstOrDefaultAsync(x => x.Email == Email && x.Date == DateOnly.FromDateTime(DateTime.Now));
+            var forgotPasswordHistory = await _context.ForgotPasswordHistories.FirstOrDefaultAsync(x => x.Email == Email && x.Date == DateOnly.FromDateTime(DateTime.UtcNow));
             if (forgotPasswordHistory != null)
             {
                 if (forgotPasswordHistory.RequestCount >= 3)
@@ -140,7 +140,7 @@ namespace API.Controllers
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Email == fpDto.Email);
             if (user == null)
                 return BadRequest("Account not found");
-            var fph = await _context.ForgotPasswordHistories.FirstOrDefaultAsync(x => x.Email == fpDto.Email && x.Date == DateOnly.FromDateTime(DateTime.Now));
+            var fph = await _context.ForgotPasswordHistories.FirstOrDefaultAsync(x => x.Email == fpDto.Email && x.Date == DateOnly.FromDateTime(DateTime.UtcNow));
             if (fph == null)
                 return BadRequest("No Forgot Password Request Found");
             if (fph.CheckCount >= 3)

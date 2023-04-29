@@ -19,6 +19,6 @@ namespace API.Entities
         public DateTime FinishTime{get; set;}
         public string RFID {get; set;}
 
-        public Dictionary<Location, DateTime> CheckPoints = new Dictionary<Location, DateTime>();
+        public List<CheckPoint> CheckPoints {get; set;} = new List<CheckPoint>();
     }
 }
