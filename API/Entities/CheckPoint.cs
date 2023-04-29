@@ -7,6 +7,7 @@ namespace API.Entities
 {
     public class CheckPoint
     {
+        public string RFID {get; set;}
         public Guid AccId {get; set;}
         public Guid RaceId {get; set;}
         public string ScannerId {get; set;}

@@ -31,6 +31,7 @@ namespace API.Controllers
             if (ra.CheckPoints.Any( x => x.ScannerId == ScannerId)) return Ok();
             ra.CheckPoints.Add(
                 new CheckPoint {
+                    RFID = cpd.RFID,
                     AccId = a.AccId,
                     RaceId = ra.RaceId,
                     ScannerId = ScannerId,

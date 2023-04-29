@@ -9,6 +9,8 @@ namespace API.DTOs
     public class CheckPointDto
     {
         [Required]
+        public string RFID {get; set;}
+
         public Guid AccId {get; set;}
         [Required]
         public Guid RaceId {get; set;}

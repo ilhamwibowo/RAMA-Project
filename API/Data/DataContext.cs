@@ -58,7 +58,7 @@ namespace API.Data
             builder.Entity<RaceRegistration>()
                 .HasKey(nameof(RaceRegistration.RaceId), nameof(RaceRegistration.AccId), nameof(RaceRegistration.RegistedAt));
             builder.Entity<CheckPoint>()
-                .HasKey(nameof(CheckPoint.AccId), nameof(CheckPoint.RaceId), nameof(CheckPoint.ScannerId));
+                .HasKey(nameof(CheckPoint.RFID), nameof(CheckPoint.RaceId), nameof(CheckPoint.ScannerId));
         }
 
         public DbSet<Account> Accounts { get; set; }
