@@ -213,7 +213,7 @@ namespace API.Controllers
         private async Task<bool> CheckBibTagExist(string bib, Guid RaceId)
         {
             var check = await _context.Races.Select(x => new {x.RaceId, x.RaceAttendee}).FirstOrDefaultAsync(x => x.RaceAttendee.Any(ra => ra.BibNumber == bib));
-            return check == null;
+            return check != null;
         }
     }
 }
