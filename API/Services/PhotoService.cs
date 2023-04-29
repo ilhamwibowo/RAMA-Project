@@ -68,7 +68,7 @@ namespace API.Services
             {
                 if (annotation.Description != null)
                 {
-                    words.Add(annotation.Description);
+                    words.Add(annotation.Description.ToLower());
                 }
             }
             return words;
