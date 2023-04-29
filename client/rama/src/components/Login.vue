@@ -55,7 +55,7 @@
         </div>
         <div id="register-container">
             <hr>
-            <p>Don't have an account? <RouterLink class="text" to="/forgot">Sign Up</RouterLink></p>
+            <p>Don't have an account? <RouterLink class="text" to="/register">Sign Up</RouterLink></p>
         </div>
     </div>
 </template>

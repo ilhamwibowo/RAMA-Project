@@ -89,7 +89,7 @@
         </div>
         <div class="login-container">
             <hr>
-            <p>Already have an account? <a href="http://localhost:5173/login">Login</a></p>
+            <p>Already have an account? <RouterLink class="text" to="/login">Login</RouterLink></p>
         </div>
     </div>
 </template>
