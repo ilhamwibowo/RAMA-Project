@@ -60,7 +60,7 @@
                            <div class="row">
                                <div class="row-item">
                                    <label for="course-map">Course Map</label>
-                                   <input type="text" id="course-map" v-model="courseMap" placeholder="TBI">
+                                   <input type="text" id="course-map" v-model="courseMap" placeholder="-33.8667,151.19;60.170880,24.94279">
                                </div>
 
                            </div>           
@@ -209,6 +209,7 @@ export default {
         // This method is for creating a new event which is used 
         // in the "Save" button on the form
         validationInput() {
+            const reMap = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?(;-?\d+(\.\d+)?,-?\d+(\.\d+)?)*$/
             try {
                 if (this.name === "") throw "Name";
                 if (this.city === "") throw "City";
@@ -218,6 +219,7 @@ export default {
                 if (this.description === "") throw "Description";
                 if (this.startRegis === "") throw "Start registration date";
                 if (this.endRegis === "") throw "End registration date";
+                if (!this.courseMap.match(reMap)) throw "Course map";
                 if (this.profilePhoto === null) throw "Image";
                 this.saveEvent()
             }
@@ -266,6 +268,7 @@ export default {
             formData.append('StartTime', startTime);
             formData.append('Distance', this.distance);
             formData.append('RegistrationFee', this.price);
+            formData.append("Points", this.courseMap);
             formData.append('isPublished', this.isPublish);
             formData.append('StartDateRegistration', startRegistration);
             formData.append('EndDateRegistration', endRegistration);

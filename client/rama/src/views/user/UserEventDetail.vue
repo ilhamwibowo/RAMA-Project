@@ -44,6 +44,9 @@
   
   import ConfirmModal from "@/components/ConfirmModal.vue";
 
+  let loader;
+  let map;
+
   export default {
     components: {
       ConfirmModal,
@@ -68,10 +71,10 @@
       this.fetchEventData();
     },
     
-    mounted() {
-      let map;
+    async mounted() {
+      let processedPoints = this.eventData.points.split(";");
       
-      const loader = new Loader({
+      loader = new Loader({
         apiKey: import.meta.env.VITE_MAPS_API_KEY,
         version: "weekly",
       });
@@ -80,13 +83,40 @@
         const { Map } = await google.maps.importLibrary("maps");
 
         map = new Map(document.getElementById("route-map"), {
-          center: { lat: -34.397, lng: 150.644 },
+          center: { lat: processedPoints[0][0], lng: processedPoints[0][1] },
           zoom: 8,
         });
       });
+
+      await this.drawRoute(processedPoints);
     },
 
     methods: {
+      async drawRoute(processedPoints) {
+        await axios.get("https://roads.googleapis.com/v1/snapToRoads?path=" + processedPoints.join("|") + "&interpolate=true&key=" + import.meta.env.VITE_MAPS_API_KEY)
+          .then((response) => {
+            let snappedCoordinates = [];
+
+            loader.load().then(async () => {
+              for (let i = 0; i < response.data.snappedPoints.length; i++) {
+                let point = new google.maps.LatLng(response.data.snappedPoints[i].location.latitude, response.data.snappedPoints[i].location.longitude);
+                snappedCoordinates.push(point);
+              }
+
+              let snappedPolyline = new google.maps.Polyline({
+                path: snappedCoordinates,
+                strokeColor: "#ffa801",
+                strokeWeight: 4,
+                strokeOpacity: 0.9
+              });
+              snappedPolyline.setMap(map);
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      
       async fetchEventData() {
         const token = localStorage.getItem("token");
 
