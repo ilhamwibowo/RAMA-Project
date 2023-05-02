@@ -93,8 +93,8 @@
                     </div>
                 </div>
                 <h2>Course Map</h2>
-                <div class="maps">
-                    <img src="/maps.png" alt="maps maraton" id="maps-image" />
+                <div id="maps">
+                    <!-- <img src="/maps.png" alt="maps maraton" id="maps-image" /> -->
                 </div>
             </div>
         </div>
@@ -104,9 +104,14 @@
 
 <script>
 import axios from 'axios';
+import { Loader } from "@googlemaps/js-api-loader";
+
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import AdminEventDetailEdit from '@/components/AdminEventDetailEdit.vue';
 import Toast from '@/components/Toast.vue';
+
+let map;
+let loader;
 
 export default {
     name: "detailEvent",
@@ -159,12 +164,12 @@ export default {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            axios
+            await axios
             .get(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
             .then((response) => {
-                if(response.status !== 200){
+                if (response.status !== 200){
                     console.log(response);
-                }else{
+                } else {
                     this.event = response.data;
                     console.log(typeof(this.event));
                     this.name = this.event.raceName;
@@ -172,6 +177,7 @@ export default {
                     this.city = this.event.startLocation.name;
                     this.startRegis = this.event.startDateRegistration;
                     this.endRegis = this.event.endDateRegistration;
+                    this.courseMap = "-6.898906,107.612737;-6.898922,107.613627";
                     this.startDate = this.event.startTime;
                     this.isPublish = this.event.isPublished;
                     this.distance = this.event.distance;
@@ -183,7 +189,53 @@ export default {
             .catch((err) => {
                 console.log(err);
             });
-        }, toggleForm() {
+        }, 
+        loadMap() {
+            let processedPoints = this.courseMap.split(";");
+            console.log("Course map: " + this.courseMap);
+            console.log(processedPoints);
+            
+            loader = new Loader({
+                apiKey: import.meta.env.VITE_MAPS_API_KEY,
+                version: "weekly",
+            });
+
+            loader.load().then(async () => {
+                const { Map } = await google.maps.importLibrary("maps");
+
+                map = new Map(document.getElementById("maps"), {
+                    center: { lat: parseFloat(processedPoints[0].split(",")[0]), lng: parseFloat(processedPoints[0].split(",")[1]) },
+                    zoom: 17,
+                });
+            });
+            
+            this.drawRoute(processedPoints);
+        },
+        async drawRoute(processedPoints) {
+            await axios.get("https://roads.googleapis.com/v1/snapToRoads?path=" + processedPoints.join("|") + "&interpolate=true&key=" + import.meta.env.VITE_MAPS_API_KEY)
+            .then((response) => {
+                let snappedCoordinates = [];
+              
+                loader.load().then(async () => {
+                    for (let i = 0; i < response.data.snappedPoints.length; i++) {
+                      let point = new google.maps.LatLng(response.data.snappedPoints[i].location.latitude, response.data.snappedPoints[i].location.longitude);
+                      snappedCoordinates.push(point);
+                    }
+                  
+                    let snappedPolyline = new google.maps.Polyline({
+                      path: snappedCoordinates,
+                      strokeColor: "#ffa801",
+                      strokeWeight: 4,
+                      strokeOpacity: 0.9
+                    });
+                    snappedPolyline.setMap(map);
+              });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
+        toggleForm() {
             console.log("Tes")
             this.showForm = !this.showForm;
             if (this.showForm) {
@@ -266,9 +318,10 @@ export default {
             });
         }
     },
-    mounted(){
-        this.getData();
-        this.getAlbum();
+    async mounted(){
+        await this.getData();
+        await this.getAlbum();
+        await this.loadMap();
     }
 }
 </script>
@@ -479,9 +532,9 @@ h2 {
     font-family: 'Darker Grotesque';
 }
 
-.maps {
+#maps {
     margin-bottom: 10%;
-    height: 30%;
+    height: 50%;
     text-align: center;
 }
 

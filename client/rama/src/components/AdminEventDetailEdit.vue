@@ -30,6 +30,9 @@
                     
                     <label for="start-date">Start Date</label>
                     <input type="datetime-local" id="start-date" v-model="startDate">
+
+                    <label for="course-map">Course Map</label>
+                    <input type="text" id="course-map" v-model="courseMap" placeholder="-33.8667,151.19;60.170880,24.94279">
                     
                 </div>
                 
@@ -50,8 +53,7 @@
                 <div class="grid-item">
                     <div class="row">
                         <div class="row-item">
-                            <label for="course-map">Album</label>
-                            <!-- <input type="text" id="course-map" v-model="albumid" placeholder="TBI"> -->
+                            <label for="albumid">Album</label>
                             <select id="albumid" v-model="albumId">
                                 <option value="">Pilih Album</option>
                                 <option v-for="album in this.albums" :key="album.albumId" :value="album.albumId">{{ album.albumName }}</option>
@@ -120,8 +122,7 @@ export default {
             latitude: "",
             longitude: "",
             courseMap: "",
-            isPublish:false,
-            price: "",
+            isPublish: false,
             description: "",
             startRegis: "",
             endRegis: "",
@@ -137,6 +138,7 @@ export default {
     },
     methods: {
         validationInput() {
+            const reMap = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?(;-?\d+(\.\d+)?,-?\d+(\.\d+)?)*$/
             try {
                 if (this.name === "") throw "Name";
                 if (this.city === "") throw "City";
@@ -146,12 +148,18 @@ export default {
                 if (this.description === "") throw "Description";
                 if (this.startRegis === "") throw "Start registration date";
                 if (this.endRegis === "") throw "End registration date";
+                if (this.courseMap === "") throw "Course map";
+                if (!this.courseMap.match(reMap)) throw "Invalid course map";
                 if (this.photo === "") throw "Image";
                 console.log(this.photo);
                 this.saveEvent();
             }
             catch (err) {
-                this.message = err + " is empty";
+                if (err === "Invalid course map") {
+                    this.message = err;
+                } else {
+                    this.message = err + " is empty";
+                }
                 console.log(this.message);
                 this.showToastError = true;
                 console.log(this.showToastError);
@@ -162,6 +170,7 @@ export default {
             }
         },
         saveEvent() {
+            console.log("Course map: " + this.courseMap);
             const token = localStorage.getItem("token");
 
             // Configuration for API
@@ -194,8 +203,9 @@ export default {
             formData.append('StartTime', startTime);
             formData.append('Distance', this.distance);
             formData.append('RegistrationFee', this.price);
+            formData.append("Points", this.courseMap);
             formData.append('isPublished', this.isPublish);
-            if(this.albumId != ""){
+            if (this.albumId !== ""){
                 formData.append('AlbumId', this.albumId);
             }
             formData.append('StartDateRegistration', startRegistration);
@@ -279,6 +289,7 @@ export default {
         this.description = this.event.raceDesc;
         this.startRegis = this.event.startDateRegistration;
         this.endRegis = this.event.endDateRegistration;
+        this.courseMap = this.event.points;
         this.albumId = this.event.raceAlbum.albumId;
         this.distance = this.event.distance;
         this.price = this.event.registrationFee;
