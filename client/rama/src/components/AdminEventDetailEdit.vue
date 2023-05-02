@@ -122,8 +122,7 @@ export default {
             latitude: "",
             longitude: "",
             courseMap: "",
-            isPublish:false,
-            price: "",
+            isPublish: false,
             description: "",
             startRegis: "",
             endRegis: "",
@@ -149,13 +148,18 @@ export default {
                 if (this.description === "") throw "Description";
                 if (this.startRegis === "") throw "Start registration date";
                 if (this.endRegis === "") throw "End registration date";
-                if (!this.courseMap.match(reMap)) throw "Course map";
+                if (this.courseMap === "") throw "Course map";
+                if (!this.courseMap.match(reMap)) throw "Invalid course map";
                 if (this.photo === "") throw "Image";
                 console.log(this.photo);
                 this.saveEvent();
             }
             catch (err) {
-                this.message = err + " is empty";
+                if (err === "Invalid course map") {
+                    this.message = err;
+                } else {
+                    this.message = err + " is empty";
+                }
                 console.log(this.message);
                 this.showToastError = true;
                 console.log(this.showToastError);
@@ -166,6 +170,7 @@ export default {
             }
         },
         saveEvent() {
+            console.log("Course map: " + this.courseMap);
             const token = localStorage.getItem("token");
 
             // Configuration for API
@@ -200,7 +205,7 @@ export default {
             formData.append('RegistrationFee', this.price);
             formData.append("Points", this.courseMap);
             formData.append('isPublished', this.isPublish);
-            if(this.albumId != ""){
+            if (this.albumId !== ""){
                 formData.append('AlbumId', this.albumId);
             }
             formData.append('StartDateRegistration', startRegistration);
