@@ -83,7 +83,7 @@
         const { Map } = await google.maps.importLibrary("maps");
 
         map = new Map(document.getElementById("route-map"), {
-          center: { lat: processedPoints[0][0], lng: processedPoints[0][1] },
+          center: { lat: parseFloat(processedPoints[0].split(",")[0]), lng: parseFloat(processedPoints[0].split(",")[1]) },
           zoom: 8,
         });
       });
@@ -125,7 +125,7 @@
             headers: { Authorization: `Bearer ${token}` }
         };
 
-        axios.get(import.meta.env.VITE_API_URI + "/Race/"+ this.eventId, config)
+        await axios.get(import.meta.env.VITE_API_URI + "/Race/"+ this.eventId, config)
           .then(response => {
             this.eventData = response.data;
             console.log(response.data);

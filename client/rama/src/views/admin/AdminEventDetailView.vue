@@ -164,12 +164,12 @@ export default {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            axios
+            await axios
             .get(import.meta.env.VITE_API_URI + "/Race/" + this.id, config)
             .then((response) => {
-                if(response.status !== 200){
+                if (response.status !== 200){
                     console.log(response);
-                }else{
+                } else {
                     this.event = response.data;
                     console.log(typeof(this.event));
                     this.name = this.event.raceName;
@@ -177,7 +177,7 @@ export default {
                     this.city = this.event.startLocation.name;
                     this.startRegis = this.event.startDateRegistration;
                     this.endRegis = this.event.endDateRegistration;
-                    this.courseMap = this.event.points;
+                    this.courseMap = "-6.898906,107.612737;-6.898922,107.613627";
                     this.startDate = this.event.startTime;
                     this.isPublish = this.event.isPublished;
                     this.distance = this.event.distance;
@@ -190,8 +190,10 @@ export default {
                 console.log(err);
             });
         }, 
-        async loadMap() {
+        loadMap() {
             let processedPoints = this.courseMap.split(";");
+            console.log("Course map: " + this.courseMap);
+            console.log(processedPoints);
             
             loader = new Loader({
                 apiKey: import.meta.env.VITE_MAPS_API_KEY,
@@ -202,36 +204,36 @@ export default {
                 const { Map } = await google.maps.importLibrary("maps");
 
                 map = new Map(document.getElementById("maps"), {
-                    center: { lat: processedPoints[0][0], lng: processedPoints[0][1] },
-                    zoom: 8,
+                    center: { lat: parseFloat(processedPoints[0].split(",")[0]), lng: parseFloat(processedPoints[0].split(",")[1]) },
+                    zoom: 17,
                 });
             });
             
-            await this.drawRoute(processedPoints);
+            this.drawRoute(processedPoints);
         },
         async drawRoute(processedPoints) {
             await axios.get("https://roads.googleapis.com/v1/snapToRoads?path=" + processedPoints.join("|") + "&interpolate=true&key=" + import.meta.env.VITE_MAPS_API_KEY)
-              .then((response) => {
-                  let snappedCoordinates = [];
+            .then((response) => {
+                let snappedCoordinates = [];
+              
+                loader.load().then(async () => {
+                    for (let i = 0; i < response.data.snappedPoints.length; i++) {
+                      let point = new google.maps.LatLng(response.data.snappedPoints[i].location.latitude, response.data.snappedPoints[i].location.longitude);
+                      snappedCoordinates.push(point);
+                    }
                   
-                  loader.load().then(async () => {
-                      for (let i = 0; i < response.data.snappedPoints.length; i++) {
-                          let point = new google.maps.LatLng(response.data.snappedPoints[i].location.latitude, response.data.snappedPoints[i].location.longitude);
-                          snappedCoordinates.push(point);
-                      }
-                      
-                      let snappedPolyline = new google.maps.Polyline({
-                          path: snappedCoordinates,
-                          strokeColor: "#ffa801",
-                          strokeWeight: 4,
-                          strokeOpacity: 0.9
-                      });
-                      snappedPolyline.setMap(map);
-                  });
-              })
-              .catch((error) => {
-                  console.log(error);
+                    let snappedPolyline = new google.maps.Polyline({
+                      path: snappedCoordinates,
+                      strokeColor: "#ffa801",
+                      strokeWeight: 4,
+                      strokeOpacity: 0.9
+                    });
+                    snappedPolyline.setMap(map);
               });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         },
         toggleForm() {
             console.log("Tes")
@@ -316,10 +318,10 @@ export default {
             });
         }
     },
-    mounted(){
-        this.getData();
-        this.getAlbum();
-        this.loadMap();
+    async mounted(){
+        await this.getData();
+        await this.getAlbum();
+        await this.loadMap();
     }
 }
 </script>
@@ -532,7 +534,7 @@ h2 {
 
 #maps {
     margin-bottom: 10%;
-    height: 30%;
+    height: 50%;
     text-align: center;
 }
 
