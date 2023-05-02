@@ -30,6 +30,9 @@
                     
                     <label for="start-date">Start Date</label>
                     <input type="datetime-local" id="start-date" v-model="startDate">
+
+                    <label for="course-map">Course Map</label>
+                    <input type="text" id="course-map" v-model="courseMap" placeholder="-33.8667,151.19;60.170880,24.94279">
                     
                 </div>
                 
@@ -50,8 +53,7 @@
                 <div class="grid-item">
                     <div class="row">
                         <div class="row-item">
-                            <label for="course-map">Album</label>
-                            <input type="text" id="course-map" v-model="courseMap" placeholder="-33.8667,151.19;60.170880,24.94279"> 
+                            <label for="albumid">Album</label>
                             <select id="albumid" v-model="albumId">
                                 <option value="">Pilih Album</option>
                                 <option v-for="album in this.albums" :key="album.albumId" :value="album.albumId">{{ album.albumName }}</option>
