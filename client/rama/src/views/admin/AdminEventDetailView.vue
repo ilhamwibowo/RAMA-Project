@@ -43,7 +43,7 @@
                         @change="changePhoto"
                         style="display: none"
                     />
-                    <img :src="basePreviewImageUrl" />
+                    <img id="race-photo" :src="basePreviewImageUrl" />
                     <div class="edit-image" @click="uploadPhoto">
                         <div class="circle"></div>
                     </div>
@@ -437,17 +437,16 @@ export default {
 }
 .image-container {
     margin-top: 2%;
-    height: 20%;
     width: 60%;
-    left: 20%;
+    height: 20%;
+    text-align: center;
     margin-left: auto;
     margin-right: auto;
 }
 
 #race-photo{
-    height: auto;
-    width: 50%;
-
+    max-width: 1024px;
+    height: 100%;
 }
 .information-container {
     margin-top: 2%;
