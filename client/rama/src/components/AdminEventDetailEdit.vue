@@ -32,7 +32,7 @@
                     <input type="datetime-local" id="start-date" v-model="startDate">
 
                     <label for="course-map">Course Map</label>
-                    <input type="text" id="course-map" v-model="courseMap" placeholder="-33.8667,151.19;60.170880,24.94279">
+                    <input type="text" id="course-map" v-model="courseMap">
                     
                 </div>
                 
@@ -289,7 +289,7 @@ export default {
         this.description = this.event.raceDesc;
         this.startRegis = this.event.startDateRegistration;
         this.endRegis = this.event.endDateRegistration;
-        this.courseMap = this.event.points;
+        this.courseMap = "-33.8667,151.19;60.170880,24.94279";
         this.albumId = this.event.raceAlbum.albumId;
         this.distance = this.event.distance;
         this.price = this.event.registrationFee;
@@ -297,6 +297,7 @@ export default {
         this.basePreviewImageUrl = this.event.raceThumbnail ? this.event.raceThumbnail.url : "";
         this.photo = this.event.raceThumbnail;
         this.getAlbum();
+        
     }
 }
 </script>

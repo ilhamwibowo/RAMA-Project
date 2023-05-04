@@ -1,5 +1,13 @@
 <template>
     <div class="detail-album">
+        <!-- Toast -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toastError">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+
         <AdminSidebar class="sidebar" album="true"/>
         <div class="layout">
             <div class="tabs">
@@ -34,7 +42,7 @@
                 <form class="form-edit-album" @submit.prevent="submitForm">
                     <div class="form-group">
                         <label class="form-label" for="album-name">Album Name</label>
-                        <input class="form-input" type="text" id="album-name" v-model="albumName" :placeholder="album.albumName">
+                        <input class="form-input" type="text" id="album-name" v-model="albumName">
                     </div>
                     <!-- <div class="form-group">
                         <label class="form-label" for="status">Status</label>
@@ -56,6 +64,8 @@
 <script>
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
+import Toast from '../../components/Toast.vue';
+
 export default {
     name: "AlbumDetailView",
     data() {
@@ -65,11 +75,15 @@ export default {
             showPopup: false,
             albumName: '',
             status: "Published",
-            statusEdit: ''
+            statusEdit: '',
+            showToastError: false,
+            showToastSuccess: false,
+            message: "",
         };
     },
     components: {
-        AdminSidebar
+        AdminSidebar,
+        Toast
     },
     methods: {
         async getAlbum(){
@@ -80,7 +94,7 @@ export default {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            axios
+            await axios
             .get(import.meta.env.VITE_API_URI + "/Album/" + this.id, config)
             .then((response) => {
                 if(response.status !== 200){
@@ -88,6 +102,7 @@ export default {
                 }else{
                     this.album = response.data;
                     console.log(this.album);
+                    this.albumName = this.album.albumName;
                     // for debug
                     // console.log(this.event);
                     // console.log(this.events[0].raceName);
@@ -97,39 +112,101 @@ export default {
                 console.log(err);
             });
         },
-        saveAlbum(){
+        async saveAlbum(){
             const token = localStorage.getItem("token");
+            var status;
+            var errorMsg;
 
             // Configuration for API
             const config = {
                 headers: { Authorization: `Bearer ${token}`}
             };
-            axios.put(import.meta.env.VITE_API_URI + "/Album/" + this.id, {albumName : this.albumName}, config)
-            .then((responese) => {
-                this.showPopup = false;
-                location.reload();
+            await axios.put(import.meta.env.VITE_API_URI + "/Album/" + this.id, {albumName : this.albumName}, config)
+            .then((response) => {
+                status = response.status;
             })
             .catch((err) =>{
                 console.log(err);
+                status = err.response.status;
+                errorMsg = err.response.data;
             })
+
+            // Status Alert
+            console.log(status);
+            if (status === 200) {
+                this.message = "Data has been updated!"
+                this.showToastSuccess = true; 
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastSuccess = false
+                }, 3000);
+                setTimeout(() => {
+                    this.showPopup = false;
+                    location.reload();
+                }, 3500);
+            }
+            else if (status === 400) {
+                this.message = errorMsg;
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            } else {
+                this.message = "Sorry, there is an error on the server"
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            }
         },
-        deleteAlbum(){
+        async deleteAlbum(){
             const token = localStorage.getItem("token");
+            var status;
+            var errorMsg;
 
             // Configuration for API
             const config = {
                 headers: { Authorization: `Bearer ${token}`}
             };
-            axios.delete(import.meta.env.VITE_API_URI + "/Album/" + this.id, config)
+            await axios.delete(import.meta.env.VITE_API_URI + "/Album/" + this.id, config)
             .then((response) => {
-                if(response.status !== 200){
-                    console.log(response);
-                }else{
-                    this.$router.push("/admin/album");
-                }
+                status = response.status;
             }).catch((err) =>{
                 console.log(err);
+                status = err.response.status;
+                errorMsg = err.response.data;
             })
+
+            // Status Alert
+            console.log(status);
+            if (status === 200) {
+                this.message = "Data has been deleted!"
+                this.showToastSuccess = true; 
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastSuccess = false
+                }, 3000);
+                setTimeout(() => {
+                    this.$router.push("/admin/album");
+                }, 3500);
+            }
+            else if (status === 400) {
+                this.message = errorMsg;
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            } else {
+                this.message = "Sorry, there is an error on the server"
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            }
         }
     },
     mounted(){
@@ -350,6 +427,49 @@ label {
   background-color: #d9534f;
   color: #fff;
   border: none;
+}
+
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
 }
 
 
