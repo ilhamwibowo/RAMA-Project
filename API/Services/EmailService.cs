@@ -32,9 +32,9 @@ namespace API.Services
                 smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
                 await smtp.SendAsync(email);
                 smtp.Disconnect(true);
-            } 
-            catch (Exception e){
-                throw;
+            }
+            catch{
+                //do nothing.   
             }
         }
     }
