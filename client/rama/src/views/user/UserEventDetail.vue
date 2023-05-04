@@ -176,7 +176,7 @@
 
         // Status Alert
         console.log(status);
-            if (status === 200) {
+            if (status === 200 || status === 201) {
                 this.message = "You already registered!"
                 this.showToastSuccess = true; 
                 clearTimeout();
