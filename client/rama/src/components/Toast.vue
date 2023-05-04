@@ -42,4 +42,8 @@ export default {
 #success {
     background: #00C851;
 }
+
+#warning {
+    background: #E2B938;
+}
 </style>

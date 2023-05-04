@@ -1,5 +1,16 @@
 <template>
     <div class="album-photo">
+        <!-- Toast -->
+        <Transition name="toast">
+            <Toast v-if="showToastSuccess" type="success" :message="message"/>
+        </Transition>
+        <Transition name="toastError">
+            <Toast v-if="showToastError" type="error" :message="message"/>
+        </Transition> 
+        <Transition name="toast">
+            <Toast v-if="showToastWarning" type="warning" :message="message"/>
+        </Transition> 
+
         <AdminSidebar class="sidebar" album="true"/>
         <div class="layout">
             <div class="tabs">
@@ -45,6 +56,7 @@ import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import AdminAlbumPagination from '@/components/AdminAlbumPagination.vue';
 import Pagination from '@/components/Pagination.vue';
+import Toast from '@/components/Toast.vue';
 
 import { useProductStore } from "@/stores/photos";
 import { forEach } from 'jszip';
@@ -62,12 +74,17 @@ export default {
             photoShow: [],
             timer: 0,
             albumPaginationKey: 0,
+            showToastError: false,
+            showToastSuccess: false,
+            showToastWarning: false,
+            message: "",
         };
     },
     components: {
         AdminSidebar,
         AdminAlbumPagination,
-        Pagination
+        Pagination,
+        Toast
 },
     methods: {
       selectAllClicked(event) {
@@ -101,6 +118,7 @@ export default {
       async deletePhoto(id) {
         const token = localStorage.getItem("token");
         var status;
+        var errorMsg;
 
         // Configuration for API
         const config = {
@@ -114,8 +132,38 @@ export default {
         })
         .catch((err) => {
             status = err.response.status;
+            errorMsg = err.response.data;
             console.log(err);
         });
+
+        // Status Alert
+        console.log(status);
+            if (status === 200) {
+                this.message = "Data has been deleted!"
+                this.showToastSuccess = true; 
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastSuccess = false
+                }, 3000);
+                setTimeout(() => {
+                    location.reload();
+                }, 3500);
+            }
+            else if (status === 400) {
+                this.message = errorMsg;
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            } else {
+                this.message = "Sorry, there is an error on the server"
+                this.showToastError = true;
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastError = false
+                }, 3000);
+            }
       },
       uploadClicked() {
         document.getElementById("image").click();
@@ -123,11 +171,23 @@ export default {
       async uploadPhoto(event) {
             // get input photos
             const inputPhotos = Array.from(event.target.files);
+            this.message = "Uploading"
+            this.showToastWarning = true;
 
             for (let i = 0; i < inputPhotos.length; i++) {
                 await this.sendPostPhoto(inputPhotos[i]);
             }
-            location.reload();
+
+            this.showToastWarning = false;
+            this.message = "Data has been uploaded!"
+                this.showToastSuccess = true; 
+                clearTimeout();
+                setTimeout(() => {
+                    this.showToastSuccess = false;
+                }, 3000);
+                setTimeout(() => {
+                    location.reload();
+                }, 3500);
         },
         async sendPostPhoto(file) {
             var status;
@@ -338,6 +398,49 @@ export default {
 .checkbox {
     width: 27px;
     height: 27px;
+}
+
+/** Toast */
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to,
+.toast-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toastError-enter-from,
+.toastError-leave-to {
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toastError-enter-to,
+.toastError-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+.toastError-enter-active {
+    animation: wobble 0.5s;
+}
+.toastError-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% { transform: translateY(-60px); opacity: 0; }
+    50% { transform: translateY(0px); opacity: 1; }
+    60% { transform: translateX(8px);}
+    70% { transform: translateX(-8px);}
+    80% { transform: translateX(4px);}
+    90% { transform: translateX(-4px);}
+    100% { transform: translateX(0px);}
 }
 
 </style>
