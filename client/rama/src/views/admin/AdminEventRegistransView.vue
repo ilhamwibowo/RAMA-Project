@@ -38,7 +38,7 @@ export default {
             names: [],
             id :this.$route.params.id,
             page: 1,
-            pager: 1,
+            pager: 10,
             totalPage: 10,
             totalRegistrans: 0,
             paginationKey: 0,
