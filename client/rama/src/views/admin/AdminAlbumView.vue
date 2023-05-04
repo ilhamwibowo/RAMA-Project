@@ -10,17 +10,17 @@
                     <thead class="table-head">
                         <tr class="table-row-header">
                             <th class="table-header-title" scope="col">Title</th>
-                            <th class="table-header-status" scope="col">Status</th>
+                            <!-- <th class="table-header-status" scope="col">Status</th> -->
                             <th class="table-header-action" scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody class="table-body">
                         <tr class="table-row-body" v-for="album in albums" :key="album.albumId">
                             <td class="table-data-title" v-text="album.albumName"></td>
-                            <td class="table-data-status">
+                            <!-- <td class="table-data-status">
                                 <p class="status-publish" id="published" v-if="this.isPublished">Published</p>
                                 <p class="status-publish-not" id="notPublished" v-if="!this.isPublished">Unpublished</p>
-                            </td>
+                            </td> -->
                             <td class="table-data-action">
                                 <button class="detail-button">
                                     <router-link :to="{params: {id : album.albumId}, name: 'albumDetail'}">
@@ -31,6 +31,14 @@
                         </tr>
                     </tbody>
                 </table>
+                <pagination
+                    class="pagination"
+                    :totalPage="totalPage"
+                    :pager="pager"
+                    :page="page"
+                    @changePage="updatePage"
+                    @changePager="updatePager"
+                />
             </div>
         </div>
     </div>
@@ -39,16 +47,23 @@
 <script>
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
+import Pagination from '@/components/Pagination.vue';
 export default {
     name: "AlbumAdminView",
     data() {
         return {
             albums : [],
-            isPublished: true
+            isPublished: true,
+            totalAlbum: 0,
+            totalPage: 1,
+            page: 1,
+            pager: 10,
+            albumShow: []
         };
     },
     components: {
-        AdminSidebar
+        AdminSidebar,
+        Pagination
     },
     methods: {
         async getAlbum(){
@@ -66,13 +81,36 @@ export default {
                     console.log(response);
                 }else{
                     this.albums = response.data.albums;
-                    console.log(response.data);
+                    this.totalAlbum = this.albums.length;
+                    this.updatePage(this.page);
+                    this.updatePager(this.pager);
                     console.log(this.albums);
                 }
             })
             .catch((err) => {
                 console.log(err);
             });
+        },
+        updatePage(n) {
+            this.page = n;
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.albumShow = this.albums.slice(start,end);
+        },
+        updatePager(n) {
+            this.pager = n;
+            this.totalPage = Math.ceil(this.totalAlbum / this.pager);
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.albumShow = this.albums.slice(start,end);
         }
     },
     mounted(){
@@ -142,6 +180,8 @@ export default {
 }
 .table-row-body{
     text-align: center;
+    border-bottom: 2px solid #272626;
+    /* border-spacing: ; */
 }
 
 .table-row-header {
@@ -153,7 +193,7 @@ export default {
 
 /* for table title */
 .table-header-title{
-    width: 60%;
+    width: 80%;
     text-align: left;
     left: 50px;
 }
@@ -161,7 +201,7 @@ export default {
 /* fot table row data */
 
 .table-data-title{
-    width: 60%;
+    width: 80%;
     text-align: left;
     font-family: 'Darker Grotesque';
     font-size: 20px;
@@ -169,9 +209,13 @@ export default {
 }
 
 
-.table-header-status, .table-data-status,
+/* .table-header-status, .table-data-status, */
 .table-header-action, .table-data-action{
     width: 20%;
+}
+
+td{
+    padding: 8px;
 }
 
 .detail-button {
@@ -202,5 +246,10 @@ export default {
     font-size: 20px;
     display: inline-block;
     padding: 0px 10px 0px 10px;
+}
+
+.pagination{
+    justify-content: end;
+    margin-top: 15px;
 }
 </style>

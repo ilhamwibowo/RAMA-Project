@@ -118,19 +118,19 @@
                     </thead>
                     <tbody class="table-body">
                         <tr class="table-row-body" v-for="(event) in events" :key="event.raceId" >
-                            <td class="table-data" v-text="event.raceName"></td>
-                            <td class="table-data" v-text="event.startLocation?.name"></td>
-                            <td class="table-data" v-text="event.startTime.slice(0,10)"></td>
+                            <td class="table-data-name" v-text="event.raceName"></td>
+                            <td class="table-data-location" v-text="event.startLocation?.name"></td>
+                            <td class="table-data-time" v-text="event.startTime.slice(0,10)"></td>
                             <!-- <td class="table-data">h</td> -->
-                            <td class="table-data">
+                            <td class="table-data-regis">
                                 <p class="open-regis" id="open-regis" v-if="event.isOpened">Opened</p>
                                 <p class="close-regis" id="close-regis" v-if="!event.isOpened">Closed</p>
                             </td>
-                            <td class="table-data">
+                            <td class="table-data-status">
                                 <p class="status-publish" id="published" v-if="event.isPublished">Published</p>
                                 <p class="status-publish-not" id="notPublished" v-if="!event.isPublished">Unpublished</p>
                             </td>
-                            <td class="table-data">
+                            <td class="table-data-action">
                                 <button class="detail-button">
                                     <router-link :to="{params: {id : event.raceId}, name: 'detailEvent'}">
                                         Detail
@@ -140,6 +140,14 @@
                         </tr>
                     </tbody>
                 </table>
+                <pagination
+                    class="pagination"
+                    :totalPage="totalPage"
+                    :pager="pager"
+                    :page="page"
+                    @changePage="updatePage"
+                    @changePager="updatePager"
+                />
             </div>
         </div>
     </div>
@@ -149,6 +157,7 @@
 import axios from 'axios';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import Toast from '@/components/Toast.vue';
+import Pagination from '@/components/Pagination.vue';
 export default {
     name: "EventView",
     data() {
@@ -177,11 +186,18 @@ export default {
             showToastError: false,
             showToastSuccess: false,
             message: "",
+            // for pagination
+            totalEvent: 0,
+            totalPage: 1,
+            page: 1,
+            pager: 10,
+            eventShow: [],
         };
     },
     components: {
         AdminSidebar,
-        Toast
+        Toast,
+        Pagination,
     },
     methods: {
         async getEvent() {
@@ -199,6 +215,9 @@ export default {
                     console.log(response);
                 }else{
                     this.events = response.data.races;
+                    this.totalEvent = this.events.length;
+                    this.updatePage(this.page);
+                    this.updatePager(this.pager);
                 }
             })
             .catch((err) => {
@@ -346,30 +365,52 @@ export default {
             }
         },
         changePhoto(event) {
-        const image = event.target.files[0];
-        this.profilePhoto = image;
-        this.previewImageUrl = URL.createObjectURL(image);
-    },
-    uploadphoto() {
-        const token = localStorage.getItem("token");
-        // Configuration for post api
-        const configPhoto = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
-                }
-            };
+            const image = event.target.files[0];
+            this.profilePhoto = image;
+            this.previewImageUrl = URL.createObjectURL(image);
+        },
+        uploadphoto() {
+            const token = localStorage.getItem("token");
+            // Configuration for post api
+            const configPhoto = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    }
+                };
 
-        // Create FormData file for post api
-        var formData = new FormData();
-        formData.append("file", this.previewImage);
+            // Create FormData file for post api
+            var formData = new FormData();
+            formData.append("file", this.previewImage);
 
-        // Axios Post
-        axios
-            .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
-            .then((response) => (console.log(this.profilePhoto = response.data)))
-            .catch((err) => console.log(err));
-    },
+            // Axios Post
+            axios
+                .post(import.meta.env.VITE_API_URI + "/User/add-photo", formData, configPhoto)
+                .then((response) => (console.log(this.profilePhoto = response.data)))
+                .catch((err) => console.log(err));
+        },
+        //for pagination
+        updatePage(n) {
+            this.page = n;
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.eventShow = this.events.slice(start,end);
+        },
+        updatePager(n) {
+            this.pager = n;
+            this.totalPage = Math.ceil(this.totalEvent / this.pager);
+
+            let page = this.page;
+            let pager = this.pager;
+
+            let start = pager * (page - 1);
+            let end = pager * page;
+            this.eventShow = this.events.slice(start,end);
+        }
     },
     
     mounted() {
@@ -548,7 +589,7 @@ img {
 }
 
 .title-page {
-    left: 20%;
+    margin-left: 50px;
     height: 100%;
     font-family: 'Darker Grotesque';
     font-weight: bold;
@@ -560,16 +601,17 @@ img {
     text-align: right;
 }
 .add-button {
-    right: 25%;
-    top: 30px;
+    right: 13%;
+    top: 25px;
     background: #353642;
     border: 1px solid grey;
     border-radius: 15px;
     font-size: 20px;
     font-family: 'Darker Grotesque';
+    font-weight: bold;
     letter-spacing: 1px;
     display: inline-block;
-    padding: 0 10px 0 10px;
+    padding: 3px 10px;
     color: white;
 }
 
@@ -578,22 +620,23 @@ img {
 }
 
 .table-container{
-    width: 80%;
-    left: 10%;
+    width: 90%;
     background: #fff;
     border-radius: 10px;
+    margin-left: 50px;
+    margin-top: 10px;
+    padding: 20px 20px 10px 20px;
 }
 
 .event-table {
     border-collapse: collapse;
     text-align: center;
 
-    margin-bottom: 1rem;
     color: #000;
     padding: 20px;
 
     width: 100%;
-    table-layout: fixed;
+    /* table-layout: fixed; */
 }
 
 .table-row-header {
@@ -603,22 +646,35 @@ img {
 }
 
 .table-header {
-    width: 100% / 7;
+    width: 14.285%;
 }
 
 .table-row-body{
     text-align: center;
     font-size: 20px;
     font-family: 'Darker Grotesque';
+    border-bottom: 2px solid #272626;
 }
 
+td{
+    padding: 8px;
+}
+
+.table-data-name{
+    text-align: left;
+    left: 5px;
+}
+.table-data-location{
+    text-align: left;
+    left: 5px;
+}
 .open-regis {
     background: #72e48b;
     border-radius: 15px;
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .close-regis {
@@ -627,7 +683,7 @@ img {
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .status-publish {
@@ -636,7 +692,7 @@ img {
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .status-publish-not {
@@ -645,7 +701,7 @@ img {
     font-family: 'Darker Grotesque';
     display: inline-block;
     padding: 0 10px 0 10px;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .detail-button {
@@ -656,7 +712,12 @@ img {
     font-family: 'Darker Grotesque';
     font-weight: bold;
     letter-spacing: 1px;
-    font-size: 16px;
+    font-size: 20px;
+}
+
+.pagination{
+    justify-content: end;
+    margin-top: 15px;
 }
 
 /** Toast */
