@@ -1,7 +1,7 @@
 ﻿<template>
     <div>
-        <h2>Leaderboard</h2>
-        <table>
+        <h2 class="subtitle">Leaderboard</h2>
+        <table class="text">
             <tr>
                 <th class="narrower">Position</th>
                 <th class="narrower">Bib Number</th>
@@ -32,6 +32,10 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+    text-align: center;
+}
+
 table,
 th,
 td {
