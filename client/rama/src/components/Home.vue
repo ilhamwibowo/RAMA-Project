@@ -3,8 +3,6 @@
         <p class="header-1">Run For You Freedom</p>
         <img class="image" src="/home-image.png" >
         <p class="subtext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras est augue, tincidunt et lacus a, rutrum iaculis diam. Vestibulum ultrices viverra tellus, et tincidunt magna eleifend ac.</p>
-        <img src="/right-arrow.png">
-        <span class="join">JOIN NOW</span>
     </div>
 </template>
 
