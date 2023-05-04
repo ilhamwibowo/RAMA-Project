@@ -50,34 +50,49 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+        async calculatePageCount() {
+            await axios
+              .get(import.meta.env.VITE_API_URI + "/Race/" + this.raceId + "/attendance")
+              .then((response) => {
+                  this.pageCount = Math.ceil(response.data.raceAttendee.length / this.perPage);
+                  this.loadLeaderboard();
+              })
+              .catch((error) => {
+                  console.log(error);
+                  this.pageCount = 10;
+              });
+        },
+        async loadLeaderboard() {
+            await axios
+              .get(
+                import.meta.env.VITE_API_URI +
+                "/Race/" +
+                this.raceId +
+                "/attendees?page=" +
+                this.currentPage +
+                "&pageSize=" +
+                this.perPage
+              )
+              .then((response) => {
+                  this.raceData = response.data.raceAttendee;
+              })
+              .catch((error) => {
+                  console.log(error);
+              });
         }
     },
 
     async beforeMount() {
-        this.pageCount = await axios
-            .get(import.meta.env.VITE_API_URI + "/Race/" + this.raceId + "/attendance")
-            .then((response) => {
-                return Math.ceil(response.data.raceAttendee.length / this.perPage);
-            })
-            .catch(() => {
-                return 10;
-            });
         await axios
-            .get(
-                import.meta.env.VITE_API_URI +
-                    "/Race/" +
-                    this.raceId +
-                    "/attendees?page=" +
-                    this.currentPage +
-                    "&pageSize=" +
-                    this.perPage
-            )
-            .then((response) => {
-                this.raceData = response.data.raceAttendee;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+          .get(import.meta.env.VITE_API_URI + "/Race/")
+          .then((response) => {
+              this.raceId = response.data.races.at(-1).raceId;
+              this.calculatePageCount();
+          })
+          .catch(() => {
+              return "";
+          });
     }
 }
 </script>
