@@ -1,11 +1,11 @@
 ﻿<template>
     <ul class="pagination">
         <li class="pagination-item utility-button">
-            <button type="button" @click="onClickFirstPage" :disabled="isInFirstPage">First</button>
+            <button class="text" type="button" @click="onClickFirstPage" :disabled="isInFirstPage">First</button>
         </li>
 
         <li class="pagination-item utility-button">
-            <button type="button" @click="onClickPreviousPage" :disabled="isInFirstPage">
+            <button class="text" type="button" @click="onClickPreviousPage" :disabled="isInFirstPage">
                 Previous
             </button>
         </li>
@@ -13,7 +13,7 @@
         <!-- Visible Buttons Start -->
 
         <li class="pagination-item page-button" v-for="page in pages" :key="page.name">
-            <button
+            <button class="text"
                 :class="{ active: isPageActive(page.name) }"
                 type="button"
                 :disabled="page.isDisabled"
@@ -26,11 +26,11 @@
         <!-- Visible Buttons End -->
 
         <li class="pagination-item utility-button">
-            <button type="button" @click="onClickNextPage" :disabled="isInLastPage">Next</button>
+            <button class="text" type="button" @click="onClickNextPage" :disabled="isInLastPage">Next</button>
         </li>
 
         <li class="pagination-item utility-button">
-            <button type="button" @click="onClickLastPage" :disabled="isInLastPage">Last</button>
+            <button class="text" type="button" @click="onClickLastPage" :disabled="isInLastPage">Last</button>
         </li>
     </ul>
 </template>
@@ -127,7 +127,8 @@ export default {
 <style scoped>
 ul {
     margin-top: 2em;
-    padding: 0 0 !important;
+    padding: 1em 0 !important;
+    text-align: center;
 }
 
 .pagination {
